@@ -120,6 +120,7 @@ class LoginController extends Controller
 
         try {
             if ($this->attemptLogin($request)) {
+                // save user IP
                 return $this->sendLoginResponse($request);
             }
         } catch (LoginAttemptException $exception) {
