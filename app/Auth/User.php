@@ -308,7 +308,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     /**
      * @param Request $request
-     * @return string
+     * @return string user IP, else empty string
      */
     public function getIp(Request $request): string
     {
