@@ -307,11 +307,20 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
 
     /**
+     * @param Request $request
+     * @return string
+     */
+    public function getIp(Request $request): string
+    {
+        return '';
+    }
+
+    /**
      * @inheritdoc
      */
     public function logDescriptor(): string
     {
-        return "({$this->id}) {$this->name}";
+        return "({$this->id}) {$this->name} {$this->getIp()}";
     }
 
     /**
