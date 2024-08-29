@@ -46,6 +46,13 @@ services:
     volumes:
       - ./:/app
     entrypoint: /app/dev/docker/entrypoint.node.sh
+  meilisearch:
+    image: getmeili/meilisearch:v1.9.1
+    restart: on-failure
+    volumes:
+      - ./data/meili:/meili_data
+    ports:
+      - 127.0.0.1:7700:7700
   mailhog:
     image: mailhog/mailhog
     ports:
