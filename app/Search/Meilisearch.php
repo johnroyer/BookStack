@@ -42,6 +42,11 @@ class Meilisearch
 
     public function addIndex(Entity $entity)
     {
+        $index = $this->client->index($this->indexName);
+
+        $entityInfo = $entity->toArray();
+        $id = class_basename($entity) . '-' . $entityInfo['id'];
+
         // remove exists data first by entity ID
 
         // index entity content
