@@ -51,6 +51,8 @@ class Meilisearch
         $doc = $index->deleteDocument($id);
 
         // index entity content
+        $doc = array_merge($entityInfo, ['id' => $id]);
+        $index->addDocuments($doc);
     }
 
     public function getIndexSettings(): array
