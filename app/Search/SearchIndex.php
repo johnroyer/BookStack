@@ -10,6 +10,7 @@ use BookStack\Util\HtmlDocument;
 use DOMNode;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Meilisearch\Client;
 
 class SearchIndex
 {
@@ -41,7 +42,9 @@ class SearchIndex
     public function indexEntities(array $entities): void
     {
         $terms = [];
+        $meilisearch = new Meilisearch(new Client('http://127.0.0.1:7700'), 'bookstack');
         foreach ($entities as $entity) {
+            $meilisearch->addIndex($entity);
             $entityTerms = $this->entityToTermDataArray($entity);
             array_push($terms, ...$entityTerms);
         }
