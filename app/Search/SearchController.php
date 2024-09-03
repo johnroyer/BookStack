@@ -7,6 +7,7 @@ use BookStack\Entities\Queries\QueryPopular;
 use BookStack\Entities\Tools\SiblingFetcher;
 use BookStack\Http\Controller;
 use Illuminate\Http\Request;
+use Meilisearch\Client;
 
 class SearchController extends Controller
 {
@@ -115,8 +116,11 @@ class SearchController extends Controller
      */
     public function searchSuggestions(Request $request)
     {
-        $searchTerm = $request->get('term', '');
-        $entities = $this->searchRunner->searchEntities(SearchOptions::fromString($searchTerm), 'all', 1, 5)['results'];
+        $meilisearch = new Meilisearch(
+            new Client('http://127.0.0.1:7700'),
+            'bookstack',
+        );
+        $entities = $meilisearch->search($request->get('term'));
 
         foreach ($entities as $entity) {
             $entity->setAttribute('preview_content', '');
