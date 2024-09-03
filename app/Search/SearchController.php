@@ -120,7 +120,7 @@ class SearchController extends Controller
             new Client('http://meilisearch:7700'),
             'bookstack',
         );
-        $entities = $meilisearch->search($request->get('term'));
+        $entities = $meilisearch->search($request->get('term'))['results'];
 
         foreach ($entities as $entity) {
             $entity->setAttribute('preview_content', '');
