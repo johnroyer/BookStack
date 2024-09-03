@@ -2,6 +2,7 @@
 
 namespace BookStack\Search;
 
+use BookStack\Entities\EntityProvider;
 use BookStack\Entities\Models\Entity;
 use Illuminate\Support\Collection;
 use Meilisearch\Client;
@@ -65,13 +66,21 @@ class Meilisearch
     {
         $index = $this->client->index($this->indexName);
         $list = $index->search($keyword)->getHits();
-        $amount = count($list);
+        $collection = collect();
+
+        $eneityProvider = new EntityProvider();
+        foreach ($list as $document) {
+            $entityInfo = explode('-', $document['id']);
+            $entity = $eneityProvider->get($entityInfo[0])
+                ->find($entityInfo[1]);
+            $collection->push($entity);
+        }
 
         return [
             'total' => $list,
             'count' => $list,
             'has_more' => false,
-            'results' => [],
+            'results' => $collection,
         ];
     }
 
