@@ -117,7 +117,7 @@ class SearchController extends Controller
     public function searchSuggestions(Request $request)
     {
         $meilisearch = new Meilisearch(
-            new Client('http://127.0.0.1:7700'),
+            new Client('http://meilisearch:7700'),
             'bookstack',
         );
         $entities = $meilisearch->search($request->get('term'));
