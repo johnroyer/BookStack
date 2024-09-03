@@ -61,6 +61,8 @@ class Meilisearch
         return [
             'displayedAttributes' => [
                 'id',
+                'entityType',
+                'entityId',
             ],
             'searchableAttributes' => [
                 'content',
