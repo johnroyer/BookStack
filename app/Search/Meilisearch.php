@@ -48,6 +48,7 @@ class Meilisearch
         $id = class_basename($entity) . '-' . $entityInfo['id'];
 
         // remove exists data first by entity ID
+        $doc = $index->deleteDocument($id);
 
         // index entity content
     }
