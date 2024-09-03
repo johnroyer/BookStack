@@ -71,7 +71,9 @@ class Meilisearch
                 'entityId',
             ],
             'searchableAttributes' => [
-                'content',
+                'name',
+                'description',
+                'tags',
             ],
             'filterableAttributes' => [
             ],
