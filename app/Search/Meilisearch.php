@@ -3,6 +3,7 @@
 namespace BookStack\Search;
 
 use BookStack\Entities\Models\Entity;
+use Illuminate\Support\Collection;
 use Meilisearch\Client;
 
 class Meilisearch
@@ -53,6 +54,25 @@ class Meilisearch
         // index entity content
         $doc = array_merge($entityInfo, ['id' => $id]);
         $index->addDocuments($doc);
+    }
+
+    /**
+     * @param string $keyword
+     * @return array{total: int, count: int, has_more: bool, results: Collection<Entity>}
+     * @see "SearchRunner::searchEntities()"
+     */
+    public function search(string $keyword): array
+    {
+        $index = $this->client->index($this->indexName);
+        $list = $index->search($keyword)->getHits();
+        $amount = count($list);
+
+        return [
+            'total' => $list,
+            'count' => $list,
+            'has_more' => false,
+            'results' => [],
+        ];
     }
 
     public function getIndexSettings(): array
