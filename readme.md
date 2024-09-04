@@ -11,3 +11,11 @@ This is a concept provement testing. Use Meilisearch as BookStack's search sugge
 BookStack use space to separate sentence to words (search tokens). But not all language can be index by this algorithm.
 
 Meilisearch use N-grams to create indexes. It make better search experience, and can use on most of languages.
+
+----
+
+# Screenshot
+
+You can now search using event words in the middle of the phrease:
+
+![search](https://i.imgur.com/nBerBDM.png)
