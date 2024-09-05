@@ -4,6 +4,10 @@
 volumes:
   db: {}
 
+networks:
+  app-network:
+    driver: bridge
+
 services:
   db:
     image: mysql:8.4
@@ -14,7 +18,11 @@ services:
       MYSQL_RANDOM_ROOT_PASSWORD: 'true'
     volumes:
       - ./dev/docker/init.db:/docker-entrypoint-initdb.d
-      - db:/var/lib/mysql
+      - ./data/db:/var/lib/mysql
+    ports:
+      - 3306:3306
+    networks:
+      - app-network
   app:
     build:
       context: .
@@ -32,7 +40,9 @@ services:
       MAIL_HOST: mailhog
       MAIL_PORT: 1025
     ports:
-      - ${DEV_PORT:-8080}:80
+      - 8080:80
+    networks:
+      - app-network
     volumes:
       - ./:/app
       - ./dev/docker/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
@@ -46,13 +56,17 @@ services:
     volumes:
       - ./:/app
     entrypoint: /app/dev/docker/entrypoint.node.sh
+    networks:
+      - app-network
   meilisearch:
     image: getmeili/meilisearch:v1.9.1
     restart: on-failure
     volumes:
       - ./data/meili:/meili_data
     ports:
-      - 127.0.0.1:7700:7700
+      - 7700:7700
+    networks:
+      - app-network
   mailhog:
     image: mailhog/mailhog
     ports:
