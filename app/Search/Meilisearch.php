@@ -104,6 +104,7 @@ class Meilisearch
             'searchableAttributes' => [
                 'name',
                 'description',
+                'text',
                 'tags',
             ],
             'filterableAttributes' => [
