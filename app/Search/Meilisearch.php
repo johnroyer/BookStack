@@ -44,16 +44,26 @@ class Meilisearch
 
     public function addIndex(Entity $entity)
     {
-        $index = $this->client->index($this->indexName);
-
         $entityInfo = $entity->toArray();
+        $className = get_class($entity);
+        $entityId = $entityInfo['id'];
+        $index = $this->client->index($this->indexName);
+        $data = $className::find($entityId);
+
+        // create ID for Meilisearch
         $id = class_basename($entity) . '-' . $entityInfo['id'];
 
         // remove exists data first by entity ID
-        $doc = $index->deleteDocument($id);
+        $index->deleteDocument($id);
 
         // index entity content
-        $doc = array_merge($entityInfo, ['id' => $id]);
+        $doc = [
+            'id' => $id,
+            'name' => $data->name,
+            'description' => $data->description,
+            'text' => $data->text,
+            'tags' => $data['tag']
+        ];
         $index->addDocuments($doc);
     }
 
