@@ -32,6 +32,14 @@ class SearchIndex
         $this->deleteEntityTerms($entity);
         $terms = $this->entityToTermDataArray($entity);
         SearchTerm::query()->insert($terms);
+
+        $meilisearch = new Meilisearch(
+            new Client(
+                'http://127.0.0.1:7700'
+            ),
+            'bookstack',
+        );
+        $meilisearch->addIndex($entity);
     }
 
     /**
