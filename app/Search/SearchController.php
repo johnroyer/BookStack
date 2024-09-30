@@ -130,7 +130,7 @@ class SearchController extends Controller
         }
 
         return view('search.parts.entity-suggestion-list', [
-            'entities' => $entities->slice(0, 5)
+            'entities' => $entities->slice(0, 6)
         ]);
     }
 
