@@ -3,6 +3,7 @@ FROM php:8.3-apache
 # isntall library
 RUN apt-get update && \
     apt-get install -y \
+        curl \
         git \
         zip \
         unzip \
