@@ -20,15 +20,15 @@ RUN ( curl -sSLf https://github.com/mlocati/docker-php-extension-installer/relea
 # install composer
 COPY --from=composer/composer:lts /usr/bin/composer /usr/bin/composer
 
+# Configure apache
+RUN a2enmod rewrite && \
+    sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf && \
+    sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+
 ENV APACHE_DOCUMENT_ROOT /app/public
 WORKDIR /app
 
 RUN <<EOR
-# Configure apache
-a2enmod rewrite
-sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
-sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
-
 # Use the default production configuration and update it as required
 mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 sed -i 's/memory_limit = 128M/memory_limit = 512M/g' "$PHP_INI_DIR/php.ini"
