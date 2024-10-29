@@ -12,9 +12,9 @@ services:
   db:
     image: mariadb:lts
     environment:
-      MYSQL_DATABASE: bookstack-dev
-      MYSQL_USER: bookstack-test
-      MYSQL_PASSWORD: bookstack-test
+      MARIADB_USER: bookstack
+      MARIADB_PASSWORD: "password"
+      MARIADB_DATABASE: bookstack
       MARIADB_ROOT_PASSWORD: "password"
     volumes:
       - ./dev/docker/init.db:/docker-entrypoint-initdb.d
