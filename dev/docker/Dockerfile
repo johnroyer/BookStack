@@ -30,4 +30,5 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" && \
     sed -i 's/memory_limit = 128M/memory_limit = 512M/g' "$PHP_INI_DIR/php.ini"
 
 ENV APACHE_DOCUMENT_ROOT /app/public
+
 WORKDIR /app
