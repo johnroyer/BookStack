@@ -16,7 +16,6 @@ services:
       MARIADB_DATABASE: bookstack
       MARIADB_ROOT_PASSWORD: "password"
     volumes:
-      - ./dev/docker/init.db:/docker-entrypoint-initdb.d
       - ./data/db:/var/lib/mysql
     ports:
       - 3306:3306
