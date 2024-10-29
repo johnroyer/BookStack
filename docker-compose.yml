@@ -21,6 +21,7 @@ services:
       - 3306:3306
     networks:
       - app-network
+
   app:
     build:
       context: .
@@ -55,6 +56,7 @@ services:
       - node
       - meilisearch
       - mailhog
+
   node:
     image: node:22-alpine
     working_dir: /app
@@ -64,6 +66,7 @@ services:
     entrypoint: /app/dev/docker/entrypoint.node.sh
     networks:
       - app-network
+
   meilisearch:
     image: getmeili/meilisearch:v1.9.1
     restart: on-failure
@@ -73,6 +76,7 @@ services:
       - 7700:7700
     networks:
       - app-network
+
   mailhog:
     image: mailhog/mailhog
     ports:
