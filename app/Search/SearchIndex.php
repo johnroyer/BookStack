@@ -50,7 +50,13 @@ class SearchIndex
     public function indexEntities(array $entities): void
     {
         $terms = [];
-        $meilisearch = new Meilisearch(new Client('http://127.0.0.1:7700'), 'bookstack');
+        $meilisearch = new Meilisearch(
+            new Client('http://'
+                . env('MEILISEARCH_HOST', '127.0.0.1')
+                . ':' . env('MEILISEARCH_INDEX', '7700')
+            ),
+            'bookstack',
+        );
         foreach ($entities as $entity) {
             $meilisearch->addIndex($entity);
             $entityTerms = $this->entityToTermDataArray($entity);
