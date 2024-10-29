@@ -38,9 +38,10 @@ services:
       MAIL_DRIVER: smtp
       MAIL_HOST: mailhog
       MAIL_PORT: 1025
-      MEILISEARCH_HOST: "meilisearch"
+      MEILISEARCH_HOST: meilisearch
       MEILISEARCH_PORT: 7700
       MEILISEARCH_MASTER_KEY: ""
+      MEILISEARCH_INDEX: bookstack
     ports:
       - 8080:80
     networks:
