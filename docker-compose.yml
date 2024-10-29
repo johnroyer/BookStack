@@ -10,7 +10,7 @@ networks:
 
 services:
   db:
-    image: mysql:8.4
+    image: mariadb:lts
     environment:
       MYSQL_DATABASE: bookstack-dev
       MYSQL_USER: bookstack-test
