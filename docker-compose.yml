@@ -50,6 +50,11 @@ services:
     entrypoint: /app/dev/docker/entrypoint.app.sh
     extra_hosts:
     - "host.docker.internal:host-gateway"
+    depends_on:
+      - db
+      - node
+      - meilisearch
+      - mailhog
   node:
     image: node:22-alpine
     working_dir: /app
