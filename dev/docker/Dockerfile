@@ -8,8 +8,7 @@ RUN apt-get update && \
         unzip \
         libpng-dev \
         libldap2-dev \
-        libzip-dev \
-        wait-for-it && \
+        libzip-dev && \
     rm -rf /var/lib/apt/lists/*
 
 ENV APACHE_DOCUMENT_ROOT /app/public
