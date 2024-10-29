@@ -16,7 +16,7 @@ services:
       MARIADB_DATABASE: bookstack
       MARIADB_ROOT_PASSWORD: "password"
     volumes:
-      - ./data/db:/var/lib/mysql
+      - ./data/db:/var/lib/mysql:Z
     ports:
       - 3306:3306
     networks:
