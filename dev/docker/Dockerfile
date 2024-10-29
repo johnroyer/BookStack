@@ -9,7 +9,8 @@ RUN apt-get update && \
         libpng-dev \
         libldap2-dev \
         libzip-dev && \
-    rm -rf /var/lib/apt/lists/*
+    rm -fr /var/cache/apk/* && \
+    rm -fr /tmp/*
 
 ENV APACHE_DOCUMENT_ROOT /app/public
 WORKDIR /app
