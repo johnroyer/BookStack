@@ -1,21 +1,21 @@
 FROM php:8.3-apache
 
+# isntall library
+RUN apt-get update && \
+    apt-get install -y \
+        git \
+        zip \
+        unzip \
+        libpng-dev \
+        libldap2-dev \
+        libzip-dev \
+        wait-for-it && \
+    rm -rf /var/lib/apt/lists/*
+
 ENV APACHE_DOCUMENT_ROOT /app/public
 WORKDIR /app
 
 RUN <<EOR
-# Install additional dependencies
-apt-get update
-apt-get install -y \
-	git \
-	zip \
-	unzip \
-	libpng-dev \
-	libldap2-dev \
-	libzip-dev \
-	wait-for-it
-rm -rf /var/lib/apt/lists/*
-
 # Configure apache
 docker-php-ext-configure ldap --with-libdir="lib/$(gcc -dumpmachine)"
 docker-php-ext-install pdo_mysql gd ldap zip
