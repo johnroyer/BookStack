@@ -17,6 +17,9 @@ RUN apt-get update && \
 RUN ( curl -sSLf https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - || echo 'return 1' ) | sh -s \
       gd ldap pdo_mysql xdebug zip
 
+# install composer
+COPY --from=composer/composer:lts /usr/bin/composer /usr/bin/composer
+
 ENV APACHE_DOCUMENT_ROOT /app/public
 WORKDIR /app
 
@@ -25,9 +28,6 @@ RUN <<EOR
 a2enmod rewrite
 sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
-
-# Install composer
-curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Use the default production configuration and update it as required
 mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
