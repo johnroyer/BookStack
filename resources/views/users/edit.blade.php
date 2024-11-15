@@ -42,7 +42,7 @@
                        class="button outline">{{ trans('common.cancel') }}</a>
                     @if($authMethod !== 'system')
                         <a href="{{ url("/settings/users/{$user->id}/delete") }}"
-                           class="button outline">{{ trans('settings.users_delete') }}</a>
+                           class="button outline text-warn">{{ trans('settings.users_delete') }}</a>
                     @endif
                     <button class="button" type="submit">{{ trans('common.save') }}</button>
                 </div>
