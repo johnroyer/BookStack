@@ -118,7 +118,7 @@ class SearchController extends Controller
     {
         $meilisearch = new Meilisearch(
             new Client(
-                env('MEILISEARCH_HOST') . env('MEILISEARCH_PORT'),
+                env('MEILISEARCH_HOST') . ':' . env('MEILISEARCH_PORT'),
                 env('MEILISEARCH_MASTER_KEY', '')
             ),
             'bookstack',
