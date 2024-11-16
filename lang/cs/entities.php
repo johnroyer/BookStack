@@ -83,8 +83,8 @@ return [
     'search_update' => 'Aktualizovat hledání',
 
     // Shelves
-    'shelf' => 'Knihovna',
-    'shelves' => 'Knihovny',
+    'shelf' => 'Police',
+    'shelves' => 'Police',
     'x_shelves' => '{0}:count polic|{1}:count police|[2,4]:count police|[5,*]:count polic',
     'shelves_empty' => 'Nebyly vytvořeny žádné police',
     'shelves_create' => 'Vytvořit novou polici',
@@ -224,8 +224,8 @@ return [
     'pages_edit_switch_to_markdown_clean' => '(Vytvořený obsah)',
     'pages_edit_switch_to_markdown_stable' => '(Stabilní obsah)',
     'pages_edit_switch_to_wysiwyg' => 'Přepnout na WYSIWYG Editor',
-    'pages_edit_switch_to_new_wysiwyg' => 'Switch to new WYSIWYG',
-    'pages_edit_switch_to_new_wysiwyg_desc' => '(In Alpha Testing)',
+    'pages_edit_switch_to_new_wysiwyg' => 'Přepnout na nový WYSIWYG',
+    'pages_edit_switch_to_new_wysiwyg_desc' => '(V alfa testování)',
     'pages_edit_set_changelog' => 'Nastavit protokol změn',
     'pages_edit_enter_changelog_desc' => 'Zadejte stručný popis změn, které jste provedli',
     'pages_edit_enter_changelog' => 'Zadejte protokol změn',
