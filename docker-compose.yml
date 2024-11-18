@@ -64,7 +64,6 @@ services:
       - app-network
   meilisearch:
     image: getmeili/meilisearch:v1.9.1
-    restart: on-failure
     volumes:
       - ./data/meili:/meili_data
     ports:
