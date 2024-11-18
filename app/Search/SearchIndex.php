@@ -35,7 +35,8 @@ class SearchIndex
 
         $meilisearch = new Meilisearch(
             new Client(
-                'http://127.0.0.1:7700'
+                env('MEILISEARCH_HOST') . ':' . env('MEILISEARCH_PORT'),
+                env('MEILISEARCH_MASTER_KEY', '')
             ),
             'bookstack',
         );
@@ -51,9 +52,9 @@ class SearchIndex
     {
         $terms = [];
         $meilisearch = new Meilisearch(
-            new Client('http://'
-                . env('MEILISEARCH_HOST', '127.0.0.1')
-                . ':' . env('MEILISEARCH_INDEX', '7700')
+            new Client(
+                env('MEILISEARCH_HOST') . ':' . env('MEILISEARCH_PORT'),
+                env('MEILISEARCH_MASTER_KEY', '')
             ),
             'bookstack',
         );
