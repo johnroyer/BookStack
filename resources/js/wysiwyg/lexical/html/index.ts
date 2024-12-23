@@ -217,6 +217,11 @@ function $createNodesFromDOM(
   if (transformOutput !== null) {
     postTransform = transformOutput.after;
     const transformNodes = transformOutput.node;
+
+    if (transformNodes === 'ignore') {
+      return lexicalNodes;
+    }
+
     currentLexicalNode = Array.isArray(transformNodes)
       ? transformNodes[transformNodes.length - 1]
       : transformNodes;
@@ -327,9 +332,6 @@ function wrapContinuousInlines(
   for (let i = 0; i < nodes.length; i++) {
     const node = nodes[i];
     if ($isBlockElementNode(node)) {
-      if (textAlign && !node.getFormat()) {
-        node.setFormat(textAlign);
-      }
       out.push(node);
     } else {
       continuousInlines.push(node);
@@ -338,7 +340,6 @@ function wrapContinuousInlines(
         (i < nodes.length - 1 && $isBlockElementNode(nodes[i + 1]))
       ) {
         const wrapper = createWrapperFn();
-        wrapper.setFormat(textAlign);
         wrapper.append(...continuousInlines);
         out.push(wrapper);
         continuousInlines = [];
