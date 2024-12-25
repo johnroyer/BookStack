@@ -69,7 +69,7 @@ return [
     'mfa_setup_method' => 'configured MFA method',
     'mfa_setup_method_notification' => 'Multi-factor method successfully configured',
     'mfa_remove_method' => 'removed MFA method',
-    'mfa_remove_method_notification' => 'Multi-factor method successfully removed',
+    'mfa_remove_method_notification' => 'მულტი-ფაქტორული მეთოდი წარმატებით მოიხსნა',
 
     // Settings
     'settings_update' => 'updated settings',
@@ -83,6 +83,14 @@ return [
     'webhook_update_notification' => 'Webhook successfully updated',
     'webhook_delete' => 'deleted webhook',
     'webhook_delete_notification' => 'Webhook successfully deleted',
+
+    // Imports
+    'import_create' => 'created import',
+    'import_create_notification' => 'Import successfully uploaded',
+    'import_run' => 'updated import',
+    'import_run_notification' => 'Content successfully imported',
+    'import_delete' => 'deleted import',
+    'import_delete_notification' => 'Import successfully deleted',
 
     // Users
     'user_create' => 'created user',

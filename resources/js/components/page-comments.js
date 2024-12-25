@@ -1,5 +1,5 @@
 import {Component} from './component';
-import {getLoading, htmlToDom} from '../services/dom';
+import {getLoading, htmlToDom} from '../services/dom.ts';
 import {buildForInput} from '../wysiwyg-tinymce/config';
 
 export class PageComments extends Component {
@@ -93,7 +93,6 @@ export class PageComments extends Component {
 
     updateCount() {
         const count = this.getCommentCount();
-        console.log('update count', count, this.container);
         this.commentsTitle.textContent = window.$trans.choice(this.countText, count, {count});
     }
 

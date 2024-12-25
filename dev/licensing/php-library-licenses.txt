@@ -202,7 +202,7 @@ Link: https://github.com/intervention/gif
 intervention/image
 License: MIT
 License File: vendor/intervention/image/LICENSE
-Copyright: Copyright (c) 2013-2024 Oliver Vogel
+Copyright: Copyright (c) 2013-present Oliver Vogel
 Source: https://github.com/Intervention/image.git
 Link: https://image.intervention.io/
 -----------
@@ -307,7 +307,7 @@ Link: https://github.com/thephpleague/oauth1-client.git
 league/oauth2-client
 License: MIT
 License File: vendor/league/oauth2-client/LICENSE
-Copyright: Copyright (c) 2013-2020 Alex Bilbie <*****@**********.***>
+Copyright: Copyright (c) 2013-2023 Alex Bilbie <*****@**********.***>
 Source: https://github.com/thephpleague/oauth2-client.git
 Link: https://github.com/thephpleague/oauth2-client.git
 -----------
@@ -415,7 +415,7 @@ predis/predis
 License: MIT
 License File: vendor/predis/predis/LICENSE
 Copyright: Copyright (c) 2009-2020 Daniele Alessandri (original work)
-Copyright (c) 2021-2023 Till Krüss (modified work)
+Copyright (c) 2021-2024 Till Krüss (modified work)
 Source: https://github.com/predis/predis.git
 Link: http://github.com/predis/predis
 -----------
@@ -514,7 +514,7 @@ Link: https://github.com/ramsey/uuid.git
 robrichards/xmlseclibs
 License: BSD-3-Clause
 License File: vendor/robrichards/xmlseclibs/LICENSE
-Copyright: Copyright (c) 2007-2019, Robert Richards <*********@*********.***>.
+Copyright: Copyright (c) 2007-2024, Robert Richards <*********@*********.***>.
 Source: https://github.com/robrichards/xmlseclibs.git
 Link: https://github.com/robrichards/xmlseclibs
 -----------
@@ -560,9 +560,9 @@ Link: https://github.com/SocialiteProviders/Twitch.git
 ssddanbrown/htmldiff
 License: MIT
 License File: vendor/ssddanbrown/htmldiff/license.md
-Copyright: Copyright (c) 2020 Nathan Herald, Rohland de Charmoy, Dan Brown
-Source: https://github.com/ssddanbrown/HtmlDiff.git
-Link: https://github.com/ssddanbrown/htmldiff
+Copyright: Copyright (c) 2024 Nathan Herald, Rohland de Charmoy, Dan Brown
+Source: https://codeberg.org/danb/HtmlDiff
+Link: https://codeberg.org/danb/HtmlDiff
 -----------
 ssddanbrown/symfony-mailer
 License: MIT

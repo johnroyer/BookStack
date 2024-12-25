@@ -31,7 +31,7 @@ class SearchIndex
     {
         $this->deleteEntityTerms($entity);
         $terms = $this->entityToTermDataArray($entity);
-        SearchTerm::query()->insert($terms);
+        $this->insertTerms($terms);
 
         $meilisearch = new Meilisearch(
             new Client(
@@ -64,10 +64,7 @@ class SearchIndex
             array_push($terms, ...$entityTerms);
         }
 
-        $chunkedTerms = array_chunk($terms, 500);
-        foreach ($chunkedTerms as $termChunk) {
-            SearchTerm::query()->insert($termChunk);
-        }
+        $this->insertTerms($terms);
     }
 
     /**
@@ -115,6 +112,19 @@ class SearchIndex
     public function deleteEntityTerms(Entity $entity): void
     {
         $entity->searchTerms()->delete();
+    }
+
+    /**
+     * Insert the given terms into the database.
+     * Chunks through the given terms to remain within database limits.
+     * @param array[] $terms
+     */
+    protected function insertTerms(array $terms): void
+    {
+        $chunkedTerms = array_chunk($terms, 500);
+        foreach ($chunkedTerms as $termChunk) {
+            SearchTerm::query()->insert($termChunk);
+        }
     }
 
     /**
