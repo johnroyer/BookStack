@@ -23,7 +23,7 @@ return [
     'image_load_more' => '더 보기',
     'image_image_name' => '이미지 이름',
     'image_delete_used' => '이 이미지는 다음 문서들이 쓰고 있습니다.',
-    'image_delete_confirm_text' => '이 이미지를 지울 건가요?',
+    'image_delete_confirm_text' => '이 이미지를 정말 삭제하시겠습니까?',
     'image_select_image' => '이미지 선택',
     'image_dropzone' => '여기에 이미지를 드롭하거나 여기를 클릭하세요. 이미지를 올릴 수 있습니다.',
     'image_dropzone_drop' => '업로드 할 이미지 파일을 여기에 놓으세요.',
@@ -33,7 +33,7 @@ return [
     'image_update_success' => '이미지 정보가 수정되었습니다.',
     'image_delete_success' => '이미지가 삭제되었습니다.',
     'image_replace' => '이미지 교체',
-    'image_replace_success' => '이미지 파일 업데이트 성공',
+    'image_replace_success' => '이미지가 수정되었습니다.',
     'image_rebuild_thumbs' => '사이즈 변경 재생성하기',
     'image_rebuild_thumbs_success' => '이미지 크기 변경이 성공적으로 완료되었습니다!',
 
