@@ -13,12 +13,15 @@ use BookStack\Permissions\PermissionsController;
 use BookStack\References\ReferenceController;
 use BookStack\Search\SearchController;
 use BookStack\Settings as SettingControllers;
+use BookStack\Sorting as SortingControllers;
+use BookStack\Theming\ThemeController;
 use BookStack\Uploads\Controllers as UploadControllers;
 use BookStack\Users\Controllers as UserControllers;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Route;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
+// Status & Meta routes
 Route::get('/status', [SettingControllers\StatusController::class, 'show']);
 Route::get('/robots.txt', [MetaController::class, 'robots']);
 Route::get('/favicon.ico', [MetaController::class, 'favicon']);
@@ -64,7 +67,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/books/{slug}/edit', [EntityControllers\BookController::class, 'edit']);
     Route::put('/books/{slug}', [EntityControllers\BookController::class, 'update']);
     Route::delete('/books/{id}', [EntityControllers\BookController::class, 'destroy']);
-    Route::get('/books/{slug}/sort-item', [EntityControllers\BookSortController::class, 'showItem']);
+    Route::get('/books/{slug}/sort-item', [SortingControllers\BookSortController::class, 'showItem']);
     Route::get('/books/{slug}', [EntityControllers\BookController::class, 'show']);
     Route::get('/books/{bookSlug}/permissions', [PermissionsController::class, 'showForBook']);
     Route::put('/books/{bookSlug}/permissions', [PermissionsController::class, 'updateForBook']);
@@ -72,8 +75,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/books/{bookSlug}/copy', [EntityControllers\BookController::class, 'showCopy']);
     Route::post('/books/{bookSlug}/copy', [EntityControllers\BookController::class, 'copy']);
     Route::post('/books/{bookSlug}/convert-to-shelf', [EntityControllers\BookController::class, 'convertToShelf']);
-    Route::get('/books/{bookSlug}/sort', [EntityControllers\BookSortController::class, 'show']);
-    Route::put('/books/{bookSlug}/sort', [EntityControllers\BookSortController::class, 'update']);
+    Route::get('/books/{bookSlug}/sort', [SortingControllers\BookSortController::class, 'show']);
+    Route::put('/books/{bookSlug}/sort', [SortingControllers\BookSortController::class, 'update']);
     Route::get('/books/{slug}/references', [ReferenceController::class, 'book']);
     Route::get('/books/{bookSlug}/export/html', [ExportControllers\BookExportController::class, 'html']);
     Route::get('/books/{bookSlug}/export/pdf', [ExportControllers\BookExportController::class, 'pdf']);
@@ -292,6 +295,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/settings/webhooks/{id}/delete', [ActivityControllers\WebhookController::class, 'delete']);
     Route::delete('/settings/webhooks/{id}', [ActivityControllers\WebhookController::class, 'destroy']);
 
+    // Sort Rules
+    Route::get('/settings/sorting/rules/new', [SortingControllers\SortRuleController::class, 'create']);
+    Route::post('/settings/sorting/rules', [SortingControllers\SortRuleController::class, 'store']);
+    Route::get('/settings/sorting/rules/{id}', [SortingControllers\SortRuleController::class, 'edit']);
+    Route::put('/settings/sorting/rules/{id}', [SortingControllers\SortRuleController::class, 'update']);
+    Route::delete('/settings/sorting/rules/{id}', [SortingControllers\SortRuleController::class, 'destroy']);
+
     // Settings
     Route::get('/settings', [SettingControllers\SettingController::class, 'index'])->name('settings');
     Route::get('/settings/{category}', [SettingControllers\SettingController::class, 'category'])->name('settings.category');
@@ -360,8 +370,12 @@ Route::post('/password/email', [AccessControllers\ForgotPasswordController::clas
 Route::get('/password/reset/{token}', [AccessControllers\ResetPasswordController::class, 'showResetForm']);
 Route::post('/password/reset', [AccessControllers\ResetPasswordController::class, 'reset'])->middleware('throttle:public');
 
-// Metadata routes
+// Help & Info routes
 Route::view('/help/tinymce', 'help.tinymce');
 Route::view('/help/wysiwyg', 'help.wysiwyg');
+
+// Theme Routes
+Route::get('/theme/{theme}/{path}', [ThemeController::class, 'publicFile'])
+    ->where('path', '.*$');
 
 Route::fallback([MetaController::class, 'notFound'])->name('fallback');
