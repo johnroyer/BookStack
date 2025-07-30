@@ -25,6 +25,7 @@ export class PageEditor extends Component {
         this.draftDisplayIcon = this.$refs.draftDisplayIcon;
         this.changelogInput = this.$refs.changelogInput;
         this.changelogDisplay = this.$refs.changelogDisplay;
+        this.changelogCounter = this.$refs.changelogCounter;
         this.changeEditorButtons = this.$manyRefs.changeEditor || [];
         this.switchDialogContainer = this.$refs.switchDialog;
         this.deleteDraftDialogContainer = this.$refs.deleteDraftDialog;
@@ -75,7 +76,11 @@ export class PageEditor extends Component {
 
         // Changelog controls
         const updateChangelogDebounced = debounce(this.updateChangelogDisplay.bind(this), 300, false);
-        this.changelogInput.addEventListener('input', updateChangelogDebounced);
+        this.changelogInput.addEventListener('input', () => {
+            const count = this.changelogInput.value.length;
+            this.changelogCounter.innerText = `${count} / 180`;
+            updateChangelogDebounced();
+        });
 
         // Draft Controls
         onSelect(this.saveDraftButton, this.saveDraft.bind(this));
