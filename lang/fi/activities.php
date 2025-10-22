@@ -84,6 +84,14 @@ return [
     'webhook_delete' => 'poisti toimintokutsun',
     'webhook_delete_notification' => 'Toimintokutsu poistettiin onnistuneesti',
 
+    // Imports
+    'import_create' => 'luotu tuonti',
+    'import_create_notification' => 'Tuontitiedosto ladattiin onnistuneesti',
+    'import_run' => 'päivitetty tuonti',
+    'import_run_notification' => 'Sisällön tuonti onnistui',
+    'import_delete' => 'poistettu tuonti',
+    'import_delete_notification' => 'Tuontitiedosto poistettiin onnistuneesti',
+
     // Users
     'user_create' => 'loi käyttäjän',
     'user_create_notification' => 'Käyttäjä luotiin onnistuneesti',
@@ -118,6 +126,14 @@ return [
     'comment_create'              => 'lisäsi kommentin',
     'comment_update'              => 'päivitti kommentin',
     'comment_delete'              => 'poisti kommentin',
+
+    // Sort Rules
+    'sort_rule_create' => 'luotu lajittelusääntö',
+    'sort_rule_create_notification' => 'Lajittelusääntö luotiin onnistuneesti',
+    'sort_rule_update' => 'päivitetty lajittelusääntö',
+    'sort_rule_update_notification' => 'Sort rule successfully updated',
+    'sort_rule_delete' => 'poistettu lajittelusääntö',
+    'sort_rule_delete_notification' => 'Lajittelusääntö poistettiin onnistuneesti',
 
     // Other
     'permissions_update'          => 'päivitti käyttöoikeudet',

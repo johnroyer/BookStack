@@ -11,6 +11,8 @@ use BookStack\Entities\Tools\TrashCan;
 use BookStack\Exceptions\MoveOperationException;
 use BookStack\Exceptions\PermissionsException;
 use BookStack\Facades\Activity;
+use BookStack\Permissions\Permission;
+use BookStack\Util\DatabaseTransaction;
 use Exception;
 
 class ChapterRepo
@@ -27,14 +29,21 @@ class ChapterRepo
      */
     public function create(array $input, Book $parentBook): Chapter
     {
-        $chapter = new Chapter();
-        $chapter->book_id = $parentBook->id;
-        $chapter->priority = (new BookContents($parentBook))->getLastPriority() + 1;
-        $this->baseRepo->create($chapter, $input);
-        $this->baseRepo->updateDefaultTemplate($chapter, intval($input['default_template_id'] ?? null));
-        Activity::add(ActivityType::CHAPTER_CREATE, $chapter);
+        return (new DatabaseTransaction(function () use ($input, $parentBook) {
+            $chapter = new Chapter();
+            $chapter->book_id = $parentBook->id;
+            $chapter->priority = (new BookContents($parentBook))->getLastPriority() + 1;
 
-        return $chapter;
+            $chapter = $this->baseRepo->create($chapter, $input);
+            $chapter->defaultTemplate()->setFromId(intval($input['default_template_id'] ?? null));
+
+            $chapter->save();
+            Activity::add(ActivityType::CHAPTER_CREATE, $chapter);
+
+            $this->baseRepo->sortParent($chapter);
+
+            return $chapter;
+        }))->run();
     }
 
     /**
@@ -42,13 +51,16 @@ class ChapterRepo
      */
     public function update(Chapter $chapter, array $input): Chapter
     {
-        $this->baseRepo->update($chapter, $input);
+        $chapter = $this->baseRepo->update($chapter, $input);
 
         if (array_key_exists('default_template_id', $input)) {
-            $this->baseRepo->updateDefaultTemplate($chapter, intval($input['default_template_id']));
+            $chapter->defaultTemplate()->setFromId(intval($input['default_template_id']));
         }
 
+        $chapter->save();
         Activity::add(ActivityType::CHAPTER_UPDATE, $chapter);
+
+        $this->baseRepo->sortParent($chapter);
 
         return $chapter;
     }
@@ -58,7 +70,7 @@ class ChapterRepo
      *
      * @throws Exception
      */
-    public function destroy(Chapter $chapter)
+    public function destroy(Chapter $chapter): void
     {
         $this->trashCan->softDestroyChapter($chapter);
         Activity::add(ActivityType::CHAPTER_DELETE, $chapter);
@@ -80,14 +92,18 @@ class ChapterRepo
             throw new MoveOperationException('Book to move chapter into not found');
         }
 
-        if (!userCan('chapter-create', $parent)) {
+        if (!userCan(Permission::ChapterCreate, $parent)) {
             throw new PermissionsException('User does not have permission to create a chapter within the chosen book');
         }
 
-        $chapter->changeBook($parent->id);
-        $chapter->rebuildPermissions();
-        Activity::add(ActivityType::CHAPTER_MOVE, $chapter);
+        return (new DatabaseTransaction(function () use ($chapter, $parent) {
+            $chapter = $chapter->changeBook($parent->id);
+            $chapter->rebuildPermissions();
+            Activity::add(ActivityType::CHAPTER_MOVE, $chapter);
 
-        return $parent;
+            $this->baseRepo->sortParent($chapter);
+
+            return $parent;
+        }))->run();
     }
 }

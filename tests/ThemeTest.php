@@ -46,7 +46,7 @@ class ThemeTest extends TestCase
             $functionsFile = theme_path('functions.php');
             app()->alias('cat', 'dog');
             file_put_contents($functionsFile, "<?php\nTheme::listen(\BookStack\Theming\ThemeEvents::APP_BOOT, function(\$app) { \$app->alias('cat', 'dog');});");
-            $this->runWithEnv('APP_THEME', $themeFolder, function () {
+            $this->runWithEnv(['APP_THEME' => $themeFolder], function () {
                 $this->assertEquals('cat', $this->app->getAlias('dog'));
             });
         });
@@ -61,7 +61,7 @@ class ThemeTest extends TestCase
             $this->expectException(ThemeException::class);
             $this->expectExceptionMessageMatches('/Failed loading theme functions file at ".*?" with error: Class "BookStack\\\\Biscuits" not found/');
 
-            $this->runWithEnv('APP_THEME', $themeFolder, fn() => null);
+            $this->runWithEnv(['APP_THEME' => $themeFolder], fn() => null);
         });
     }
 
@@ -464,6 +464,34 @@ END;
         });
     }
 
+    public function test_public_folder_contents_accessible_via_route()
+    {
+        $this->usingThemeFolder(function (string $themeFolderName) {
+            $publicDir = theme_path('public');
+            mkdir($publicDir, 0777, true);
+
+            $text = 'some-text ' . md5(random_bytes(5));
+            $css = "body { background-color: tomato !important; }";
+            file_put_contents("{$publicDir}/file.txt", $text);
+            file_put_contents("{$publicDir}/file.css", $css);
+            copy($this->files->testFilePath('test-image.png'), "{$publicDir}/image.png");
+
+            $resp = $this->asAdmin()->get("/theme/{$themeFolderName}/file.txt");
+            $resp->assertStreamedContent($text);
+            $resp->assertHeader('Content-Type', 'text/plain; charset=UTF-8');
+            $resp->assertHeader('Cache-Control', 'max-age=86400, private');
+
+            $resp = $this->asAdmin()->get("/theme/{$themeFolderName}/image.png");
+            $resp->assertHeader('Content-Type', 'image/png');
+            $resp->assertHeader('Cache-Control', 'max-age=86400, private');
+
+            $resp = $this->asAdmin()->get("/theme/{$themeFolderName}/file.css");
+            $resp->assertStreamedContent($css);
+            $resp->assertHeader('Content-Type', 'text/css; charset=UTF-8');
+            $resp->assertHeader('Cache-Control', 'max-age=86400, private');
+        });
+    }
+
     protected function usingThemeFolder(callable $callback)
     {
         // Create a folder and configure a theme
@@ -476,7 +504,7 @@ END;
         $this->beforeApplicationDestroyed(fn() => File::deleteDirectory($themeFolderPath));
 
         // Run provided callback with theme env option set
-        $this->runWithEnv('APP_THEME', $themeFolderName, function () use ($callback, $themeFolderName) {
+        $this->runWithEnv(['APP_THEME' => $themeFolderName], function () use ($callback, $themeFolderName) {
             call_user_func($callback, $themeFolderName);
         });
     }

@@ -2,27 +2,29 @@ import {EditorButtonDefinition} from "../../framework/buttons";
 import linkIcon from "@icons/editor/link.svg";
 import {EditorUiContext} from "../../framework/core";
 import {
-    $createTextNode,
     $getRoot,
     $getSelection, $insertNodes,
     BaseSelection,
-    ElementNode, isCurrentlyReadOnlyMode
+    ElementNode
 } from "lexical";
 import {$isLinkNode, LinkNode} from "@lexical/link";
 import unlinkIcon from "@icons/editor/unlink.svg";
 import imageIcon from "@icons/editor/image.svg";
-import {$isImageNode, ImageNode} from "../../../nodes/image";
+import {$isImageNode, ImageNode} from "@lexical/rich-text/LexicalImageNode";
 import horizontalRuleIcon from "@icons/editor/horizontal-rule.svg";
-import {$createHorizontalRuleNode, $isHorizontalRuleNode} from "../../../nodes/horizontal-rule";
+import {$createHorizontalRuleNode, $isHorizontalRuleNode} from "@lexical/rich-text/LexicalHorizontalRuleNode";
 import codeBlockIcon from "@icons/editor/code-block.svg";
-import {$isCodeBlockNode} from "../../../nodes/code-block";
+import {$isCodeBlockNode} from "@lexical/rich-text/LexicalCodeBlockNode";
 import editIcon from "@icons/edit.svg";
 import diagramIcon from "@icons/editor/diagram.svg";
-import {$createDiagramNode, DiagramNode} from "../../../nodes/diagram";
+import {$createDiagramNode, DiagramNode} from "@lexical/rich-text/LexicalDiagramNode";
 import detailsIcon from "@icons/editor/details.svg";
+import detailsToggleIcon from "@icons/editor/details-toggle.svg";
+import tableDeleteIcon from "@icons/editor/table-delete.svg";
+import tagIcon from "@icons/tag.svg";
 import mediaIcon from "@icons/editor/media.svg";
-import {$createDetailsNode, $isDetailsNode} from "../../../nodes/details";
-import {$isMediaNode, MediaNode} from "../../../nodes/media";
+import {$createDetailsNode, $isDetailsNode} from "@lexical/rich-text/LexicalDetailsNode";
+import {$isMediaNode, MediaNode} from "@lexical/rich-text/LexicalMediaNode";
 import {
     $getNodeFromSelection,
     $insertNewBlockNodeAtSelection,
@@ -30,8 +32,9 @@ import {
 } from "../../../utils/selection";
 import {$isDiagramNode, $openDrawingEditorForNode, showDiagramManagerForInsert} from "../../../utils/diagrams";
 import {$createLinkedImageNodeFromImageData, showImageManager} from "../../../utils/images";
-import {$showImageForm, $showLinkForm} from "../forms/objects";
+import {$showDetailsForm, $showImageForm, $showLinkForm, $showMediaForm} from "../forms/objects";
 import {formatCodeBlock} from "../../../utils/formats";
+import {$unwrapDetailsNode} from "../../../utils/details";
 
 export const link: EditorButtonDefinition = {
     label: 'Insert/edit link',
@@ -90,6 +93,7 @@ export const image: EditorButtonDefinition = {
                 context.editor.update(() => {
                     const link = $createLinkedImageNodeFromImageData(image);
                     $insertNodes([link]);
+                    link.select();
                 });
             })
         });
@@ -163,27 +167,14 @@ export const diagramManager: EditorButtonDefinition = {
 };
 
 export const media: EditorButtonDefinition = {
-    label: 'Insert/edit Media',
+    label: 'Insert/edit media',
     icon: mediaIcon,
     action(context: EditorUiContext) {
-        const mediaModal = context.manager.createModal('media');
-
         context.editor.getEditorState().read(() => {
             const selection = $getSelection();
             const selectedNode = $getNodeFromSelection(selection, $isMediaNode) as MediaNode | null;
 
-            let formDefaults = {};
-            if (selectedNode) {
-                const nodeAttrs = selectedNode.getAttributes();
-                formDefaults = {
-                    src: nodeAttrs.src || nodeAttrs.data || '',
-                    width: nodeAttrs.width,
-                    height: nodeAttrs.height,
-                    embed: '',
-                }
-            }
-
-            mediaModal.show(formDefaults);
+            $showMediaForm(selectedNode, context);
         });
     },
     isActive(selection: BaseSelection | null): boolean {
@@ -203,6 +194,8 @@ export const details: EditorButtonDefinition = {
                 .filter(n => n !== null) as ElementNode[];
             const uniqueTopLevels = [...new Set(topLevels)];
 
+            detailsNode.setOpen(true);
+
             if (uniqueTopLevels.length > 0) {
                 uniqueTopLevels[0].insertAfter(detailsNode);
             } else {
@@ -216,5 +209,55 @@ export const details: EditorButtonDefinition = {
     },
     isActive(selection: BaseSelection | null): boolean {
         return $selectionContainsNodeType(selection, $isDetailsNode);
+    }
+}
+
+export const detailsEditLabel: EditorButtonDefinition = {
+    label: 'Edit label',
+    icon: tagIcon,
+    action(context: EditorUiContext) {
+        context.editor.getEditorState().read(() => {
+            const details = $getNodeFromSelection($getSelection(), $isDetailsNode);
+            if ($isDetailsNode(details)) {
+                $showDetailsForm(details, context);
+            }
+        })
+    },
+    isActive(selection: BaseSelection | null): boolean {
+        return false;
+    }
+}
+
+export const detailsToggle: EditorButtonDefinition = {
+    label: 'Toggle open/closed',
+    icon: detailsToggleIcon,
+    action(context: EditorUiContext) {
+        context.editor.update(() => {
+            const details = $getNodeFromSelection($getSelection(), $isDetailsNode);
+            if ($isDetailsNode(details)) {
+                details.setOpen(!details.getOpen());
+                context.manager.triggerLayoutUpdate();
+            }
+        })
+    },
+    isActive(selection: BaseSelection | null): boolean {
+        return false;
+    }
+}
+
+export const detailsUnwrap: EditorButtonDefinition = {
+    label: 'Unwrap',
+    icon: tableDeleteIcon,
+    action(context: EditorUiContext) {
+        context.editor.update(() => {
+            const details = $getNodeFromSelection($getSelection(), $isDetailsNode);
+            if ($isDetailsNode(details)) {
+                $unwrapDetailsNode(details);
+                context.manager.triggerLayoutUpdate();
+            }
+        })
+    },
+    isActive(selection: BaseSelection | null): boolean {
+        return false;
     }
 }

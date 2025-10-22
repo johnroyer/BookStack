@@ -1,22 +1,24 @@
-import {$createCustomListItemNode, $isCustomListItemNode, CustomListItemNode} from "../nodes/custom-list-item";
-import {$createCustomListNode, $isCustomListNode} from "../nodes/custom-list";
-import {$getSelection, BaseSelection, LexicalEditor} from "lexical";
+import {$createTextNode, $getSelection, BaseSelection, LexicalEditor, TextNode} from "lexical";
 import {$getBlockElementNodesInSelection, $selectNodes, $toggleSelection} from "./selection";
-import {nodeHasInset} from "./nodes";
+import {$sortNodes, nodeHasInset} from "./nodes";
+import {$createListItemNode, $createListNode, $isListItemNode, $isListNode, ListItemNode} from "@lexical/list";
 
 
-export function $nestListItem(node: CustomListItemNode): CustomListItemNode {
+export function $nestListItem(node: ListItemNode): ListItemNode {
     const list = node.getParent();
-    if (!$isCustomListNode(list)) {
+    if (!$isListNode(list)) {
         return node;
     }
 
-    const listItems = list.getChildren() as CustomListItemNode[];
+    const nodeChildList = node.getChildren().filter(n => $isListNode(n))[0] || null;
+    const nodeChildItems = nodeChildList?.getChildren() || [];
+
+    const listItems = list.getChildren() as ListItemNode[];
     const nodeIndex = listItems.findIndex((n) => n.getKey() === node.getKey());
     const isFirst = nodeIndex === 0;
 
-    const newListItem = $createCustomListItemNode();
-    const newList = $createCustomListNode(list.getListType());
+    const newListItem = $createListItemNode();
+    const newList = $createListNode(list.getListType());
     newList.append(newListItem);
     newListItem.append(...node.getChildren());
 
@@ -28,19 +30,37 @@ export function $nestListItem(node: CustomListItemNode): CustomListItemNode {
         node.remove();
     }
 
+    if (nodeChildList) {
+        for (const child of nodeChildItems) {
+            newListItem.insertAfter(child);
+        }
+        nodeChildList.remove();
+    }
+
     return newListItem;
 }
 
-export function $unnestListItem(node: CustomListItemNode): CustomListItemNode {
+export function $unnestListItem(node: ListItemNode): ListItemNode {
     const list = node.getParent();
     const parentListItem = list?.getParent();
     const outerList = parentListItem?.getParent();
-    if (!$isCustomListNode(list) || !$isCustomListNode(outerList) || !$isCustomListItemNode(parentListItem)) {
+    if (!$isListNode(list) || !$isListNode(outerList) || !$isListItemNode(parentListItem)) {
         return node;
     }
 
+    const laterSiblings = node.getNextSiblings();
     parentListItem.insertAfter(node);
     if (list.getChildren().length === 0) {
+        list.remove();
+    }
+
+    if (laterSiblings.length > 0) {
+        const childList = $createListNode(list.getListType());
+        childList.append(...laterSiblings);
+        node.append(childList);
+    }
+
+    if (list.getChildrenSize() === 0) {
         list.remove();
     }
 
@@ -51,20 +71,47 @@ export function $unnestListItem(node: CustomListItemNode): CustomListItemNode {
     return node;
 }
 
-function getListItemsForSelection(selection: BaseSelection|null): (CustomListItemNode|null)[] {
+function getListItemsForSelection(selection: BaseSelection|null): (ListItemNode|null)[] {
     const nodes = selection?.getNodes() || [];
-    const listItemNodes = [];
+    let [start, end] = selection?.getStartEndPoints() || [null, null];
 
+    // Ensure we ignore parent list items of the top-most list item since,
+    // although technically part of the selection, from a user point of
+    // view the selection does not spread to encompass this outer element.
+    const itemsToIgnore: Set<string> = new Set();
+    if (selection && start) {
+        if (selection.isBackward() && end) {
+            [end, start] = [start, end];
+        }
+
+        const startParents = start.getNode().getParents();
+        let foundList = false;
+        for (const parent of startParents) {
+            if ($isListItemNode(parent)) {
+                if (foundList) {
+                    itemsToIgnore.add(parent.getKey());
+                } else {
+                    foundList = true;
+                }
+            }
+        }
+    }
+
+    const listItemNodes = [];
     outer: for (const node of nodes) {
-        if ($isCustomListItemNode(node)) {
-            listItemNodes.push(node);
+        if ($isListItemNode(node)) {
+            if (!itemsToIgnore.has(node.getKey())) {
+                listItemNodes.push(node);
+            }
             continue;
         }
 
         const parents = node.getParents();
         for (const parent of parents) {
-            if ($isCustomListItemNode(parent)) {
-                listItemNodes.push(parent);
+            if ($isListItemNode(parent)) {
+                if (!itemsToIgnore.has(parent.getKey())) {
+                    listItemNodes.push(parent);
+                }
                 continue outer;
             }
         }
@@ -75,8 +122,8 @@ function getListItemsForSelection(selection: BaseSelection|null): (CustomListIte
     return listItemNodes;
 }
 
-function $reduceDedupeListItems(listItems: (CustomListItemNode|null)[]): CustomListItemNode[] {
-    const listItemMap: Record<string, CustomListItemNode> = {};
+function $reduceDedupeListItems(listItems: (ListItemNode|null)[]): ListItemNode[] {
+    const listItemMap: Record<string, ListItemNode> = {};
 
     for (const item of listItems) {
         if (item === null) {
@@ -89,11 +136,13 @@ function $reduceDedupeListItems(listItems: (CustomListItemNode|null)[]): CustomL
         }
     }
 
-    return Object.values(listItemMap);
+    const items = Object.values(listItemMap);
+    return $sortNodes(items) as ListItemNode[];
 }
 
 export function $setInsetForSelection(editor: LexicalEditor, change: number): void {
     const selection = $getSelection();
+    const selectionBounds = selection?.getStartEndPoints();
     const listItemsInSelection = getListItemsForSelection(selection);
     const isListSelection = listItemsInSelection.length > 0 && !listItemsInSelection.includes(null);
 
@@ -111,7 +160,19 @@ export function $setInsetForSelection(editor: LexicalEditor, change: number): vo
             alteredListItems.reverse();
         }
 
-        $selectNodes(alteredListItems);
+        if (alteredListItems.length === 1 && selectionBounds) {
+            // Retain selection range if moving just one item
+            const listItem = alteredListItems[0] as ListItemNode;
+            let child = listItem.getChildren()[0] as TextNode;
+            if (!child) {
+                child = $createTextNode('');
+                listItem.append(child);
+            }
+            child.select(selectionBounds[0].offset, selectionBounds[1].offset);
+        } else {
+            $selectNodes(alteredListItems);
+        }
+
         return;
     }
 

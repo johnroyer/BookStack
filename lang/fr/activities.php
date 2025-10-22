@@ -84,6 +84,14 @@ return [
     'webhook_delete' => 'supprimer un Webhook',
     'webhook_delete_notification' => 'Webhook supprimé avec succès',
 
+    // Imports
+    'import_create' => 'import créé',
+    'import_create_notification' => 'Importation envoyée avec succès',
+    'import_run' => 'importation mise à jour',
+    'import_run_notification' => 'Contenu importé avec succès',
+    'import_delete' => 'import supprimé',
+    'import_delete_notification' => 'Importation supprimée avec succès',
+
     // Users
     'user_create' => 'utilisateur créé',
     'user_create_notification' => 'Utilisateur créé avec succès',
@@ -118,6 +126,14 @@ return [
     'comment_create'              => 'Commentaire ajouté',
     'comment_update'              => 'Commentaire mis à jour',
     'comment_delete'              => 'Commentaire supprimé',
+
+    // Sort Rules
+    'sort_rule_create' => 'règle de tri crée',
+    'sort_rule_create_notification' => 'Règle de tri crée avec succès',
+    'sort_rule_update' => 'règle de tri mise à jour',
+    'sort_rule_update_notification' => 'Règle de tri mise à jour avec succès',
+    'sort_rule_delete' => 'règle de tri supprimée',
+    'sort_rule_delete_notification' => 'La règle de tri a été supprimée avec succès',
 
     // Other
     'permissions_update'          => 'a mis à jour les autorisations sur',

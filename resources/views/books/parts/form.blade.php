@@ -1,7 +1,3 @@
-@push('head')
-    <script src="{{ versioned_asset('libs/tinymce/tinymce.min.js') }}" nonce="{{ $cspNonce }}"></script>
-@endpush
-
 {{ csrf_field() }}
 <div class="form-group title-input">
     <label for="name">{{ trans('common.name') }}</label>
@@ -22,7 +18,7 @@
 
         @include('form.image-picker', [
             'defaultImage' => url('/book_default_cover.png'),
-            'currentImage' => (isset($model) && $model->cover) ? $model->getBookCover() : url('/book_default_cover.png') ,
+            'currentImage' => (($model ?? null)?->coverInfo()->getUrl(440, 250, null) ?? url('/book_default_cover.png')),
             'name' => 'image',
             'imageClass' => 'cover'
         ])

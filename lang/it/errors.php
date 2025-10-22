@@ -105,6 +105,18 @@ return [
     'app_down' => ':appName è offline al momento',
     'back_soon' => 'Tornerà presto online.',
 
+    // Import
+    'import_zip_cant_read' => 'Impossibile leggere il file ZIP.',
+    'import_zip_cant_decode_data' => 'Impossibile trovare e decodificare il contenuto ZIP data.json.',
+    'import_zip_no_data' => 'I dati del file ZIP non hanno il contenuto previsto di libri, capitoli o pagine.',
+    'import_validation_failed' => 'L\'importazione ZIP non è stata convalidata con errori:',
+    'import_zip_failed_notification' => 'Impossibile importare il file ZIP.',
+    'import_perms_books' => 'Non hai i permessi necessari per creare libri.',
+    'import_perms_chapters' => 'Non hai i permessi necessari per creare capitoli.',
+    'import_perms_pages' => 'Non hai i permessi necessari per creare pagine.',
+    'import_perms_images' => 'Non hai i permessi necessari per creare immagini.',
+    'import_perms_attachments' => 'Non hai il permesso necessario per creare allegati.',
+
     // API errors
     'api_no_authorization_found' => 'Nessun token di autorizzazione trovato nella richiesta',
     'api_bad_authorization_format' => 'Un token di autorizzazione è stato trovato nella richiesta, ma il formato sembra non corretto',

@@ -105,6 +105,18 @@ return [
     'app_down' => ':appName n\'est pas en service pour le moment',
     'back_soon' => 'Nous serons bientôt de retour.',
 
+    // Import
+    'import_zip_cant_read' => 'Impossible de lire le fichier ZIP.',
+    'import_zip_cant_decode_data' => 'Impossible de trouver et de décoder le contenu ZIP data.json.',
+    'import_zip_no_data' => 'Les données du fichier ZIP n\'ont pas de livre, de chapitre ou de page attendus.',
+    'import_validation_failed' => 'L\'importation du ZIP n\'a pas été validée avec les erreurs :',
+    'import_zip_failed_notification' => 'Impossible d\'importer le fichier ZIP.',
+    'import_perms_books' => 'Vous n\'avez pas les permissions requises pour créer des livres.',
+    'import_perms_chapters' => 'Vous n\'avez pas les permissions requises pour créer des chapitres.',
+    'import_perms_pages' => 'Vous n\'avez pas les permissions requises pour créer des pages.',
+    'import_perms_images' => 'Vous n\'avez pas les permissions requises pour créer des images.',
+    'import_perms_attachments' => 'Vous n\'avez pas les permissions requises pour créer des pièces jointes.',
+
     // API errors
     'api_no_authorization_found' => 'Aucun jeton d\'autorisation trouvé pour la demande',
     'api_bad_authorization_format' => 'Un jeton d\'autorisation a été trouvé pour la requête, mais le format semble incorrect',

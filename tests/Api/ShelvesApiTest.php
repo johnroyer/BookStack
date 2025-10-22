@@ -4,6 +4,7 @@ namespace Tests\Api;
 
 use BookStack\Entities\Models\Book;
 use BookStack\Entities\Models\Bookshelf;
+use BookStack\Entities\Repos\BaseRepo;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -28,6 +29,28 @@ class ShelvesApiTest extends TestCase
                 'owned_by' => $firstBookshelf->owned_by,
                 'created_by' => $firstBookshelf->created_by,
                 'updated_by' => $firstBookshelf->updated_by,
+                'cover' => null,
+            ],
+        ]]);
+    }
+
+    public function test_index_endpoint_includes_cover_if_set()
+    {
+        $this->actingAsApiEditor();
+        $shelf = $this->entities->shelf();
+
+        $baseRepo = $this->app->make(BaseRepo::class);
+        $image = $this->files->uploadedImage('shelf_cover');
+        $baseRepo->updateCoverImage($shelf, $image);
+
+        $resp = $this->getJson($this->baseEndpoint . '?filter[id]=' . $shelf->id);
+        $resp->assertJson(['data' => [
+            [
+                'id'   => $shelf->id,
+                'cover' => [
+                    'id' => $shelf->coverInfo()->getImage()->id,
+                    'url' => $shelf->coverInfo()->getImage()->url,
+                ],
             ],
         ]]);
     }
@@ -79,7 +102,7 @@ class ShelvesApiTest extends TestCase
         ]);
 
         $resp->assertJson($expectedDetails);
-        $this->assertDatabaseHas('bookshelves', $expectedDetails);
+        $this->assertDatabaseHasEntityData('bookshelf', $expectedDetails);
     }
 
     public function test_shelf_name_needed_to_create()
@@ -158,14 +181,14 @@ class ShelvesApiTest extends TestCase
         $resp = $this->putJson($this->baseEndpoint . "/{$shelf->id}", $details);
         $resp->assertStatus(200);
 
-        $this->assertDatabaseHas('bookshelves', array_merge($details, ['id' => $shelf->id, 'description' => 'A shelf updated via the API']));
+        $this->assertDatabaseHasEntityData('bookshelf', array_merge($details, ['id' => $shelf->id, 'description' => 'A shelf updated via the API']));
     }
 
     public function test_update_increments_updated_date_if_only_tags_are_sent()
     {
         $this->actingAsApiEditor();
         $shelf = Bookshelf::visible()->first();
-        DB::table('bookshelves')->where('id', '=', $shelf->id)->update(['updated_at' => Carbon::now()->subWeek()]);
+        $shelf->newQuery()->where('id', '=', $shelf->id)->update(['updated_at' => Carbon::now()->subWeek()]);
 
         $details = [
             'tags' => [['name' => 'Category', 'value' => 'Testing']],
@@ -199,7 +222,7 @@ class ShelvesApiTest extends TestCase
         $this->actingAsApiEditor();
         /** @var Book $shelf */
         $shelf = Bookshelf::visible()->first();
-        $this->assertNull($shelf->cover);
+        $this->assertNull($shelf->coverInfo()->getImage());
         $file = $this->files->uploadedImage('image.png');
 
         // Ensure cover image can be set via API
@@ -209,7 +232,7 @@ class ShelvesApiTest extends TestCase
         $shelf->refresh();
 
         $resp->assertStatus(200);
-        $this->assertNotNull($shelf->cover);
+        $this->assertNotNull($shelf->coverInfo()->getImage());
 
         // Ensure further updates without image do not clear cover image
         $resp = $this->put($this->baseEndpoint . "/{$shelf->id}", [
@@ -218,7 +241,7 @@ class ShelvesApiTest extends TestCase
         $shelf->refresh();
 
         $resp->assertStatus(200);
-        $this->assertNotNull($shelf->cover);
+        $this->assertNotNull($shelf->coverInfo()->getImage());
 
         // Ensure update with null image property clears image
         $resp = $this->put($this->baseEndpoint . "/{$shelf->id}", [
@@ -227,7 +250,7 @@ class ShelvesApiTest extends TestCase
         $shelf->refresh();
 
         $resp->assertStatus(200);
-        $this->assertNull($shelf->cover);
+        $this->assertNull($shelf->coverInfo()->getImage());
     }
 
     public function test_delete_endpoint()

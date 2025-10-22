@@ -4,6 +4,7 @@ namespace Tests\Entity;
 
 use BookStack\Entities\Models\Book;
 use BookStack\Entities\Models\Page;
+use BookStack\Uploads\Image;
 use Carbon\Carbon;
 use Tests\TestCase;
 
@@ -74,7 +75,7 @@ class PageTest extends TestCase
         $resp = $this->post($book->getUrl("/draft/{$draft->id}"), $details);
         $resp->assertRedirect();
 
-        $this->assertDatabaseHas('pages', [
+        $this->assertDatabaseHasEntityData('page', [
             'markdown' => $details['markdown'],
             'name'     => $details['name'],
             'id'       => $draft->id,
@@ -155,6 +156,25 @@ class PageTest extends TestCase
 
         $this->assertDatabaseMissing('page_revisions', [
             'page_id' => $page->id,
+        ]);
+    }
+
+    public function test_page_full_delete_nulls_related_images()
+    {
+        $page = $this->entities->page();
+        $image = Image::factory()->create(['type' => 'gallery', 'uploaded_to' => $page->id]);
+
+        $this->asEditor()->delete($page->getUrl());
+        $this->asAdmin()->post('/settings/recycle-bin/empty');
+
+        $this->assertDatabaseMissing('images', [
+            'type' => 'gallery',
+            'uploaded_to' => $page->id,
+        ]);
+
+        $this->assertDatabaseHas('images', [
+            'id' => $image->id,
+            'uploaded_to' => null,
         ]);
     }
 
@@ -242,7 +262,7 @@ class PageTest extends TestCase
         ]);
         $movePageResp->assertRedirect();
 
-        $this->assertDatabaseHas('pages', [
+        $this->assertDatabaseHasEntityData('page', [
             'name'       => 'My copied test page',
             'created_by' => $viewer->id,
             'book_id'    => $newBook->id,
@@ -300,7 +320,7 @@ class PageTest extends TestCase
         ]);
 
         $resp = $this->asAdmin()->get('/pages/recently-updated');
-        $this->withHtml($resp)->assertElementContains('.entity-list .page:nth-child(1)', 'Updated 1 second ago by ' . $user->name);
+        $this->withHtml($resp)->assertElementContains('.entity-list .page:nth-child(1) small', 'by ' . $user->name);
     }
 
     public function test_recently_updated_pages_view_shows_parent_chain()
@@ -355,5 +375,15 @@ class PageTest extends TestCase
 
         $resp = $this->get('/');
         $this->withHtml($resp)->assertElementContains('#recently-updated-pages', $page->name);
+    }
+
+    public function test_page_edit_without_update_permissions_but_with_view_redirects_to_page()
+    {
+        $page = $this->entities->page();
+
+        $resp = $this->asViewer()->get($page->getUrl('/edit'));
+        $resp->assertRedirect($page->getUrl());
+
+        $resp->assertSessionHas('error', 'You do not have permission to access the requested page.');
     }
 }

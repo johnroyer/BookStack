@@ -32,20 +32,22 @@ return [
         'local' => [
             'driver'     => 'local',
             'root'       => public_path(),
-            'visibility' => 'public',
+            'serve'      => false,
             'throw'      => true,
+            'directory_visibility' => 'public',
         ],
 
         'local_secure_attachments' => [
             'driver' => 'local',
             'root'   => storage_path('uploads/files/'),
+            'serve'  => false,
             'throw'  => true,
         ],
 
         'local_secure_images' => [
             'driver'     => 'local',
             'root'       => storage_path('uploads/images/'),
-            'visibility' => 'public',
+            'serve'      => false,
             'throw'      => true,
         ],
 

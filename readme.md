@@ -14,6 +14,8 @@ Meilisearch use N-grams to create indexes. It make better search experience, and
 
 ----
 
+BookStack is an opinionated documentation platform that provides a pleasant and simple out-of-the-box experience. New users to an instance should find the experience intuitive and only basic word-processing skills should be required to get involved in creating content on BookStack. The platform should provide advanced power features to those that desire it, but they should not interfere with the core simple user experience.
+
 # Migration
 
 **WARNING**: BACKUP, before you do any changes.

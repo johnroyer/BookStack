@@ -13,7 +13,7 @@
                     </button>
                     <ul refs="dropdown@menu code-editor@historyList" class="dropdown-menu"></ul>
                 </div>
-                <button class="popup-header-close" refs="popup@hide">@icon('close')</button>
+                <button class="popup-header-close" refs="popup@hide" title="{{ trans('common.close') }}">@icon('close')</button>
             </div>
 
             <div class="code-editor-body-wrap flex-container-row flex-fill">
@@ -23,7 +23,7 @@
                     <div refs="code-editor@language-options-container" class="lang-options">
                         @php
                             $languages = [
-                                'Bash', 'CSS', 'C', 'C++', 'C#', 'Clojure', 'Dart', 'Diff', 'Fortran', 'F#', 'Go', 'Haskell', 'HTML', 'INI',
+                                'Bash', 'CSS', 'C', 'C++', 'C#', 'Clojure', 'Dart', 'Diff', 'Fortran', 'F#', 'Go', 'Groovy', 'Haskell', 'HTML', 'INI',
                                 'Java', 'JavaScript', 'JSON', 'Julia', 'Kotlin', 'LaTeX', 'Lua', 'MarkDown', 'MATLAB', 'MSSQL', 'MySQL',
                                 'Nginx', 'OCaml', 'Octave', 'Pascal', 'Perl', 'PHP', 'PL/SQL', 'PostgreSQL', 'Powershell', 'Python',
                                 'R', 'Ruby', 'Rust', 'SAS', 'Scala', 'Scheme', 'Shell', 'Smarty', 'SQL', 'SQLite', 'Swift',
@@ -34,8 +34,8 @@
                         @foreach($languages as $language)
                             <div class="relative">
                                 <button type="button" refs="code-editor@language-button" data-favourite="false" data-lang="{{ strtolower($language) }}">{{ $language }}</button>
-                                <button class="lang-option-favorite-toggle action-favourite" data-title="{{ trans('common.favourite') }}">@icon('star-outline')</button>
-                                <button class="lang-option-favorite-toggle action-unfavourite" data-title="{{ trans('common.unfavourite') }}">@icon('star')</button>
+                                <button class="lang-option-favorite-toggle action-favourite" title="{{ trans('common.favourite') }}">@icon('star-outline')</button>
+                                <button class="lang-option-favorite-toggle action-unfavourite" title="{{ trans('common.unfavourite') }}">@icon('star')</button>
                             </div>
                         @endforeach
                     </div>

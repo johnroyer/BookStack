@@ -78,7 +78,7 @@ return [
     // Users
     'users_cannot_delete_only_admin' => 'Jūs nevarat dzēst vienīgo administratoru',
     'users_cannot_delete_guest' => 'Jūs nevarat dzēst lietotāju "viesis"',
-    'users_could_not_send_invite' => 'Could not create user since invite email failed to send',
+    'users_could_not_send_invite' => 'Neizdevās izveidot lietotāju, jo neizdevās nosūtīt ielūguma epastu',
 
     // Roles
     'role_cannot_be_edited' => 'Šo lomu nevar rediģēt',
@@ -104,6 +104,18 @@ return [
     'error_occurred' => 'Radusies kļūda',
     'app_down' => ':appName pagaidām nav pieejams',
     'back_soon' => 'Drīz būs atkal pieejams.',
+
+    // Import
+    'import_zip_cant_read' => 'Nevarēja nolasīt ZIP failu.',
+    'import_zip_cant_decode_data' => 'Nevarēja atrast un nolasīt data.json saturu ZIP failā.',
+    'import_zip_no_data' => 'ZIP faila datos nav atrasts grāmatu, nodaļu vai lapu saturs.',
+    'import_validation_failed' => 'ZIP faila imports ir neveiksmīgs ar šādām kļūdām:',
+    'import_zip_failed_notification' => 'ZIP faila imports ir neveiksmīgs.',
+    'import_perms_books' => 'Jums nav nepieciešamo tiesību izveidot grāmatas.',
+    'import_perms_chapters' => 'Jums nav nepieciešamo tiesību izveidot nodaļas.',
+    'import_perms_pages' => 'Jums nav nepieciešamo tiesību izveidot lapas.',
+    'import_perms_images' => 'Jums nav nepieciešamo tiesību izviedot attēlus.',
+    'import_perms_attachments' => 'Jums nav nepieciešamo tiesību izveidot pielikumus.',
 
     // API errors
     'api_no_authorization_found' => 'Pieprasījumā nav atrasts autorizācijas žetons',

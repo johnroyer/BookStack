@@ -30,6 +30,8 @@ return [
     'create' => 'Aanmaken',
     'update' => 'Bijwerken',
     'edit' => 'Bewerk',
+    'archive' => 'Archiveer',
+    'unarchive' => 'Terughalen',
     'sort' => 'Sorteer',
     'move' => 'Verplaats',
     'copy' => 'Kopieer',
@@ -38,7 +40,7 @@ return [
     'delete_confirm' => 'Verwijdering bevestigen',
     'search' => 'Zoek',
     'search_clear' => 'Zoekopdracht wissen',
-    'reset' => 'Reset',
+    'reset' => 'Wissen',
     'remove' => 'Verwijder',
     'add' => 'Voeg toe',
     'configure' => 'Configureer',
@@ -62,7 +64,7 @@ return [
     'sort_name' => 'Naam',
     'sort_default' => 'Standaard',
     'sort_created_at' => 'Aanmaakdatum',
-    'sort_updated_at' => 'Gewijzigd op',
+    'sort_updated_at' => 'Bijwerkdatum',
 
     // Misc
     'deleted_user' => 'Verwijderde gebruiker',

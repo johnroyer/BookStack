@@ -3,22 +3,20 @@ import {
     $createParagraphNode, $createRangeSelection,
     $getRoot,
     $getSelection, $isBlockElementNode, $isDecoratorNode,
-    $isElementNode,
+    $isElementNode, $isParagraphNode,
     $isTextNode,
     $setSelection,
     BaseSelection, DecoratorNode,
-    ElementFormatType,
     ElementNode, LexicalEditor,
     LexicalNode,
     TextFormatType, TextNode
 } from "lexical";
-import {$findMatchingParent, $getNearestBlockElementAncestorOrThrow} from "@lexical/utils";
+import {$getNearestBlockElementAncestorOrThrow} from "@lexical/utils";
 import {LexicalElementNodeCreator, LexicalNodeMatcher} from "../nodes";
 import {$setBlocksType} from "@lexical/selection";
 
 import {$getNearestNodeBlockParent, $getParentOfType, nodeHasAlignment} from "./nodes";
-import {$createCustomParagraphNode} from "../nodes/custom-paragraph";
-import {CommonBlockAlignment} from "../nodes/_common";
+import {CommonBlockAlignment} from "lexical/nodes/common";
 
 const lastSelectionByEditor = new WeakMap<LexicalEditor, BaseSelection|null>;
 
@@ -53,15 +51,26 @@ export function $getNodeFromSelection(selection: BaseSelection | null, matcher: 
     return null;
 }
 
+export function $getTextNodeFromSelection(selection: BaseSelection | null): TextNode|null {
+    return $getNodeFromSelection(selection, $isTextNode) as TextNode|null;
+}
+
 export function $selectionContainsTextFormat(selection: BaseSelection | null, format: TextFormatType): boolean {
     if (!selection) {
         return false;
     }
 
-    for (const node of selection.getNodes()) {
+    // Check text nodes
+    const nodes = selection.getNodes();
+    for (const node of nodes) {
         if ($isTextNode(node) && node.hasFormat(format)) {
             return true;
         }
+    }
+
+    // If we're in an empty paragraph, check the paragraph format
+    if (nodes.length === 1 && $isParagraphNode(nodes[0]) && nodes[0].hasTextFormat(format)) {
+        return true;
     }
 
     return false;
@@ -71,7 +80,7 @@ export function $toggleSelectionBlockNodeType(matcher: LexicalNodeMatcher, creat
     const selection = $getSelection();
     const blockElement = selection ? $getNearestBlockElementAncestorOrThrow(selection.getNodes()[0]) : null;
     if (selection && matcher(blockElement)) {
-        $setBlocksType(selection, $createCustomParagraphNode);
+        $setBlocksType(selection, $createParagraphNode);
     } else {
         $setBlocksType(selection, creator);
     }

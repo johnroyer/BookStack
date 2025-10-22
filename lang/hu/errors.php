@@ -61,7 +61,7 @@ return [
     'attachment_upload_error' => 'Hiba történt a melléklet feltöltésekor',
 
     // Pages
-    'page_draft_autosave_fail' => 'Nem sikerült a vázlat mentése. Mentés előtt meg kell róla győződni, hogy van internetkapcsolat',
+    'page_draft_autosave_fail' => 'Nem sikerült a vázlat mentése. Mentés előtt állítsd helyre az internetkapcsolatot',
     'page_draft_delete_fail' => 'Nem sikerült törölni az oldalvázlatot és lekérni az aktuális oldal mentett tartalmat',
     'page_custom_home_deletion' => 'Nem lehet oldalt törölni ha kezdőlapnak van beállítva',
 
@@ -101,9 +101,21 @@ return [
     'image_not_found_subtitle' => 'Sajnáljuk, a keresett kép nem található.',
     'image_not_found_details' => 'Ha arra számított, hogy ez a kép létezik, akkor előfordulhat, hogy törölték.',
     'return_home' => 'Vissza a kezdőlapra',
-    'error_occurred' => 'Hiba örtént',
+    'error_occurred' => 'Hiba történt',
     'app_down' => ':appName jelenleg nem üzemel',
     'back_soon' => 'Hamarosan újra elérhető lesz.',
+
+    // Import
+    'import_zip_cant_read' => 'Could not read ZIP file.',
+    'import_zip_cant_decode_data' => 'Could not find and decode ZIP data.json content.',
+    'import_zip_no_data' => 'ZIP file data has no expected book, chapter or page content.',
+    'import_validation_failed' => 'Import ZIP failed to validate with errors:',
+    'import_zip_failed_notification' => 'Failed to import ZIP file.',
+    'import_perms_books' => 'You are lacking the required permissions to create books.',
+    'import_perms_chapters' => 'You are lacking the required permissions to create chapters.',
+    'import_perms_pages' => 'You are lacking the required permissions to create pages.',
+    'import_perms_images' => 'You are lacking the required permissions to create images.',
+    'import_perms_attachments' => 'You are lacking the required permission to create attachments.',
 
     // API errors
     'api_no_authorization_found' => 'A kérésben nem található hitelesítési vezérjel',

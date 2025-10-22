@@ -105,6 +105,11 @@ return [
     'url'                  => 'Mae’r fformat :attribute yn annilys.',
     'uploaded'             => 'Nid oedd modd uwchlwytho’r ffeil. Efallai na fydd y gweinydd yn derbyn ffeiliau o\'r maint hwn.',
 
+    'zip_file' => 'Mae\'r :attribute angen cyfeirio at ffeil yn y ZIP.',
+    'zip_file_mime' => 'Mae\'r :attribute angen cyfeirio at ffeil o fath :valid Types, sydd wedi\'i ffeindio :foundType.',
+    'zip_model_expected' => 'Dyswgyl am wrthrych data ond wedi ffeindio ":type".',
+    'zip_unique' => 'Mae rhaid y :attribute fod yn unigol i\'r fath o wrthrych yn y ZIP.',
+
     // Custom validation lines
     'custom' => [
         'password-confirm' => [

@@ -105,6 +105,18 @@ return [
     'app_down' => ':appName зараз недоступний',
     'back_soon' => 'Він повернеться найближчим часом.',
 
+    // Import
+    'import_zip_cant_read' => 'Не вдалося прочитати ZIP-файл.',
+    'import_zip_cant_decode_data' => 'Не вдалося знайти і розшифрувати контент ZIP data.json.',
+    'import_zip_no_data' => 'ZIP-файл не містить очікуваної книги, глави або вмісту сторінки.',
+    'import_validation_failed' => 'Не вдалося виконати перевірку ZIP-адреси із помилками:',
+    'import_zip_failed_notification' => 'Не вдалося імпортувати ZIP-файл.',
+    'import_perms_books' => 'У Вас не вистачає необхідних прав для створення книг.',
+    'import_perms_chapters' => 'Вам не вистачає необхідних дозволів для створення розділів.',
+    'import_perms_pages' => 'У Вас немає необхідних прав для створення сторінок.',
+    'import_perms_images' => 'У Вас немає необхідних прав для створення зображень.',
+    'import_perms_attachments' => 'У Вас немає необхідних прав для створення вкладень.',
+
     // API errors
     'api_no_authorization_found' => 'У запиті не знайдено токен авторизації',
     'api_bad_authorization_format' => 'У запиті знайдено токен авторизації, але формат недійсний',

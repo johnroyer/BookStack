@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd" bootstrap="vendor/autoload.php" colors="true">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         displayDetailsOnTestsThatTriggerDeprecations="true"
+         colors="true">
   <testsuites>
     <testsuite name="Application Test Suite">
       <directory>./tests/</directory>
@@ -12,6 +16,8 @@
     <server name="APP_THEME" value="none"/>
     <server name="APP_AUTO_LANG_PUBLIC" value="true"/>
     <server name="APP_URL" value="http://bookstack.dev"/>
+    <server name="APP_TIMEZONE" value="UTC"/>
+    <server name="APP_DISPLAY_TIMEZONE" value="UTC"/>
     <server name="ALLOWED_IFRAME_HOSTS" value=""/>
     <server name="ALLOWED_IFRAME_SOURCES" value="https://*.draw.io https://*.youtube.com https://*.youtube-nocookie.com https://*.vimeo.com"/>
     <server name="ALLOWED_SSR_HOSTS" value="*"/>
@@ -21,6 +27,7 @@
     <server name="DB_CONNECTION" value="mysql_testing"/>
     <server name="BCRYPT_ROUNDS" value="4"/>
     <server name="MAIL_DRIVER" value="array"/>
+    <server name="MAIL_PORT" value="587"/>
     <server name="MAIL_VERIFY_SSL" value="true"/>
     <server name="LOG_CHANNEL" value="single"/>
     <server name="AUTH_METHOD" value="standard"/>

@@ -5,13 +5,13 @@ namespace BookStack\Users;
 use BookStack\Access\UserInviteException;
 use BookStack\Access\UserInviteService;
 use BookStack\Activity\ActivityType;
-use BookStack\Entities\EntityProvider;
 use BookStack\Exceptions\NotifyException;
 use BookStack\Exceptions\UserUpdateException;
 use BookStack\Facades\Activity;
 use BookStack\Uploads\UserAvatars;
 use BookStack\Users\Models\Role;
 use BookStack\Users\Models\User;
+use DB;
 use Exception;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -24,7 +24,6 @@ class UserRepo
         protected UserInviteService $inviteService
     ) {
     }
-
 
     /**
      * Get a user by their email address.
@@ -100,13 +99,13 @@ class UserRepo
     }
 
     /**
-     * Update the given user with the given data.
+     * Update the given user with the given data, but do not create an activity.
      *
      * @param array{name: ?string, email: ?string, external_auth_id: ?string, password: ?string, roles: ?array<int>, language: ?string} $data
      *
      * @throws UserUpdateException
      */
-    public function update(User $user, array $data, bool $manageUsersAllowed): User
+    public function updateWithoutActivity(User $user, array $data, bool $manageUsersAllowed): User
     {
         if (!empty($data['name'])) {
             $user->name = $data['name'];
@@ -134,6 +133,21 @@ class UserRepo
         }
 
         $user->save();
+
+        return $user;
+    }
+
+    /**
+     * Update the given user with the given data.
+     *
+     * @param array{name: ?string, email: ?string, external_auth_id: ?string, password: ?string, roles: ?array<int>, language: ?string} $data
+     *
+     * @throws UserUpdateException
+     */
+    public function update(User $user, array $data, bool $manageUsersAllowed): User
+    {
+        $user = $this->updateWithoutActivity($user, $data, $manageUsersAllowed);
+
         Activity::add(ActivityType::USER_UPDATE, $user);
 
         return $user;
@@ -144,15 +158,12 @@ class UserRepo
      *
      * @throws Exception
      */
-    public function destroy(User $user, ?int $newOwnerId = null)
+    public function destroy(User $user, ?int $newOwnerId = null): void
     {
         $this->ensureDeletable($user);
 
-        $user->socialAccounts()->delete();
-        $user->apiTokens()->delete();
-        $user->favourites()->delete();
-        $user->mfaValues()->delete();
-        $user->watches()->delete();
+        $this->removeUserDependantRelations($user);
+        $this->nullifyUserNonDependantRelations($user);
         $user->delete();
 
         // Delete user profile images
@@ -161,14 +172,50 @@ class UserRepo
         // Delete related activities
         setting()->deleteUserSettings($user->id);
 
+        // Migrate or nullify ownership
+        $newOwner = null;
         if (!empty($newOwnerId)) {
             $newOwner = User::query()->find($newOwnerId);
-            if (!is_null($newOwner)) {
-                $this->migrateOwnership($user, $newOwner);
-            }
         }
+        $this->migrateOwnership($user, $newOwner);
 
         Activity::add(ActivityType::USER_DELETE, $user);
+    }
+
+    protected function removeUserDependantRelations(User $user): void
+    {
+        $user->apiTokens()->delete();
+        $user->socialAccounts()->delete();
+        $user->favourites()->delete();
+        $user->mfaValues()->delete();
+        $user->watches()->delete();
+
+        $tables = ['email_confirmations', 'user_invites', 'views'];
+        foreach ($tables as $table) {
+            DB::table($table)->where('user_id', '=', $user->id)->delete();
+        }
+    }
+    protected function nullifyUserNonDependantRelations(User $user): void
+    {
+        $toNullify = [
+            'attachments' => ['created_by', 'updated_by'],
+            'comments' => ['created_by', 'updated_by'],
+            'deletions' => ['deleted_by'],
+            'entities' => ['created_by', 'updated_by'],
+            'images' => ['created_by', 'updated_by'],
+            'imports' => ['created_by'],
+            'joint_permissions' => ['owner_id'],
+            'page_revisions' => ['created_by'],
+            'sessions' => ['user_id'],
+        ];
+
+        foreach ($toNullify as $table => $columns) {
+            foreach ($columns as $column) {
+                DB::table($table)
+                    ->where($column, '=', $user->id)
+                    ->update([$column => null]);
+            }
+        }
     }
 
     /**
@@ -188,13 +235,12 @@ class UserRepo
     /**
      * Migrate ownership of items in the system from one user to another.
      */
-    protected function migrateOwnership(User $fromUser, User $toUser)
+    protected function migrateOwnership(User $fromUser, User|null $toUser): void
     {
-        $entities = (new EntityProvider())->all();
-        foreach ($entities as $instance) {
-            $instance->newQuery()->where('owned_by', '=', $fromUser->id)
-                ->update(['owned_by' => $toUser->id]);
-        }
+        $newOwnerValue = $toUser ? $toUser->id : null;
+        DB::table('entities')
+            ->where('owned_by', '=', $fromUser->id)
+            ->update(['owned_by' => $newOwnerValue]);
     }
 
     /**
@@ -232,7 +278,7 @@ class UserRepo
      *
      * @throws UserUpdateException
      */
-    protected function setUserRoles(User $user, array $roles)
+    protected function setUserRoles(User $user, array $roles): void
     {
         $roles = array_filter(array_values($roles));
 
@@ -245,7 +291,7 @@ class UserRepo
 
     /**
      * Check if the given user is the last admin and their new roles no longer
-     * contains the admin role.
+     * contain the admin role.
      */
     protected function demotingLastAdmin(User $user, array $newRoles): bool
     {

@@ -284,7 +284,7 @@ export interface TextNode {
 /** @noInheritDoc */
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class TextNode extends LexicalNode {
-  ['constructor']!: KlassConstructor<typeof TextNode>;
+  declare ['constructor']: KlassConstructor<typeof TextNode>;
   __text: string;
   /** @internal */
   __format: number;
@@ -620,6 +620,7 @@ export class TextNode extends LexicalNode {
   // HTML content and not have the ability to use CSS classes.
   exportDOM(editor: LexicalEditor): DOMExportOutput {
     let {element} = super.exportDOM(editor);
+    const originalElementName = (element?.nodeName || '').toLowerCase()
     invariant(
       element !== null && isHTMLElement(element),
       'Expected TextNode createDOM to always return a HTMLElement',
@@ -649,8 +650,8 @@ export class TextNode extends LexicalNode {
     // This is the only way to properly add support for most clients,
     // even if it's semantically incorrect to have to resort to using
     // <b>, <u>, <s>, <i> elements.
-    if (this.hasFormat('bold')) {
-      element = wrapElementWith(element, 'b');
+    if (this.hasFormat('bold') && originalElementName !== 'strong') {
+      element = wrapElementWith(element, 'strong');
     }
     if (this.hasFormat('italic')) {
       element = wrapElementWith(element, 'em');
@@ -1314,6 +1315,11 @@ const nodeNameToTextFormat: Record<string, TextFormatType> = {
 
 function convertTextFormatElement(domNode: HTMLElement): DOMConversionOutput {
   const format = nodeNameToTextFormat[domNode.nodeName.toLowerCase()];
+
+  if (format === 'code' && domNode.closest('pre')) {
+    return {node: null};
+  }
+
   if (format === undefined) {
     return {node: null};
   }

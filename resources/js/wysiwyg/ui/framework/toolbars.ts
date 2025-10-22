@@ -4,7 +4,7 @@ import {el} from "../../utils/dom";
 
 export type EditorContextToolbarDefinition = {
     selector: string;
-    content: EditorUiElement[],
+    content: () => EditorUiElement[],
     displayTargetLocator?: (originalTarget: HTMLElement) => HTMLElement;
 };
 
@@ -34,7 +34,11 @@ export class EditorContextToolbar extends EditorContainerUiElement {
 
         dom.hidden = !showing;
 
-        if (!showing) {
+        if (!this.target.isConnected) {
+            // If our target is no longer in the DOM, tell the manager an update is needed.
+            this.getContext().manager.triggerFutureStateRefresh();
+            return;
+        } else if (!showing) {
             return;
         }
 
@@ -55,18 +59,5 @@ export class EditorContextToolbar extends EditorContainerUiElement {
         this.addChildren(...children);
         const dom = this.getDOMElement();
         dom.append(...children.map(child => child.getDOMElement()));
-    }
-
-    protected empty() {
-        const children = this.getChildren();
-        for (const child of children) {
-            child.getDOMElement().remove();
-        }
-        this.removeChildren(...children);
-    }
-
-    destroy() {
-        this.empty();
-        this.getDOMElement().remove();
     }
 }

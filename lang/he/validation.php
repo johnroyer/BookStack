@@ -15,7 +15,7 @@ return [
     'alpha_dash'           => 'שדה :attribute יכול להכיל אותיות, מספרים ומקפים בלבד.',
     'alpha_num'            => 'שדה :attribute יכול להכיל אותיות ומספרים בלבד.',
     'array'                => 'שדה :attribute חייב להיות מערך.',
-    'backup_codes'         => 'The provided code is not valid or has already been used.',
+    'backup_codes'         => 'קוד שהוזן לא תקין או שכבר השתמשו בו.',
     'before'               => 'שדה :attribute חייב להיות תאריך לפני :date.',
     'between'              => [
         'numeric' => 'שדה :attribute חייב להיות בין :min ל-:max.',
@@ -104,6 +104,11 @@ return [
     'unique'               => 'שדה :attribute כבר תפוס.',
     'url'                  => 'שדה :attribute בעל פורמט שאינו תקין.',
     'uploaded'             => 'שדה :attribute ארעה שגיאה בעת ההעלאה.',
+
+    'zip_file' => 'The :attribute needs to reference a file within the ZIP.',
+    'zip_file_mime' => 'The :attribute needs to reference a file of type :validTypes, found :foundType.',
+    'zip_model_expected' => 'Data object expected but ":type" found.',
+    'zip_unique' => 'The :attribute must be unique for the object type within the ZIP.',
 
     // Custom validation lines
     'custom' => [

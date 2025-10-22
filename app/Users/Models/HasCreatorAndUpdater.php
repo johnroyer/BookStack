@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @property int $created_by
  * @property int $updated_by
+ * @property ?User $createdBy
+ * @property ?User $updatedBy
  */
 trait HasCreatorAndUpdater
 {
@@ -24,5 +26,10 @@ trait HasCreatorAndUpdater
     public function updatedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    public function getOwnerFieldName(): string
+    {
+        return 'created_by';
     }
 }

@@ -7,17 +7,21 @@ use BookStack\Api\UserApiTokenController;
 use BookStack\App\HomeController;
 use BookStack\App\MetaController;
 use BookStack\Entities\Controllers as EntityControllers;
+use BookStack\Exports\Controllers as ExportControllers;
 use BookStack\Http\Middleware\VerifyCsrfToken;
 use BookStack\Permissions\PermissionsController;
 use BookStack\References\ReferenceController;
 use BookStack\Search\SearchController;
 use BookStack\Settings as SettingControllers;
+use BookStack\Sorting as SortingControllers;
+use BookStack\Theming\ThemeController;
 use BookStack\Uploads\Controllers as UploadControllers;
 use BookStack\Users\Controllers as UserControllers;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Route;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
+// Status & Meta routes
 Route::get('/status', [SettingControllers\StatusController::class, 'show']);
 Route::get('/robots.txt', [MetaController::class, 'robots']);
 Route::get('/favicon.ico', [MetaController::class, 'favicon']);
@@ -63,7 +67,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/books/{slug}/edit', [EntityControllers\BookController::class, 'edit']);
     Route::put('/books/{slug}', [EntityControllers\BookController::class, 'update']);
     Route::delete('/books/{id}', [EntityControllers\BookController::class, 'destroy']);
-    Route::get('/books/{slug}/sort-item', [EntityControllers\BookSortController::class, 'showItem']);
+    Route::get('/books/{slug}/sort-item', [SortingControllers\BookSortController::class, 'showItem']);
     Route::get('/books/{slug}', [EntityControllers\BookController::class, 'show']);
     Route::get('/books/{bookSlug}/permissions', [PermissionsController::class, 'showForBook']);
     Route::put('/books/{bookSlug}/permissions', [PermissionsController::class, 'updateForBook']);
@@ -71,14 +75,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/books/{bookSlug}/copy', [EntityControllers\BookController::class, 'showCopy']);
     Route::post('/books/{bookSlug}/copy', [EntityControllers\BookController::class, 'copy']);
     Route::post('/books/{bookSlug}/convert-to-shelf', [EntityControllers\BookController::class, 'convertToShelf']);
-    Route::get('/books/{bookSlug}/sort', [EntityControllers\BookSortController::class, 'show']);
-    Route::put('/books/{bookSlug}/sort', [EntityControllers\BookSortController::class, 'update']);
+    Route::get('/books/{bookSlug}/sort', [SortingControllers\BookSortController::class, 'show']);
+    Route::put('/books/{bookSlug}/sort', [SortingControllers\BookSortController::class, 'update']);
     Route::get('/books/{slug}/references', [ReferenceController::class, 'book']);
-    Route::get('/books/{bookSlug}/export/html', [EntityControllers\BookExportController::class, 'html']);
-    Route::get('/books/{bookSlug}/export/pdf', [EntityControllers\BookExportController::class, 'pdf']);
-    Route::get('/books/{bookSlug}/export/markdown', [EntityControllers\BookExportController::class, 'markdown']);
-    Route::get('/books/{bookSlug}/export/zip', [EntityControllers\BookExportController::class, 'zip']);
-    Route::get('/books/{bookSlug}/export/plaintext', [EntityControllers\BookExportController::class, 'plainText']);
+    Route::get('/books/{bookSlug}/export/html', [ExportControllers\BookExportController::class, 'html']);
+    Route::get('/books/{bookSlug}/export/pdf', [ExportControllers\BookExportController::class, 'pdf']);
+    Route::get('/books/{bookSlug}/export/markdown', [ExportControllers\BookExportController::class, 'markdown']);
+    Route::get('/books/{bookSlug}/export/zip', [ExportControllers\BookExportController::class, 'zip']);
+    Route::get('/books/{bookSlug}/export/plaintext', [ExportControllers\BookExportController::class, 'plainText']);
 
     // Pages
     Route::get('/books/{bookSlug}/create-page', [EntityControllers\PageController::class, 'create']);
@@ -86,10 +90,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/books/{bookSlug}/draft/{pageId}', [EntityControllers\PageController::class, 'editDraft']);
     Route::post('/books/{bookSlug}/draft/{pageId}', [EntityControllers\PageController::class, 'store']);
     Route::get('/books/{bookSlug}/page/{pageSlug}', [EntityControllers\PageController::class, 'show']);
-    Route::get('/books/{bookSlug}/page/{pageSlug}/export/pdf', [EntityControllers\PageExportController::class, 'pdf']);
-    Route::get('/books/{bookSlug}/page/{pageSlug}/export/html', [EntityControllers\PageExportController::class, 'html']);
-    Route::get('/books/{bookSlug}/page/{pageSlug}/export/markdown', [EntityControllers\PageExportController::class, 'markdown']);
-    Route::get('/books/{bookSlug}/page/{pageSlug}/export/plaintext', [EntityControllers\PageExportController::class, 'plainText']);
+    Route::get('/books/{bookSlug}/page/{pageSlug}/export/pdf', [ExportControllers\PageExportController::class, 'pdf']);
+    Route::get('/books/{bookSlug}/page/{pageSlug}/export/html', [ExportControllers\PageExportController::class, 'html']);
+    Route::get('/books/{bookSlug}/page/{pageSlug}/export/markdown', [ExportControllers\PageExportController::class, 'markdown']);
+    Route::get('/books/{bookSlug}/page/{pageSlug}/export/plaintext', [ExportControllers\PageExportController::class, 'plainText']);
+    Route::get('/books/{bookSlug}/page/{pageSlug}/export/zip', [ExportControllers\PageExportController::class, 'zip']);
     Route::get('/books/{bookSlug}/page/{pageSlug}/edit', [EntityControllers\PageController::class, 'edit']);
     Route::get('/books/{bookSlug}/page/{pageSlug}/move', [EntityControllers\PageController::class, 'showMove']);
     Route::put('/books/{bookSlug}/page/{pageSlug}/move', [EntityControllers\PageController::class, 'move']);
@@ -126,10 +131,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/books/{bookSlug}/chapter/{chapterSlug}/edit', [EntityControllers\ChapterController::class, 'edit']);
     Route::post('/books/{bookSlug}/chapter/{chapterSlug}/convert-to-book', [EntityControllers\ChapterController::class, 'convertToBook']);
     Route::get('/books/{bookSlug}/chapter/{chapterSlug}/permissions', [PermissionsController::class, 'showForChapter']);
-    Route::get('/books/{bookSlug}/chapter/{chapterSlug}/export/pdf', [EntityControllers\ChapterExportController::class, 'pdf']);
-    Route::get('/books/{bookSlug}/chapter/{chapterSlug}/export/html', [EntityControllers\ChapterExportController::class, 'html']);
-    Route::get('/books/{bookSlug}/chapter/{chapterSlug}/export/markdown', [EntityControllers\ChapterExportController::class, 'markdown']);
-    Route::get('/books/{bookSlug}/chapter/{chapterSlug}/export/plaintext', [EntityControllers\ChapterExportController::class, 'plainText']);
+    Route::get('/books/{bookSlug}/chapter/{chapterSlug}/export/pdf', [ExportControllers\ChapterExportController::class, 'pdf']);
+    Route::get('/books/{bookSlug}/chapter/{chapterSlug}/export/html', [ExportControllers\ChapterExportController::class, 'html']);
+    Route::get('/books/{bookSlug}/chapter/{chapterSlug}/export/markdown', [ExportControllers\ChapterExportController::class, 'markdown']);
+    Route::get('/books/{bookSlug}/chapter/{chapterSlug}/export/plaintext', [ExportControllers\ChapterExportController::class, 'plainText']);
+    Route::get('/books/{bookSlug}/chapter/{chapterSlug}/export/zip', [ExportControllers\ChapterExportController::class, 'zip']);
     Route::put('/books/{bookSlug}/chapter/{chapterSlug}/permissions', [PermissionsController::class, 'updateForChapter']);
     Route::get('/books/{bookSlug}/chapter/{chapterSlug}/references', [ReferenceController::class, 'chapter']);
     Route::get('/books/{bookSlug}/chapter/{chapterSlug}/delete', [EntityControllers\ChapterController::class, 'showDelete']);
@@ -173,6 +179,8 @@ Route::middleware('auth')->group(function () {
 
     // Comments
     Route::post('/comment/{pageId}', [ActivityControllers\CommentController::class, 'savePageComment']);
+    Route::put('/comment/{id}/archive', [ActivityControllers\CommentController::class, 'archive']);
+    Route::put('/comment/{id}/unarchive', [ActivityControllers\CommentController::class, 'unarchive']);
     Route::put('/comment/{id}', [ActivityControllers\CommentController::class, 'update']);
     Route::delete('/comment/{id}', [ActivityControllers\CommentController::class, 'destroy']);
 
@@ -202,6 +210,13 @@ Route::middleware('auth')->group(function () {
 
     // Watching
     Route::put('/watching/update', [ActivityControllers\WatchController::class, 'update']);
+
+    // Importing
+    Route::get('/import', [ExportControllers\ImportController::class, 'start']);
+    Route::post('/import', [ExportControllers\ImportController::class, 'upload']);
+    Route::get('/import/{id}', [ExportControllers\ImportController::class, 'show']);
+    Route::post('/import/{id}', [ExportControllers\ImportController::class, 'run']);
+    Route::delete('/import/{id}', [ExportControllers\ImportController::class, 'delete']);
 
     // Other Pages
     Route::get('/', [HomeController::class, 'index']);
@@ -282,6 +297,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/settings/webhooks/{id}/delete', [ActivityControllers\WebhookController::class, 'delete']);
     Route::delete('/settings/webhooks/{id}', [ActivityControllers\WebhookController::class, 'destroy']);
 
+    // Sort Rules
+    Route::get('/settings/sorting/rules/new', [SortingControllers\SortRuleController::class, 'create']);
+    Route::post('/settings/sorting/rules', [SortingControllers\SortRuleController::class, 'store']);
+    Route::get('/settings/sorting/rules/{id}', [SortingControllers\SortRuleController::class, 'edit']);
+    Route::put('/settings/sorting/rules/{id}', [SortingControllers\SortRuleController::class, 'update']);
+    Route::delete('/settings/sorting/rules/{id}', [SortingControllers\SortRuleController::class, 'destroy']);
+
     // Settings
     Route::get('/settings', [SettingControllers\SettingController::class, 'index'])->name('settings');
     Route::get('/settings/{category}', [SettingControllers\SettingController::class, 'category'])->name('settings.category');
@@ -350,7 +372,12 @@ Route::post('/password/email', [AccessControllers\ForgotPasswordController::clas
 Route::get('/password/reset/{token}', [AccessControllers\ResetPasswordController::class, 'showResetForm']);
 Route::post('/password/reset', [AccessControllers\ResetPasswordController::class, 'reset'])->middleware('throttle:public');
 
-// Metadata routes
+// Help & Info routes
+Route::view('/help/tinymce', 'help.tinymce');
 Route::view('/help/wysiwyg', 'help.wysiwyg');
+
+// Theme Routes
+Route::get('/theme/{theme}/{path}', [ThemeController::class, 'publicFile'])
+    ->where('path', '.*$');
 
 Route::fallback([MetaController::class, 'notFound'])->name('fallback');

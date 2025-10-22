@@ -84,6 +84,14 @@ return [
     'webhook_delete' => 'Webhook נמחק',
     'webhook_delete_notification' => 'Webook נמחק בהצלחה',
 
+    // Imports
+    'import_create' => 'יבוא נוצר',
+    'import_create_notification' => 'יבוא עודכן בהצלחה',
+    'import_run' => 'יבוא עודכן',
+    'import_run_notification' => 'תוכן יובא בהצלחה',
+    'import_delete' => 'יבוא נמחק',
+    'import_delete_notification' => 'יבוא נמחק בהצלחה',
+
     // Users
     'user_create' => 'משתמש חדש נוצר',
     'user_create_notification' => 'משתמש נוצר בהצלחה',
@@ -118,6 +126,14 @@ return [
     'comment_create'              => 'הערה הוספה',
     'comment_update'              => 'תגובה הוספה',
     'comment_delete'              => 'תגובה נמחקה',
+
+    // Sort Rules
+    'sort_rule_create' => 'created sort rule',
+    'sort_rule_create_notification' => 'Sort rule successfully created',
+    'sort_rule_update' => 'updated sort rule',
+    'sort_rule_update_notification' => 'Sort rule successfully updated',
+    'sort_rule_delete' => 'deleted sort rule',
+    'sort_rule_delete_notification' => 'Sort rule successfully deleted',
 
     // Other
     'permissions_update'          => 'הרשאות עודכנו',

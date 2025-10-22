@@ -5,9 +5,11 @@ namespace BookStack\Access;
 use BookStack\Access\Mfa\MfaSession;
 use BookStack\Activity\ActivityType;
 use BookStack\Exceptions\LoginAttemptException;
+use BookStack\Exceptions\LoginAttemptInvalidUserException;
 use BookStack\Exceptions\StoppedAuthenticationException;
 use BookStack\Facades\Activity;
 use BookStack\Facades\Theme;
+use BookStack\Permissions\Permission;
 use BookStack\Theming\ThemeEvents;
 use BookStack\Users\Models\User;
 use Exception;
@@ -29,10 +31,14 @@ class LoginService
      * a reason to (MFA or Unconfirmed Email).
      * Returns a boolean to indicate the current login result.
      *
-     * @throws StoppedAuthenticationException
+     * @throws StoppedAuthenticationException|LoginAttemptInvalidUserException
      */
     public function login(User $user, string $method, bool $remember = false): void
     {
+        if ($user->isGuest()) {
+            throw new LoginAttemptInvalidUserException('Login not allowed for guest user');
+        }
+
         if ($this->awaitingEmailConfirmation($user) || $this->needsMfaVerification($user)) {
             $this->setLastLoginAttemptedForUser($user, $method, $remember);
 
@@ -45,7 +51,7 @@ class LoginService
         Theme::dispatch(ThemeEvents::AUTH_LOGIN, $method, $user);
 
         // Authenticate on all session guards if a likely admin
-        if ($user->can('users-manage') && $user->can('user-roles-manage')) {
+        if ($user->can(Permission::UsersManage) && $user->can(Permission::UserRolesManage)) {
             $guards = ['standard', 'ldap', 'saml2', 'oidc'];
             foreach ($guards as $guard) {
                 auth($guard)->login($user);
@@ -58,7 +64,7 @@ class LoginService
      *
      * @throws Exception
      */
-    public function reattemptLoginFor(User $user)
+    public function reattemptLoginFor(User $user): void
     {
         if ($user->id !== ($this->getLastLoginAttemptUser()->id ?? null)) {
             throw new Exception('Login reattempt user does align with current session state');
@@ -90,7 +96,7 @@ class LoginService
     {
         $value = session()->get(self::LAST_LOGIN_ATTEMPTED_SESSION_KEY);
         if (!$value) {
-            return ['user_id' => null, 'method' => null];
+            return ['user_id' => null, 'method' => null, 'remember' => false];
         }
 
         [$id, $method, $remember, $time] = explode(':', $value);
@@ -98,18 +104,18 @@ class LoginService
         if ($time < $hourAgo) {
             $this->clearLastLoginAttempted();
 
-            return ['user_id' => null, 'method' => null];
+            return ['user_id' => null, 'method' => null, 'remember' => false];
         }
 
         return ['user_id' => $id, 'method' => $method, 'remember' => boolval($remember)];
     }
 
     /**
-     * Set the last login attempted user.
+     * Set the last login-attempted user.
      * Must be only used when credentials are correct and a login could be
-     * achieved but a secondary factor has stopped the login.
+     * achieved, but a secondary factor has stopped the login.
      */
-    protected function setLastLoginAttemptedForUser(User $user, string $method, bool $remember)
+    protected function setLastLoginAttemptedForUser(User $user, string $method, bool $remember): void
     {
         session()->put(
             self::LAST_LOGIN_ATTEMPTED_SESSION_KEY,
@@ -152,14 +158,38 @@ class LoginService
      */
     public function attempt(array $credentials, string $method, bool $remember = false): bool
     {
+        if ($this->areCredentialsForGuest($credentials)) {
+            return false;
+        }
+
         $result = auth()->attempt($credentials, $remember);
         if ($result) {
             $user = auth()->user();
             auth()->logout();
-            $this->login($user, $method, $remember);
+            try {
+                $this->login($user, $method, $remember);
+            } catch (LoginAttemptInvalidUserException $e) {
+                // Catch and return false for non-login accounts
+                // so it looks like a normal invalid login.
+                return false;
+            }
         }
 
         return $result;
+    }
+
+    /**
+     * Check if the given credentials are likely for the system guest account.
+     */
+    protected function areCredentialsForGuest(array $credentials): bool
+    {
+        if (isset($credentials['email'])) {
+            return User::query()->where('email', '=', $credentials['email'])
+                ->where('system_name', '=', 'public')
+                ->exists();
+        }
+
+        return false;
     }
 
     /**

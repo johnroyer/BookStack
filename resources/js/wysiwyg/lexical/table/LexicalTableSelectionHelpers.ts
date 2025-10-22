@@ -16,7 +16,6 @@ import type {
 } from './LexicalTableSelection';
 import type {
   BaseSelection,
-  ElementFormatType,
   LexicalCommand,
   LexicalEditor,
   LexicalNode,
@@ -50,7 +49,6 @@ import {
   DELETE_LINE_COMMAND,
   DELETE_WORD_COMMAND,
   FOCUS_COMMAND,
-  FORMAT_ELEMENT_COMMAND,
   FORMAT_TEXT_COMMAND,
   INSERT_PARAGRAPH_COMMAND,
   KEY_ARROW_DOWN_COMMAND,
@@ -73,6 +71,7 @@ import {TableDOMTable, TableObserver} from './LexicalTableObserver';
 import {$isTableRowNode} from './LexicalTableRowNode';
 import {$isTableSelection} from './LexicalTableSelection';
 import {$computeTableMap, $getNodeTriplet} from './LexicalTableUtils';
+import {$selectOrCreateAdjacent} from "../../utils/nodes";
 
 const LEXICAL_ELEMENT_KEY = '__lexicalTableSelection';
 
@@ -433,59 +432,6 @@ export function applyTableHandlers(
         }
 
         return false;
-      },
-      COMMAND_PRIORITY_CRITICAL,
-    ),
-  );
-
-  tableObserver.listenersToRemove.add(
-    editor.registerCommand<ElementFormatType>(
-      FORMAT_ELEMENT_COMMAND,
-      (formatType) => {
-        const selection = $getSelection();
-        if (
-          !$isTableSelection(selection) ||
-          !$isSelectionInTable(selection, tableNode)
-        ) {
-          return false;
-        }
-
-        const anchorNode = selection.anchor.getNode();
-        const focusNode = selection.focus.getNode();
-        if (!$isTableCellNode(anchorNode) || !$isTableCellNode(focusNode)) {
-          return false;
-        }
-
-        const [tableMap, anchorCell, focusCell] = $computeTableMap(
-          tableNode,
-          anchorNode,
-          focusNode,
-        );
-        const maxRow = Math.max(anchorCell.startRow, focusCell.startRow);
-        const maxColumn = Math.max(
-          anchorCell.startColumn,
-          focusCell.startColumn,
-        );
-        const minRow = Math.min(anchorCell.startRow, focusCell.startRow);
-        const minColumn = Math.min(
-          anchorCell.startColumn,
-          focusCell.startColumn,
-        );
-        for (let i = minRow; i <= maxRow; i++) {
-          for (let j = minColumn; j <= maxColumn; j++) {
-            const cell = tableMap[i][j].cell;
-            cell.setFormat(formatType);
-
-            const cellChildren = cell.getChildren();
-            for (let k = 0; k < cellChildren.length; k++) {
-              const child = cellChildren[k];
-              if ($isElementNode(child) && !child.isInline()) {
-                child.setFormat(formatType);
-              }
-            }
-          }
-        }
-        return true;
       },
       COMMAND_PRIORITY_CRITICAL,
     ),
@@ -970,9 +916,14 @@ export function getTable(tableElement: HTMLElement): TableDOMTable {
   domRows.length = 0;
 
   while (currentNode != null) {
-    const nodeMame = currentNode.nodeName;
+    const nodeName = currentNode.nodeName;
 
-    if (nodeMame === 'TD' || nodeMame === 'TH') {
+    if (nodeName === 'COLGROUP' || nodeName === 'CAPTION') {
+      currentNode = currentNode.nextSibling;
+      continue;
+    }
+
+    if (nodeName === 'TD' || nodeName === 'TH') {
       const elem = currentNode as HTMLElement;
       const cell = {
         elem,
@@ -1163,7 +1114,7 @@ const selectTableNodeInDirection = (
           false,
         );
       } else {
-        tableNode.selectPrevious();
+        $selectOrCreateAdjacent(tableNode, false);
       }
 
       return true;
@@ -1175,7 +1126,7 @@ const selectTableNodeInDirection = (
           true,
         );
       } else {
-        tableNode.selectNext();
+        $selectOrCreateAdjacent(tableNode, true);
       }
 
       return true;

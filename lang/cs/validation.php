@@ -105,6 +105,11 @@ return [
     'url'                  => 'Formát :attribute je neplatný.',
     'uploaded'             => 'Nahrávání :attribute se nezdařilo.',
 
+    'zip_file' => ':attribute musí odkazovat na soubor v archivu ZIP.',
+    'zip_file_mime' => ':attribute musí odkazovat na soubor typu :validTypes, nalezen :foundType.',
+    'zip_model_expected' => 'Očekáván datový objekt, ale nalezen „:type“.',
+    'zip_unique' => ':attribute musí být jedinečný pro typ objektu v archivu ZIP.',
+
     // Custom validation lines
     'custom' => [
         'password-confirm' => [

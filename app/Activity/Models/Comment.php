@@ -4,6 +4,8 @@ namespace BookStack\Activity\Models;
 
 use BookStack\App\Model;
 use BookStack\Users\Models\HasCreatorAndUpdater;
+use BookStack\Users\Models\OwnableInterface;
+use BookStack\Users\Models\User;
 use BookStack\Util\HtmlContentFilter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,16 +19,15 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property int      $local_id
  * @property string   $entity_type
  * @property int      $entity_id
- * @property int      $created_by
- * @property int      $updated_by
+ * @property string   $content_ref
+ * @property bool     $archived
  */
-class Comment extends Model implements Loggable
+class Comment extends Model implements Loggable, OwnableInterface
 {
     use HasFactory;
     use HasCreatorAndUpdater;
 
     protected $fillable = ['parent_id'];
-    protected $appends = ['created', 'updated'];
 
     /**
      * Get the entity that this comment belongs to.
@@ -38,6 +39,7 @@ class Comment extends Model implements Loggable
 
     /**
      * Get the parent comment this is in reply to (if existing).
+     * @return BelongsTo<Comment, $this>
      */
     public function parent(): BelongsTo
     {
@@ -52,22 +54,6 @@ class Comment extends Model implements Loggable
     public function isUpdated(): bool
     {
         return $this->updated_at->timestamp > $this->created_at->timestamp;
-    }
-
-    /**
-     * Get created date as a relative diff.
-     */
-    public function getCreatedAttribute(): string
-    {
-        return $this->created_at->diffForHumans();
-    }
-
-    /**
-     * Get updated date as a relative diff.
-     */
-    public function getUpdatedAttribute(): string
-    {
-        return $this->updated_at->diffForHumans();
     }
 
     public function logDescriptor(): string

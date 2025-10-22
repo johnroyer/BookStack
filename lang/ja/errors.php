@@ -105,6 +105,18 @@ return [
     'app_down' => ':appNameは現在停止しています',
     'back_soon' => '回復までしばらくお待ちください。',
 
+    // Import
+    'import_zip_cant_read' => 'ZIPファイルを読み込めません。',
+    'import_zip_cant_decode_data' => 'ZIPファイル内に data.json が見つからないかデコードできませんでした。',
+    'import_zip_no_data' => 'ZIPファイルのデータにブック、チャプター、またはページコンテンツがありません。',
+    'import_validation_failed' => 'エラーによりインポートZIPの検証に失敗しました:',
+    'import_zip_failed_notification' => 'ZIP ファイルのインポートに失敗しました。',
+    'import_perms_books' => 'ブックを作成するために必要な権限がありません。',
+    'import_perms_chapters' => 'チャプタを作成するために必要な権限がありません。',
+    'import_perms_pages' => 'ページを作成するために必要な権限がありません。',
+    'import_perms_images' => '画像を作成するために必要な権限がありません。',
+    'import_perms_attachments' => '添付ファイルを作成するために必要な権限がありません。',
+
     // API errors
     'api_no_authorization_found' => 'リクエストに認証トークンが見つかりません',
     'api_bad_authorization_format' => 'リクエストに認証トークンが見つかりましたが、形式が正しくないようです',

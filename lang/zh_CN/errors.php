@@ -78,7 +78,7 @@ return [
     // Users
     'users_cannot_delete_only_admin' => '您不能删除唯一的管理员账户',
     'users_cannot_delete_guest' => '您不能删除访客用户',
-    'users_could_not_send_invite' => 'Could not create user since invite email failed to send',
+    'users_could_not_send_invite' => '由于邀请电子邮件发送失败，无法创建用户',
 
     // Roles
     'role_cannot_be_edited' => '无法编辑该角色',
@@ -104,6 +104,18 @@ return [
     'error_occurred' => '出现错误',
     'app_down' => ':appName现在正在关闭',
     'back_soon' => '请耐心等待网站的恢复。',
+
+    // Import
+    'import_zip_cant_read' => '无法读取 ZIP 文件。',
+    'import_zip_cant_decode_data' => '无法找到并解码 ZIP data.json 内容。',
+    'import_zip_no_data' => 'ZIP 文件数据没有预期的书籍、章节或页面内容。',
+    'import_validation_failed' => '导入 ZIP 验证失败，出现错误：',
+    'import_zip_failed_notification' => 'ZIP 文件导入失败。',
+    'import_perms_books' => '您缺少创建书籍所需的权限。',
+    'import_perms_chapters' => '您缺少创建章节所需的权限。',
+    'import_perms_pages' => '您缺少创建页面所需的权限。',
+    'import_perms_images' => '您缺少创建图片所需的权限。',
+    'import_perms_attachments' => '您缺少创建附件所需的权限。',
 
     // API errors
     'api_no_authorization_found' => '未在请求中找到授权令牌',

@@ -84,6 +84,14 @@ return [
     'webhook_delete' => 'web- dojavnik izbrisan',
     'webhook_delete_notification' => 'Web-dojavnik je uspješno izbrisan',
 
+    // Imports
+    'import_create' => 'created import',
+    'import_create_notification' => 'Import successfully uploaded',
+    'import_run' => 'updated import',
+    'import_run_notification' => 'Content successfully imported',
+    'import_delete' => 'deleted import',
+    'import_delete_notification' => 'Import successfully deleted',
+
     // Users
     'user_create' => 'kreirani korisnik',
     'user_create_notification' => 'Korisnik je uspješno kreiran',
@@ -118,6 +126,14 @@ return [
     'comment_create'              => 'dodani komentar',
     'comment_update'              => 'ažurirani komentar',
     'comment_delete'              => 'obrisani komentar',
+
+    // Sort Rules
+    'sort_rule_create' => 'created sort rule',
+    'sort_rule_create_notification' => 'Sort rule successfully created',
+    'sort_rule_update' => 'updated sort rule',
+    'sort_rule_update_notification' => 'Sort rule successfully updated',
+    'sort_rule_delete' => 'deleted sort rule',
+    'sort_rule_delete_notification' => 'Sort rule successfully deleted',
 
     // Other
     'permissions_update'          => 'ažurirana dopuštenja',

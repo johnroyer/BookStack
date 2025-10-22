@@ -35,10 +35,6 @@ return [
     // Available caches stores
     'stores' => [
 
-        'apc' => [
-            'driver' => 'apc',
-        ],
-
         'array' => [
             'driver'    => 'array',
             'serialize' => false,
@@ -49,6 +45,7 @@ return [
             'table'           => 'cache',
             'connection'      => null,
             'lock_connection' => null,
+            'lock_table'      => null,
         ],
 
         'file' => [
@@ -88,6 +85,6 @@ return [
     |
     */
 
-    'prefix' => env('CACHE_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_cache_'),
+    'prefix' => env('CACHE_PREFIX', 'bookstack_cache_'),
 
 ];

@@ -6,15 +6,18 @@ use BookStack\Entities\EntityProvider;
 use BookStack\Entities\Models\Book;
 use BookStack\Entities\Models\Bookshelf;
 use BookStack\Entities\Models\Chapter;
+use BookStack\Entities\Models\EntityContainerData;
+use BookStack\Entities\Models\HasCoverInterface;
 use BookStack\Entities\Models\Deletion;
 use BookStack\Entities\Models\Entity;
-use BookStack\Entities\Models\HasCoverImage;
 use BookStack\Entities\Models\Page;
 use BookStack\Entities\Queries\EntityQueries;
 use BookStack\Exceptions\NotifyException;
 use BookStack\Facades\Activity;
 use BookStack\Uploads\AttachmentService;
+use BookStack\Uploads\Image;
 use BookStack\Uploads\ImageService;
+use BookStack\Util\DatabaseTransaction;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
@@ -139,6 +142,7 @@ class TrashCan
     protected function destroyShelf(Bookshelf $shelf): int
     {
         $this->destroyCommonRelations($shelf);
+        $shelf->books()->detach();
         $shelf->forceDelete();
 
         return 1;
@@ -166,6 +170,7 @@ class TrashCan
         }
 
         $this->destroyCommonRelations($book);
+        $book->shelves()->detach();
         $book->forceDelete();
 
         return $count + 1;
@@ -208,15 +213,16 @@ class TrashCan
             $attachmentService->deleteFile($attachment);
         }
 
-        // Remove book template usages
-        $this->queries->books->start()
+        // Remove use as a template
+        EntityContainerData::query()
             ->where('default_template_id', '=', $page->id)
             ->update(['default_template_id' => null]);
 
-        // Remove chapter template usages
-        $this->queries->chapters->start()
-            ->where('default_template_id', '=', $page->id)
-            ->update(['default_template_id' => null]);
+        // Nullify uploaded image relations
+        Image::query()
+            ->whereIn('type', ['gallery', 'drawio'])
+            ->where('uploaded_to', '=', $page->id)
+            ->update(['uploaded_to' => null]);
 
         $page->forceDelete();
 
@@ -267,8 +273,8 @@ class TrashCan
         // exists in the event it has already been destroyed during this request.
         $entity = $deletion->deletable()->first();
         $count = 0;
-        if ($entity) {
-            $count = $this->destroyEntity($deletion->deletable);
+        if ($entity instanceof Entity) {
+            $count = $this->destroyEntity($entity);
         }
         $deletion->delete();
 
@@ -357,25 +363,26 @@ class TrashCan
 
     /**
      * Destroy the given entity.
+     * Returns the number of total entities destroyed in the operation.
      *
      * @throws Exception
      */
     public function destroyEntity(Entity $entity): int
     {
-        if ($entity instanceof Page) {
-            return $this->destroyPage($entity);
-        }
-        if ($entity instanceof Chapter) {
-            return $this->destroyChapter($entity);
-        }
-        if ($entity instanceof Book) {
-            return $this->destroyBook($entity);
-        }
-        if ($entity instanceof Bookshelf) {
-            return $this->destroyShelf($entity);
-        }
+        $result = (new DatabaseTransaction(function () use ($entity) {
+            if ($entity instanceof Page) {
+                return $this->destroyPage($entity);
+            } else if ($entity instanceof Chapter) {
+                return $this->destroyChapter($entity);
+            } else if ($entity instanceof Book) {
+                return $this->destroyBook($entity);
+            } else if ($entity instanceof Bookshelf) {
+                return $this->destroyShelf($entity);
+            }
+            return null;
+        }))->run();
 
-        return 0;
+        return $result ?? 0;
     }
 
     /**
@@ -396,9 +403,11 @@ class TrashCan
         $entity->referencesTo()->delete();
         $entity->referencesFrom()->delete();
 
-        if ($entity instanceof HasCoverImage && $entity->cover()->exists()) {
+        if ($entity instanceof HasCoverInterface && $entity->coverInfo()->exists()) {
             $imageService = app()->make(ImageService::class);
-            $imageService->destroy($entity->cover()->first());
+            $imageService->destroy($entity->coverInfo()->getImage());
         }
+
+        $entity->relatedData()->delete();
     }
 }

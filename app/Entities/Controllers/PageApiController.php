@@ -7,12 +7,13 @@ use BookStack\Entities\Queries\PageQueries;
 use BookStack\Entities\Repos\PageRepo;
 use BookStack\Exceptions\PermissionsException;
 use BookStack\Http\ApiController;
+use BookStack\Permissions\Permission;
 use Exception;
 use Illuminate\Http\Request;
 
 class PageApiController extends ApiController
 {
-    protected $rules = [
+    protected array $rules = [
         'create' => [
             'book_id'    => ['required_without:chapter_id', 'integer'],
             'chapter_id' => ['required_without:book_id', 'integer'],
@@ -76,7 +77,7 @@ class PageApiController extends ApiController
         } else {
             $parent = $this->entityQueries->books->findVisibleByIdOrFail(intval($request->get('book_id')));
         }
-        $this->checkOwnablePermission('page-create', $parent);
+        $this->checkOwnablePermission(Permission::PageCreate, $parent);
 
         $draft = $this->pageRepo->getNewDraftPage($parent);
         $this->pageRepo->publishDraft($draft, $request->only(array_keys($this->rules['create'])));
@@ -116,7 +117,7 @@ class PageApiController extends ApiController
         $requestData = $this->validate($request, $this->rules['update']);
 
         $page = $this->queries->findVisibleByIdOrFail($id);
-        $this->checkOwnablePermission('page-update', $page);
+        $this->checkOwnablePermission(Permission::PageUpdate, $page);
 
         $parent = null;
         if ($request->has('chapter_id')) {
@@ -126,7 +127,7 @@ class PageApiController extends ApiController
         }
 
         if ($parent && !$parent->matches($page->getParent())) {
-            $this->checkOwnablePermission('page-delete', $page);
+            $this->checkOwnablePermission(Permission::PageDelete, $page);
 
             try {
                 $this->pageRepo->move($page, $parent->getType() . ':' . $parent->id);
@@ -151,7 +152,7 @@ class PageApiController extends ApiController
     public function delete(string $id)
     {
         $page = $this->queries->findVisibleByIdOrFail($id);
-        $this->checkOwnablePermission('page-delete', $page);
+        $this->checkOwnablePermission(Permission::PageDelete, $page);
 
         $this->pageRepo->destroy($page);
 

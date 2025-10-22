@@ -47,7 +47,7 @@ return [
     'bookshelf_update'                 => '更新書棧',
     'bookshelf_update_notification'    => '書棧已更新',
     'bookshelf_delete'                 => '刪除書棧',
-    'bookshelf_delete_notification'    => '書棧已刪除',
+    'bookshelf_delete_notification'    => '書架已刪除',
 
     // Revisions
     'revision_restore' => '還原的版本',
@@ -84,6 +84,14 @@ return [
     'webhook_delete' => 'webhook 已刪除',
     'webhook_delete_notification' => 'Webhook 已刪除成功',
 
+    // Imports
+    'import_create' => '已建立匯入',
+    'import_create_notification' => '成功上傳匯入',
+    'import_run' => '已更新匯入',
+    'import_run_notification' => '成功匯入內容',
+    'import_delete' => '已刪除匯入',
+    'import_delete_notification' => '匯入刪除成功',
+
     // Users
     'user_create' => '建立使用者',
     'user_create_notification' => '使用者已成功建立。',
@@ -118,6 +126,14 @@ return [
     'comment_create'              => '新增評論',
     'comment_update'              => '更新評論',
     'comment_delete'              => '已刪除之評論',
+
+    // Sort Rules
+    'sort_rule_create' => '已建立的排序規則',
+    'sort_rule_create_notification' => '排序規則已成功建立',
+    'sort_rule_update' => '已更新排序規則',
+    'sort_rule_update_notification' => '排序規則已成功更新',
+    'sort_rule_delete' => '已刪除排序規則',
+    'sort_rule_delete_notification' => '排序規則已成功刪除',
 
     // Other
     'permissions_update'          => '更新權限',

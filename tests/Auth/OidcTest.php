@@ -5,6 +5,7 @@ namespace Tests\Auth;
 use BookStack\Activity\ActivityType;
 use BookStack\Facades\Theme;
 use BookStack\Theming\ThemeEvents;
+use BookStack\Uploads\UserAvatars;
 use BookStack\Users\Models\Role;
 use BookStack\Users\Models\User;
 use GuzzleHttp\Psr7\Response;
@@ -41,6 +42,7 @@ class OidcTest extends TestCase
             'oidc.discover'               => false,
             'oidc.dump_user_details'      => false,
             'oidc.additional_scopes'      => '',
+            'odic.fetch_avatar'           => false,
             'oidc.user_to_groups'         => false,
             'oidc.groups_claim'           => 'group',
             'oidc.remove_from_groups'     => false,
@@ -457,6 +459,105 @@ class OidcTest extends TestCase
         ]);
     }
 
+    public function test_user_avatar_fetched_from_picture_on_first_login_if_enabled()
+    {
+        config()->set(['oidc.fetch_avatar' => true]);
+
+        $this->runLogin([
+            'email' => 'avatar@example.com',
+            'picture' => 'https://example.com/my-avatar.jpg',
+        ], [
+            new Response(200, ['Content-Type' => 'image/jpeg'], $this->files->jpegImageData())
+        ]);
+
+        $user = User::query()->where('email', '=', 'avatar@example.com')->first();
+        $this->assertNotNull($user);
+
+        $this->assertTrue($user->avatar()->exists());
+    }
+
+    public function test_user_avatar_fetched_for_existing_user_when_no_avatar_already_assigned()
+    {
+        config()->set(['oidc.fetch_avatar' => true]);
+        $editor = $this->users->editor();
+        $editor->external_auth_id = 'benny509';
+        $editor->save();
+
+        $this->assertFalse($editor->avatar()->exists());
+
+        $this->runLogin([
+            'picture' => 'https://example.com/my-avatar.jpg',
+            'sub' => 'benny509',
+        ], [
+            new Response(200, ['Content-Type' => 'image/jpeg'], $this->files->jpegImageData())
+        ]);
+
+        $editor->refresh();
+        $this->assertTrue($editor->avatar()->exists());
+    }
+
+    public function test_user_avatar_not_fetched_if_image_data_format_unknown()
+    {
+        config()->set(['oidc.fetch_avatar' => true]);
+
+        $this->runLogin([
+            'email' => 'avatar-format@example.com',
+            'picture' => 'https://example.com/my-avatar.jpg',
+        ], [
+            new Response(200, ['Content-Type' => 'image/jpeg'], str_repeat('abc123', 5))
+        ]);
+
+        $user = User::query()->where('email', '=', 'avatar-format@example.com')->first();
+        $this->assertNotNull($user);
+
+        $this->assertFalse($user->avatar()->exists());
+    }
+
+    public function test_user_avatar_not_fetched_when_avatar_already_assigned()
+    {
+        config()->set(['oidc.fetch_avatar' => true]);
+        $editor = $this->users->editor();
+        $editor->external_auth_id = 'benny509';
+        $editor->save();
+
+        $avatars = $this->app->make(UserAvatars::class);
+        $originalImageData = $this->files->pngImageData();
+        $avatars->assignToUserFromExistingData($editor, $originalImageData, 'png');
+
+        $this->runLogin([
+            'picture' => 'https://example.com/my-avatar.jpg',
+            'sub' => 'benny509',
+        ], [
+            new Response(200, ['Content-Type' => 'image/jpeg'], $this->files->jpegImageData())
+        ]);
+
+        $editor->refresh();
+        $newAvatarData = file_get_contents($this->files->relativeToFullPath($editor->avatar->path));
+        $this->assertEquals($originalImageData, $newAvatarData);
+    }
+
+    public function test_user_avatar_fetch_follows_up_to_three_redirects()
+    {
+        config()->set(['oidc.fetch_avatar' => true]);
+
+        $logger = $this->withTestLogger();
+
+        $this->runLogin([
+            'email' => 'avatar@example.com',
+            'picture' => 'https://example.com/my-avatar.jpg',
+        ], [
+            new Response(302, ['Location' => 'https://example.com/a']),
+            new Response(302, ['Location' => 'https://example.com/b']),
+            new Response(302, ['Location' => 'https://example.com/c']),
+            new Response(302, ['Location' => 'https://example.com/d']),
+        ]);
+
+        $user = User::query()->where('email', '=', 'avatar@example.com')->first();
+        $this->assertFalse($user->avatar()->exists());
+
+        $this->assertStringContainsString('"Failed to fetch image, max redirect limit of 3 tries reached. Last fetched URL: https://example.com/c"', $logger->getRecords()[0]->formatted);
+    }
+
     public function test_login_group_sync()
     {
         config()->set([
@@ -785,6 +886,20 @@ class OidcTest extends TestCase
 
         $user = User::where('email', OidcJwtHelper::defaultPayload()['email'])->first();
         $this->assertTrue($user->hasRole($roleA->id));
+    }
+
+    public function test_userinfo_endpoint_response_with_complex_json_content_type_handled()
+    {
+        $userinfoResponseData = [
+            'sub' => OidcJwtHelper::defaultPayload()['sub'],
+            'name' => 'Barry',
+        ];
+        $userinfoResponse = new Response(200, ['Content-Type'  => 'Application/Json ; charset=utf-8'], json_encode($userinfoResponseData));
+        $resp = $this->runLogin(['name' => null], [$userinfoResponse]);
+        $resp->assertRedirect('/');
+
+        $user = User::where('email', OidcJwtHelper::defaultPayload()['email'])->first();
+        $this->assertEquals('Barry', $user->name);
     }
 
     public function test_userinfo_endpoint_jwks_response_handled()

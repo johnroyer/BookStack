@@ -105,6 +105,18 @@ return [
     'app_down' => ':appName je momentálně vypnutá',
     'back_soon' => 'Brzy bude opět v provozu.',
 
+    // Import
+    'import_zip_cant_read' => 'Nelze načíst ZIP soubor.',
+    'import_zip_cant_decode_data' => 'Nelze najít a dekódovat data.json v archivu ZIP.',
+    'import_zip_no_data' => 'ZIP archiv neobsahuje knihy, kapitoly nebo stránky.',
+    'import_validation_failed' => 'Importování ZIP selhalo s chybami:',
+    'import_zip_failed_notification' => 'Nepodařilo se naimportovat ZIP soubor.',
+    'import_perms_books' => 'Chybí vám požadovaná oprávnění k vytvoření knih.',
+    'import_perms_chapters' => 'Chybí vám požadovaná oprávnění k vytvoření kapitol.',
+    'import_perms_pages' => 'Chybí vám požadovaná oprávnění k vytvoření stránek.',
+    'import_perms_images' => 'Chybí vám požadovaná oprávnění k vytvoření obrázků.',
+    'import_perms_attachments' => 'Chybí vám požadovaná oprávnění k vytvoření příloh.',
+
     // API errors
     'api_no_authorization_found' => 'V požadavku nebyl nalezen žádný autorizační token',
     'api_bad_authorization_format' => 'V požadavku byl nalezen autorizační token, ale jeho formát se zdá být chybný',

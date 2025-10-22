@@ -105,6 +105,18 @@ return [
     'app_down' => 'Mae :appName i lawr ar hyn o bryd',
     'back_soon' => 'Bydd yn ôl i fyny yn fuan.',
 
+    // Import
+    'import_zip_cant_read' => 'Wedi methu darllen ffeil ZIP.',
+    'import_zip_cant_decode_data' => 'Wedi methu ffeindio a dadgodio cynnwys ZIP data.json.',
+    'import_zip_no_data' => 'Nid oes cynnwys llyfr, pennod neu dudalen disgwyliedig yn nata ffeil ZIP.',
+    'import_validation_failed' => 'ZIP mewnforyn wedi\'i methu dilysu gyda gwallau:',
+    'import_zip_failed_notification' => 'Wedi methu mewnforio ffeil ZIP.',
+    'import_perms_books' => 'Dych chi\'n methu\'r caniatâd gofynnol i greu llyfrau.',
+    'import_perms_chapters' => 'Dych chi\'n methu\'r caniatâd gofynnol i greu pennodau.',
+    'import_perms_pages' => 'Dych chi\'n methu\'r caniatâd gofynnol i greu tudalennau.',
+    'import_perms_images' => 'Dych chi\'n methu\'r caniatâd gofynnol i greu delwau.',
+    'import_perms_attachments' => 'Dych chi\'n methu\'r caniatâd gofynnol i greu atodiadau.',
+
     // API errors
     'api_no_authorization_found' => 'Ni chanfuwyd tocyn awdurdodi ar y cais',
     'api_bad_authorization_format' => 'Canfuwyd tocyn awdurdodi ar y cais ond roedd yn ymddangos bod y fformat yn anghywir',

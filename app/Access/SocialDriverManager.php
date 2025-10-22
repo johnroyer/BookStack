@@ -55,7 +55,7 @@ class SocialDriverManager
 
     /**
      * Gets the names of the active social drivers, keyed by driver id.
-     * @returns array<string, string>
+     * @return array<string, string>
      */
     public function getActive(): array
     {
@@ -92,7 +92,7 @@ class SocialDriverManager
         string $driverName,
         array $config,
         string $socialiteHandler,
-        callable $configureForRedirect = null
+        ?callable $configureForRedirect = null
     ) {
         $this->validDrivers[] = $driverName;
         config()->set('services.' . $driverName, $config);

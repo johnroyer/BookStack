@@ -2,60 +2,26 @@
 
 namespace BookStack\Access;
 
+use BookStack\Users\Models\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
-use Illuminate\Database\Eloquent\Model;
 
 class ExternalBaseUserProvider implements UserProvider
 {
     /**
-     * The user model.
-     *
-     * @var string
-     */
-    protected $model;
-
-    /**
-     * LdapUserProvider constructor.
-     */
-    public function __construct(string $model)
-    {
-        $this->model = $model;
-    }
-
-    /**
-     * Create a new instance of the model.
-     *
-     * @return Model
-     */
-    public function createModel()
-    {
-        $class = '\\' . ltrim($this->model, '\\');
-
-        return new $class();
-    }
-
-    /**
      * Retrieve a user by their unique identifier.
-     *
-     * @param mixed $identifier
-     *
-     * @return Authenticatable|null
      */
-    public function retrieveById($identifier)
+    public function retrieveById(mixed $identifier): ?Authenticatable
     {
-        return $this->createModel()->newQuery()->find($identifier);
+        return User::query()->find($identifier);
     }
 
     /**
      * Retrieve a user by their unique identifier and "remember me" token.
      *
-     * @param mixed  $identifier
      * @param string $token
-     *
-     * @return Authenticatable|null
      */
-    public function retrieveByToken($identifier, $token)
+    public function retrieveByToken(mixed $identifier, $token): null
     {
         return null;
     }
@@ -75,32 +41,25 @@ class ExternalBaseUserProvider implements UserProvider
 
     /**
      * Retrieve a user by the given credentials.
-     *
-     * @param array $credentials
-     *
-     * @return Authenticatable|null
      */
-    public function retrieveByCredentials(array $credentials)
+    public function retrieveByCredentials(array $credentials): ?Authenticatable
     {
-        // Search current user base by looking up a uid
-        $model = $this->createModel();
-
-        return $model->newQuery()
+        return User::query()
             ->where('external_auth_id', $credentials['external_auth_id'])
             ->first();
     }
 
     /**
      * Validate a user against the given credentials.
-     *
-     * @param Authenticatable $user
-     * @param array           $credentials
-     *
-     * @return bool
      */
-    public function validateCredentials(Authenticatable $user, array $credentials)
+    public function validateCredentials(Authenticatable $user, array $credentials): bool
     {
         // Should be done in the guard.
         return false;
+    }
+
+    public function rehashPasswordIfRequired(Authenticatable $user, #[\SensitiveParameter] array $credentials, bool $force = false)
+    {
+        // No action to perform, any passwords are external in the auth system
     }
 }

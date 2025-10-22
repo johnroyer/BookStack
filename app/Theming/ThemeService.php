@@ -16,6 +16,15 @@ class ThemeService
     protected array $listeners = [];
 
     /**
+     * Get the currently configured theme.
+     * Returns an empty string if not configured.
+     */
+    public function getTheme(): string
+    {
+        return config('view.theme') ?? '';
+    }
+
+    /**
      * Listen to a given custom theme event,
      * setting up the action to be ran when the event occurs.
      */
@@ -84,7 +93,7 @@ class ThemeService
     /**
      * @see SocialDriverManager::addSocialDriver
      */
-    public function addSocialDriver(string $driverName, array $config, string $socialiteHandler, callable $configureForRedirect = null): void
+    public function addSocialDriver(string $driverName, array $config, string $socialiteHandler, ?callable $configureForRedirect = null): void
     {
         $driverManager = app()->make(SocialDriverManager::class);
         $driverManager->addSocialDriver($driverName, $config, $socialiteHandler, $configureForRedirect);

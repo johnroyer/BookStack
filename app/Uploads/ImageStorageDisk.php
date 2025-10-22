@@ -2,9 +2,12 @@
 
 namespace BookStack\Uploads;
 
+use BookStack\Util\FilePathNormalizer;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Filesystem\FilesystemAdapter;
-use League\Flysystem\WhitespacePathNormalizer;
+use Illuminate\Support\Facades\Log;
+use League\Flysystem\UnableToSetVisibility;
+use League\Flysystem\Visibility;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ImageStorageDisk
@@ -30,13 +33,14 @@ class ImageStorageDisk
      */
     protected function adjustPathForDisk(string $path): string
     {
-        $path = (new WhitespacePathNormalizer())->normalizePath(str_replace('uploads/images/', '', $path));
+        $trimmed = str_replace('uploads/images/', '', $path);
+        $normalized = FilePathNormalizer::normalize($trimmed);
 
         if ($this->usingSecureImages()) {
-            return $path;
+            return $normalized;
         }
 
-        return 'uploads/images/' . $path;
+        return 'uploads/images/' . $normalized;
     }
 
     /**
@@ -56,6 +60,15 @@ class ImageStorageDisk
     }
 
     /**
+     * Get a stream to the file at the given path.
+     * @return ?resource
+     */
+    public function stream(string $path): mixed
+    {
+        return $this->filesystem->readStream($this->adjustPathForDisk($path));
+    }
+
+    /**
      * Save the given image data at the given path. Can choose to set
      * the image as public which will update its visibility after saving.
      */
@@ -64,12 +77,19 @@ class ImageStorageDisk
         $path = $this->adjustPathForDisk($path);
         $this->filesystem->put($path, $data);
 
-        // Set visibility when a non-AWS-s3, s3-like storage option is in use.
-        // Done since this call can break s3-like services but desired for other image stores.
-        // Attempting to set ACL during above put request requires different permissions
-        // hence would technically be a breaking change for actual s3 usage.
+        // Set public visibility to ensure public access on S3, or that the file is accessible
+        // to other processes (like web-servers) for local file storage options.
+        // We avoid attempting this for (non-AWS) s3-like systems (even in a try-catch) as
+        // we've always avoided setting permissions for s3-like due to potential issues,
+        // with docs advising setting pre-configured permissions instead.
+        // We also don't do this as the default filesystem/driver level as that can technically
+        // require different ACLs for S3, and this provides us more logical control.
         if ($makePublic && !$this->isS3Like()) {
-            $this->filesystem->setVisibility($path, 'public');
+            try {
+                $this->filesystem->setVisibility($path, Visibility::PUBLIC);
+            } catch (UnableToSetVisibility $e) {
+                Log::warning("Unable to set visibility for image upload with relative path: {$path}");
+            }
         }
     }
 

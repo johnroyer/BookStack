@@ -84,6 +84,14 @@ return [
     'webhook_delete' => 'видалений вебхук',
     'webhook_delete_notification' => 'Вебхуки успішно видалено',
 
+    // Imports
+    'import_create' => 'створений імпорт',
+    'import_create_notification' => 'Імпорт успішно завантажений',
+    'import_run' => 'оновлений імпорт',
+    'import_run_notification' => 'Контент успішно імпортовано',
+    'import_delete' => 'видалений імпорт',
+    'import_delete_notification' => 'Імпорт успішно видалено',
+
     // Users
     'user_create' => 'створений користувач',
     'user_create_notification' => 'Користувач успішно створений',
@@ -118,6 +126,14 @@ return [
     'comment_create'              => 'додано коментар',
     'comment_update'              => 'оновлено коментар',
     'comment_delete'              => 'видалений коментар',
+
+    // Sort Rules
+    'sort_rule_create' => 'створене правило сортування',
+    'sort_rule_create_notification' => 'Правило сортування успішно створено',
+    'sort_rule_update' => 'оновлено правило сортування',
+    'sort_rule_update_notification' => 'Правило сортування успішно оновлено',
+    'sort_rule_delete' => 'видалено правило сортування',
+    'sort_rule_delete_notification' => 'Правило сортування успішно видалено',
 
     // Other
     'permissions_update'          => 'оновив дозволи',

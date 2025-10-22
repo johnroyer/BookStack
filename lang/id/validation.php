@@ -105,6 +105,11 @@ return [
     'url'                  => ':attribute format tidak valid.',
     'uploaded'             => 'Berkas tidak dapat diunggah. Server mungkin tidak menerima berkas dengan ukuran ini.',
 
+    'zip_file' => ':attribute perlu merujuk ke sebuah file yang terdapat di dalam arsip ZIP.',
+    'zip_file_mime' => ':attribute seharusnya berupa file dengan tipe :validTypes, tapi yang Anda unggah bertipe :foundType.',
+    'zip_model_expected' => 'Diharapkan sebuah objek data, namun yang ditemukan adalah \':type\'.',
+    'zip_unique' => ':attribute harus bersifat unik untuk setiap jenis objek dalam file ZIP.',
+
     // Custom validation lines
     'custom' => [
         'password-confirm' => [

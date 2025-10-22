@@ -19,8 +19,8 @@ import invariant from 'lexical/shared/invariant';
 import {$isTextNode, TextNode} from '../index';
 import {
   DOUBLE_LINE_BREAK,
-  ELEMENT_FORMAT_TO_TYPE,
-  ELEMENT_TYPE_TO_FORMAT,
+
+
 } from '../LexicalConstants';
 import {LexicalNode} from '../LexicalNode';
 import {
@@ -42,20 +42,9 @@ export type SerializedElementNode<
   {
     children: Array<T>;
     direction: 'ltr' | 'rtl' | null;
-    format: ElementFormatType;
-    indent: number;
   },
   SerializedLexicalNode
 >;
-
-export type ElementFormatType =
-  | 'left'
-  | 'start'
-  | 'center'
-  | 'right'
-  | 'end'
-  | 'justify'
-  | '';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export interface ElementNode {
@@ -66,7 +55,7 @@ export interface ElementNode {
 /** @noInheritDoc */
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class ElementNode extends LexicalNode {
-  ['constructor']!: KlassConstructor<typeof ElementNode>;
+  declare ['constructor']: KlassConstructor<typeof ElementNode>;
   /** @internal */
   __first: null | NodeKey;
   /** @internal */
@@ -74,11 +63,7 @@ export class ElementNode extends LexicalNode {
   /** @internal */
   __size: number;
   /** @internal */
-  __format: number;
-  /** @internal */
   __style: string;
-  /** @internal */
-  __indent: number;
   /** @internal */
   __dir: 'ltr' | 'rtl' | null;
 
@@ -87,9 +72,7 @@ export class ElementNode extends LexicalNode {
     this.__first = null;
     this.__last = null;
     this.__size = 0;
-    this.__format = 0;
     this.__style = '';
-    this.__indent = 0;
     this.__dir = null;
   }
 
@@ -98,27 +81,13 @@ export class ElementNode extends LexicalNode {
     this.__first = prevNode.__first;
     this.__last = prevNode.__last;
     this.__size = prevNode.__size;
-    this.__indent = prevNode.__indent;
-    this.__format = prevNode.__format;
     this.__style = prevNode.__style;
     this.__dir = prevNode.__dir;
   }
 
-  getFormat(): number {
-    const self = this.getLatest();
-    return self.__format;
-  }
-  getFormatType(): ElementFormatType {
-    const format = this.getFormat();
-    return ELEMENT_FORMAT_TO_TYPE[format] || '';
-  }
   getStyle(): string {
     const self = this.getLatest();
     return self.__style;
-  }
-  getIndent(): number {
-    const self = this.getLatest();
-    return self.__indent;
   }
   getChildren<T extends LexicalNode>(): Array<T> {
     const children: Array<T> = [];
@@ -181,6 +150,20 @@ export class ElementNode extends LexicalNode {
     }
     return node;
   }
+    getFirstSelectableDescendant<T extends LexicalNode>(): null | T {
+      if (this.shouldSelectDirectly()) {
+          return null;
+      }
+        let node = this.getFirstChild<T>();
+        while ($isElementNode(node) && !node.shouldSelectDirectly()) {
+            const child = node.getFirstChild<T>();
+            if (child === null) {
+                break;
+            }
+            node = child;
+        }
+        return node;
+    }
   getLastDescendant<T extends LexicalNode>(): null | T {
     let node = this.getLastChild<T>();
     while ($isElementNode(node)) {
@@ -192,6 +175,20 @@ export class ElementNode extends LexicalNode {
     }
     return node;
   }
+    getLastSelectableDescendant<T extends LexicalNode>(): null | T {
+      if (this.shouldSelectDirectly()) {
+          return null;
+      }
+        let node = this.getLastChild<T>();
+        while ($isElementNode(node) && !node.shouldSelectDirectly()) {
+            const child = node.getLastChild<T>();
+            if (child === null) {
+                break;
+            }
+            node = child;
+        }
+        return node;
+    }
   getDescendantByIndex<T extends LexicalNode>(index: number): null | T {
     const children = this.getChildren<T>();
     const childrenLength = children.length;
@@ -301,13 +298,6 @@ export class ElementNode extends LexicalNode {
     const self = this.getLatest();
     return self.__dir;
   }
-  hasFormat(type: ElementFormatType): boolean {
-    if (type !== '') {
-      const formatFlag = ELEMENT_TYPE_TO_FORMAT[type];
-      return (this.getFormat() & formatFlag) !== 0;
-    }
-    return false;
-  }
 
   // Mutators
 
@@ -317,7 +307,7 @@ export class ElementNode extends LexicalNode {
     let anchorOffset = _anchorOffset;
     let focusOffset = _focusOffset;
     const childrenCount = this.getChildrenSize();
-    if (!this.canBeEmpty()) {
+    if (!this.canBeEmpty() && !this.shouldSelectDirectly()) {
       if (_anchorOffset === 0 && _focusOffset === 0) {
         const firstChild = this.getFirstChild();
         if ($isTextNode(firstChild) || $isElementNode(firstChild)) {
@@ -357,11 +347,11 @@ export class ElementNode extends LexicalNode {
     return selection;
   }
   selectStart(): RangeSelection {
-    const firstNode = this.getFirstDescendant();
+    const firstNode = this.getFirstSelectableDescendant();
     return firstNode ? firstNode.selectStart() : this.select();
   }
   selectEnd(): RangeSelection {
-    const lastNode = this.getLastDescendant();
+    const lastNode = this.getLastSelectableDescendant();
     return lastNode ? lastNode.selectEnd() : this.select();
   }
   clear(): this {
@@ -378,19 +368,9 @@ export class ElementNode extends LexicalNode {
     self.__dir = direction;
     return self;
   }
-  setFormat(type: ElementFormatType): this {
-    const self = this.getWritable();
-    self.__format = type !== '' ? ELEMENT_TYPE_TO_FORMAT[type] : 0;
-    return this;
-  }
   setStyle(style: string): this {
     const self = this.getWritable();
     self.__style = style || '';
-    return this;
-  }
-  setIndent(indentLevel: number): this {
-    const self = this.getWritable();
-    self.__indent = indentLevel;
     return this;
   }
   splice(
@@ -528,8 +508,6 @@ export class ElementNode extends LexicalNode {
     return {
       children: [],
       direction: this.getDirection(),
-      format: this.getFormatType(),
-      indent: this.getIndent(),
       type: 'element',
       version: 1,
     };

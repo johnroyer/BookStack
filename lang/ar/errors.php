@@ -10,13 +10,13 @@ return [
 
     // Auth
     'error_user_exists_different_creds' => 'يوجد مستخدم ببيانات مختلفة مسجل بالنظام للبريد الإلكتروني :email.',
-    'auth_pre_register_theme_prevention' => 'User account could not be registered for the provided details',
+    'auth_pre_register_theme_prevention' => 'لم يتمكن حساب المستخدم من التسجيل للحصول على التفاصيل المقدمة',
     'email_already_confirmed' => 'تم تأكيد البريد الإلكتروني من قبل, الرجاء محاولة تسجيل الدخول.',
     'email_confirmation_invalid' => 'رابط التأكيد غير صحيح أو قد تم استخدامه من قبل, الرجاء محاولة التسجيل من جديد.',
     'email_confirmation_expired' => 'صلاحية رابط التأكيد انتهت, تم إرسال رسالة تأكيد جديدة لعنوان البريد الإلكتروني.',
     'email_confirmation_awaiting' => 'عنوان البريد الإلكتروني للحساب قيد الاستخدام يحتاج إلى تأكيد',
     'ldap_fail_anonymous' => 'فشل الوصول إلى LDAP باستخدام الربط المجهول',
-    'ldap_fail_authed' => 'فشل الوصول إلى LDAP باستخدام dn و password المعطاة',
+    'ldap_fail_authed' => 'فشل الوصول إلى LDAP باستخدام dn و كلمة السر المعطاة',
     'ldap_extension_not_installed' => 'لم يتم تثبيت إضافة LDAP PHP',
     'ldap_cannot_connect' => 'لا يمكن الاتصال بخادم ldap, فشل الاتصال المبدئي',
     'saml_already_logged_in' => 'تم تسجيل الدخول بالفعل',
@@ -37,7 +37,7 @@ return [
     'social_driver_not_found' => 'لم يتم العثور على السوشيال درايفر "Social driver"',
     'social_driver_not_configured' => 'لم يتم تهيئة إعدادات حسابك الاجتماعي بشكل صحيح.',
     'invite_token_expired' => 'انتهت صلاحية رابط هذه الدعوة. يمكنك بدلاً من ذلك محاولة إعادة تعيين كلمة مرور حسابك.',
-    'login_user_not_found' => 'A user for this action could not be found.',
+    'login_user_not_found' => 'لم يتم العثور على مستخدم لهذا الإجراء.',
 
     // System
     'path_not_writable' => 'لا يمكن الرفع إلى مسار :filePath. الرجاء التأكد من قابلية الكتابة إلى الخادم.',
@@ -78,7 +78,7 @@ return [
     // Users
     'users_cannot_delete_only_admin' => 'لا يمكن حذف المشرف الوحيد',
     'users_cannot_delete_guest' => 'لا يمكن حذف المستخدم الضيف',
-    'users_could_not_send_invite' => 'Could not create user since invite email failed to send',
+    'users_could_not_send_invite' => 'لم يتم إنشاء المستخدم بسبب فشل إرسال بريد الدعوة',
 
     // Roles
     'role_cannot_be_edited' => 'لا يمكن تعديل هذا الدور',
@@ -104,6 +104,18 @@ return [
     'error_occurred' => 'حدث خطأ',
     'app_down' => ':appName لا يعمل حالياً',
     'back_soon' => 'سيعود للعمل قريباً.',
+
+    // Import
+    'import_zip_cant_read' => 'لم أتمكن من قراءة المِلَفّ المضغوط -ZIP-.',
+    'import_zip_cant_decode_data' => 'لم نتمكن من العثور على محتوى المِلَفّ المضغوط data.json وفك تشفيره.',
+    'import_zip_no_data' => 'لا تتضمن بيانات المِلَفّ المضغوط أي محتوى متوقع للكتاب أو الفصل أو الصفحة.',
+    'import_validation_failed' => 'فشل التحقق من صحة استيراد المِلَفّ المضغوط بسبب الأخطاء التالية:',
+    'import_zip_failed_notification' => 'فشل استيراد المِلَفّ المضغوط.',
+    'import_perms_books' => 'أنت تفتقر إلى الصلاحيات المطلوبة لإنشاء الكتب.',
+    'import_perms_chapters' => 'أنت تفتقر إلى الصلاحيات المطلوبة لإنشاء الفصول.',
+    'import_perms_pages' => 'أنت تفتقر إلى الصلاحيات المطلوبة لإنشاء الصفحات.',
+    'import_perms_images' => 'أنت تفتقر إلى الصلاحيات المطلوبة لإنشاء الصور.',
+    'import_perms_attachments' => 'أنت تفتقر إلى الصَّلاحِيَة المطلوب لإنشاء المرفقات.',
 
     // API errors
     'api_no_authorization_found' => 'لم يتم العثور على رمز ترخيص مميز في الطلب',

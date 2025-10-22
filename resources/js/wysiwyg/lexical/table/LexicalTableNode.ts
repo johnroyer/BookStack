@@ -7,7 +7,7 @@
  */
 
 import type {TableCellNode} from './LexicalTableCellNode';
-import type {
+import {
   DOMConversionMap,
   DOMConversionOutput,
   DOMExportOutput,
@@ -15,31 +15,49 @@ import type {
   LexicalEditor,
   LexicalNode,
   NodeKey,
-  SerializedElementNode,
+  Spread,
 } from 'lexical';
 
 import {addClassNamesToElement, isHTMLElement} from '@lexical/utils';
 import {
   $applyNodeReplacement,
   $getNearestNodeFromDOMNode,
-  ElementNode,
+
 } from 'lexical';
 
 import {$isTableCellNode} from './LexicalTableCellNode';
 import {TableDOMCell, TableDOMTable} from './LexicalTableObserver';
-import {$isTableRowNode, TableRowNode} from './LexicalTableRowNode';
 import {getTable} from './LexicalTableSelectionHelpers';
+import {CommonBlockNode, copyCommonBlockProperties, SerializedCommonBlockNode} from "lexical/nodes/CommonBlockNode";
+import {
+  applyCommonPropertyChanges,
+  commonPropertiesDifferent, deserializeCommonBlockNode,
+  setCommonBlockPropsFromElement,
+  updateElementWithCommonBlockProps
+} from "lexical/nodes/common";
+import {el, extractStyleMapFromElement, StyleMap} from "../../utils/dom";
+import {buildColgroupFromTableWidths, getTableColumnWidths} from "../../utils/tables";
 
-export type SerializedTableNode = SerializedElementNode;
+export type SerializedTableNode = Spread<{
+  colWidths: string[];
+  styles: Record<string, string>,
+}, SerializedCommonBlockNode>
 
 /** @noInheritDoc */
-export class TableNode extends ElementNode {
+export class TableNode extends CommonBlockNode {
+  __colWidths: string[] = [];
+  __styles: StyleMap = new Map;
+
   static getType(): string {
     return 'table';
   }
 
   static clone(node: TableNode): TableNode {
-    return new TableNode(node.__key);
+    const newNode = new TableNode(node.__key);
+    copyCommonBlockProperties(node, newNode);
+    newNode.__colWidths = [...node.__colWidths];
+    newNode.__styles = new Map(node.__styles);
+    return newNode;
   }
 
   static importDOM(): DOMConversionMap | null {
@@ -52,18 +70,24 @@ export class TableNode extends ElementNode {
   }
 
   static importJSON(_serializedNode: SerializedTableNode): TableNode {
-    return $createTableNode();
+    const node = $createTableNode();
+    deserializeCommonBlockNode(_serializedNode, node);
+    node.setColWidths(_serializedNode.colWidths);
+    node.setStyles(new Map(Object.entries(_serializedNode.styles)));
+    return node;
   }
 
   constructor(key?: NodeKey) {
     super(key);
   }
 
-  exportJSON(): SerializedElementNode {
+  exportJSON(): SerializedTableNode {
     return {
       ...super.exportJSON(),
       type: 'table',
       version: 1,
+      colWidths: this.__colWidths,
+      styles: Object.fromEntries(this.__styles),
     };
   }
 
@@ -72,10 +96,43 @@ export class TableNode extends ElementNode {
 
     addClassNamesToElement(tableElement, config.theme.table);
 
+    updateElementWithCommonBlockProps(tableElement, this);
+
+    const colWidths = this.getColWidths();
+    const colgroup = buildColgroupFromTableWidths(colWidths);
+    if (colgroup) {
+      tableElement.append(colgroup);
+    }
+
+    for (const [name, value] of this.__styles.entries()) {
+      tableElement.style.setProperty(name, value);
+    }
+
     return tableElement;
   }
 
-  updateDOM(): boolean {
+  updateDOM(_prevNode: TableNode, dom: HTMLElement): boolean {
+    applyCommonPropertyChanges(_prevNode, this, dom);
+
+    if (this.__colWidths.join(':') !== _prevNode.__colWidths.join(':')) {
+      const existingColGroup = Array.from(dom.children).find(child => child.nodeName === 'COLGROUP');
+      const newColGroup = buildColgroupFromTableWidths(this.__colWidths);
+      if (existingColGroup) {
+        existingColGroup.remove();
+      }
+
+      if (newColGroup) {
+        dom.prepend(newColGroup);
+      }
+    }
+
+    if (Array.from(this.__styles.values()).join(':') !== Array.from(_prevNode.__styles.values()).join(':')) {
+      dom.style.cssText = '';
+      for (const [name, value] of this.__styles.entries()) {
+        dom.style.setProperty(name, value);
+      }
+    }
+
     return false;
   }
 
@@ -94,6 +151,8 @@ export class TableNode extends ElementNode {
           for (const child of Array.from(tableElement.children)) {
             if (child.nodeName === 'TR') {
               tBody.append(child);
+            } else if (child.nodeName === 'CAPTION') {
+              newElement.insertBefore(child, newElement.firstChild);
             } else {
               newElement.append(child);
             }
@@ -113,6 +172,26 @@ export class TableNode extends ElementNode {
 
   isShadowRoot(): boolean {
     return true;
+  }
+
+  setColWidths(widths: string[]) {
+    const self = this.getWritable();
+    self.__colWidths = widths;
+  }
+
+  getColWidths(): string[] {
+    const self = this.getLatest();
+    return [...self.__colWidths];
+  }
+
+  getStyles(): StyleMap {
+    const self = this.getLatest();
+    return new Map(self.__styles);
+  }
+
+  setStyles(styles: StyleMap): void {
+    const self = this.getWritable();
+    self.__styles = new Map(styles);
   }
 
   getCordsFromCellNode(
@@ -239,8 +318,15 @@ export function $getElementForTableNode(
   return getTable(tableElement);
 }
 
-export function $convertTableElement(_domNode: Node): DOMConversionOutput {
-  return {node: $createTableNode()};
+export function $convertTableElement(element: HTMLElement): DOMConversionOutput {
+  const node = $createTableNode();
+  setCommonBlockPropsFromElement(element, node);
+
+  const colWidths = getTableColumnWidths(element as HTMLTableElement);
+  node.setColWidths(colWidths);
+  node.setStyles(extractStyleMapFromElement(element));
+
+  return {node};
 }
 
 export function $createTableNode(): TableNode {

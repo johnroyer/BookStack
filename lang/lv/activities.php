@@ -84,6 +84,14 @@ return [
     'webhook_delete' => 'izdzēsa webhook',
     'webhook_delete_notification' => 'Webhook veiksmīgi izdzēsts',
 
+    // Imports
+    'import_create' => 'izveidoja importu',
+    'import_create_notification' => 'Imports veiksmīgi augšupielādēts',
+    'import_run' => 'atjaunoja importu',
+    'import_run_notification' => 'Saturs veiksmīgi importēts',
+    'import_delete' => 'izdzēsa importu',
+    'import_delete_notification' => 'Imports veiksmīgi dzēsts',
+
     // Users
     'user_create' => 'izveidoja lietotāju',
     'user_create_notification' => 'Lietotājs veiksmīgi izveidots',
@@ -118,6 +126,14 @@ return [
     'comment_create'              => 'pievienoja komentāru',
     'comment_update'              => 'atjaunoja komentārju',
     'comment_delete'              => 'dzēsa komentāru',
+
+    // Sort Rules
+    'sort_rule_create' => 'izveidoja kārtošanas nosacījumu',
+    'sort_rule_create_notification' => 'Kārtošanas nosacījums veiksmīgi izveidots',
+    'sort_rule_update' => 'atjaunoja kārtošanas nosacījumu',
+    'sort_rule_update_notification' => 'Kārtošanas nosacījums veiksmīgi atjaunots',
+    'sort_rule_delete' => 'izdzēsa kārtošanas nosacījumu',
+    'sort_rule_delete_notification' => 'Kārtošanas nosacījums veiksmīgi dzēsts',
 
     // Other
     'permissions_update'          => 'atjaunoja atļaujas',

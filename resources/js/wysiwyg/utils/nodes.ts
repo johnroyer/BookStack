@@ -1,23 +1,23 @@
 import {
+    $createParagraphNode,
     $getRoot,
     $isDecoratorNode,
     $isElementNode, $isRootNode,
     $isTextNode,
     ElementNode,
     LexicalEditor,
-    LexicalNode
+    LexicalNode, RangeSelection
 } from "lexical";
 import {LexicalNodeMatcher} from "../nodes";
-import {$createCustomParagraphNode} from "../nodes/custom-paragraph";
 import {$generateNodesFromDOM} from "@lexical/html";
 import {htmlToDom} from "./dom";
-import {NodeHasAlignment, NodeHasInset} from "../nodes/_common";
+import {NodeHasAlignment, NodeHasInset} from "lexical/nodes/common";
 import {$findMatchingParent} from "@lexical/utils";
 
 function wrapTextNodes(nodes: LexicalNode[]): LexicalNode[] {
     return nodes.map(node => {
         if ($isTextNode(node)) {
-            const paragraph = $createCustomParagraphNode();
+            const paragraph = $createParagraphNode();
             paragraph.append(node);
             return paragraph;
         }
@@ -92,6 +92,46 @@ export function $getNearestNodeBlockParent(node: LexicalNode): LexicalNode|null 
     }
 
     return $findMatchingParent(node, isBlockNode);
+}
+
+export function $sortNodes(nodes: LexicalNode[]): LexicalNode[] {
+    const idChain: string[] = [];
+    const addIds = (n: ElementNode) => {
+        for (const child of n.getChildren()) {
+            idChain.push(child.getKey())
+            if ($isElementNode(child)) {
+                addIds(child)
+            }
+        }
+    };
+
+    const root = $getRoot();
+    addIds(root);
+
+    const sorted = Array.from(nodes);
+    sorted.sort((a, b) => {
+        const aIndex = idChain.indexOf(a.getKey());
+        const bIndex = idChain.indexOf(b.getKey());
+        return aIndex - bIndex;
+    });
+
+    return sorted;
+}
+
+export function $selectOrCreateAdjacent(node: LexicalNode, after: boolean): RangeSelection {
+    const nearestBlock = $getNearestNodeBlockParent(node) || node;
+    let target = after ? nearestBlock.getNextSibling() : nearestBlock.getPreviousSibling()
+
+    if (!target) {
+        target = $createParagraphNode();
+        if (after) {
+            nearestBlock.insertAfter(target)
+        } else {
+            nearestBlock.insertBefore(target);
+        }
+    }
+
+    return after ? target.selectStart() : target.selectEnd();
 }
 
 export function nodeHasAlignment(node: object): node is NodeHasAlignment {

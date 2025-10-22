@@ -32,12 +32,12 @@ class RangeSupportedStream
     /**
      * Sniff a mime type from the stream.
      */
-    public function sniffMime(): string
+    public function sniffMime(string $extension = ''): string
     {
         $offset = min(2000, $this->fileSize);
         $this->sniffContent = fread($this->stream, $offset);
 
-        return (new WebSafeMimeSniffer())->sniff($this->sniffContent);
+        return (new WebSafeMimeSniffer())->sniff($this->sniffContent, $extension);
     }
 
     /**
@@ -92,7 +92,7 @@ class RangeSupportedStream
             if ($start < 0 || $start > $end) {
                 $this->responseStatus = 416;
                 $this->responseHeaders['Content-Range'] = sprintf('bytes */%s', $this->fileSize);
-            } elseif ($end - $start < $this->fileSize - 1) {
+            } else {
                 $this->responseLength = $end < $this->fileSize ? $end - $start + 1 : -1;
                 $this->responseOffset = $start;
                 $this->responseStatus = 206;

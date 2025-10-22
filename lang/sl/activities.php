@@ -59,7 +59,7 @@ return [
     'favourite_remove_notification' => '":name" odstranjen iz priljubljenih',
 
     // Watching
-    'watch_update_level_notification' => 'Nastavitve opazovanja uspešno posodobljene',
+    'watch_update_level_notification' => 'Nastavitve spremljanja uspešno posodobljene',
 
     // Auth
     'auth_login' => 'prijavljen',
@@ -83,6 +83,14 @@ return [
     'webhook_update_notification' => 'Webhook uspešno posodobljen',
     'webhook_delete' => 'izbrisan webhook',
     'webhook_delete_notification' => 'Webhook uspešno izbrisan',
+
+    // Imports
+    'import_create' => 'created import',
+    'import_create_notification' => 'Import successfully uploaded',
+    'import_run' => 'updated import',
+    'import_run_notification' => 'Content successfully imported',
+    'import_delete' => 'deleted import',
+    'import_delete_notification' => 'Import successfully deleted',
 
     // Users
     'user_create' => 'ustvarjen uporabnik',
@@ -118,6 +126,14 @@ return [
     'comment_create'              => 'dodan komentar',
     'comment_update'              => 'posodobljen komentar',
     'comment_delete'              => 'izbrisan komentar',
+
+    // Sort Rules
+    'sort_rule_create' => 'created sort rule',
+    'sort_rule_create_notification' => 'Sort rule successfully created',
+    'sort_rule_update' => 'updated sort rule',
+    'sort_rule_update_notification' => 'Sort rule successfully updated',
+    'sort_rule_delete' => 'deleted sort rule',
+    'sort_rule_delete_notification' => 'Sort rule successfully deleted',
 
     // Other
     'permissions_update'          => 'pravice so posodobljene',

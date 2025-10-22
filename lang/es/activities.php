@@ -84,6 +84,14 @@ return [
     'webhook_delete' => 'webhook eliminado',
     'webhook_delete_notification' => 'Webhook eliminado correctamente',
 
+    // Imports
+    'import_create' => 'importación creada',
+    'import_create_notification' => 'Importación cargada correctamente',
+    'import_run' => 'importación actualizada',
+    'import_run_notification' => 'Contenido importado correctamente',
+    'import_delete' => 'importación borrada',
+    'import_delete_notification' => 'Importación borrada correctamente',
+
     // Users
     'user_create' => 'usuario creado',
     'user_create_notification' => 'Usuario creado correctamente',
@@ -118,6 +126,14 @@ return [
     'comment_create'              => 'comentario añadido',
     'comment_update'              => 'comentario actualizado',
     'comment_delete'              => 'comentario borrado',
+
+    // Sort Rules
+    'sort_rule_create' => 'regla de ordenación creada',
+    'sort_rule_create_notification' => 'Rol de ordenación creada con éxito',
+    'sort_rule_update' => 'regla de ordenación actualizada',
+    'sort_rule_update_notification' => 'Regla de ordenación actualizada correctamente',
+    'sort_rule_delete' => 'regla de ordenación eliminada',
+    'sort_rule_delete_notification' => 'Rol de ordenación borrada con éxito',
 
     // Other
     'permissions_update'          => 'permisos actualizados',

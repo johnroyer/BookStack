@@ -15,7 +15,7 @@ class EventServiceProvider extends ServiceProvider
     /**
      * The event listener mappings for the application.
      *
-     * @var array<class-string, array<int, class-string>>
+     * @var array<class-string, array<int, string>>
      */
     protected $listen = [
         SocialiteWasCalled::class => [
@@ -41,5 +41,13 @@ class EventServiceProvider extends ServiceProvider
     public function shouldDiscoverEvents(): bool
     {
         return false;
+    }
+
+    /**
+     * Overrides the registration of Laravel's default email verification system
+     */
+    protected function configureEmailVerification(): void
+    {
+        //
     }
 }

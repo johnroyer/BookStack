@@ -17,7 +17,7 @@ import invariant from 'lexical/shared/invariant';
 import {
   $createLineBreakNode,
   $createParagraphNode,
-  $createTextNode,
+  $createTextNode, $getNearestNodeFromDOMNode,
   $isDecoratorNode,
   $isElementNode,
   $isLineBreakNode,
@@ -63,6 +63,7 @@ import {
   toggleTextFormatType,
 } from './LexicalUtils';
 import {$createTabNode, $isTabNode} from './nodes/LexicalTabNode';
+import {$selectSingleNode} from "../../utils/selection";
 
 export type TextPointType = {
   _selection: BaseSelection;
@@ -475,12 +476,12 @@ export class RangeSelection implements BaseSelection {
     const startOffset = firstPoint.offset;
     const endOffset = lastPoint.offset;
 
-    if ($isElementNode(firstNode)) {
+    if ($isElementNode(firstNode) && !firstNode.shouldSelectDirectly()) {
       const firstNodeDescendant =
         firstNode.getDescendantByIndex<ElementNode>(startOffset);
       firstNode = firstNodeDescendant != null ? firstNodeDescendant : firstNode;
     }
-    if ($isElementNode(lastNode)) {
+    if ($isElementNode(lastNode) && !lastNode.shouldSelectDirectly()) {
       let lastNodeDescendant =
         lastNode.getDescendantByIndex<ElementNode>(endOffset);
       // We don't want to over-select, as node selection infers the child before
@@ -498,7 +499,7 @@ export class RangeSelection implements BaseSelection {
     let nodes: Array<LexicalNode>;
 
     if (firstNode.is(lastNode)) {
-      if ($isElementNode(firstNode) && firstNode.getChildrenSize() > 0) {
+      if ($isElementNode(firstNode) && firstNode.getChildrenSize() > 0 && !firstNode.shouldSelectDirectly()) {
         nodes = [];
       } else {
         nodes = [firstNode];
@@ -2568,6 +2569,17 @@ export function updateDOMSelection(
   }
 
   if (!$isRangeSelection(nextSelection)) {
+
+    // If the DOM selection enters a decorator node update the selection to a single node selection
+    if (activeElement !== null && domSelection.isCollapsed && focusDOMNode instanceof Node) {
+      const node = $getNearestNodeFromDOMNode(focusDOMNode);
+      if ($isDecoratorNode(node)) {
+        domSelection.removeAllRanges();
+        $selectSingleNode(node);
+        return;
+      }
+    }
+
     // We don't remove selection if the prevSelection is null because
     // of editor.setRootElement(). If this occurs on init when the
     // editor is already focused, then this can cause the editor to
@@ -2696,6 +2708,8 @@ export function updateDOMSelection(
         const range = document.createRange();
         range.selectNode(selectionTarget);
         selectionRect = range.getBoundingClientRect();
+      } else if (selectionTarget instanceof Range) {
+          selectionRect = selectionTarget.getBoundingClientRect();
       } else {
         selectionRect = selectionTarget.getBoundingClientRect();
       }

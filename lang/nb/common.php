@@ -30,6 +30,8 @@ return [
     'create' => 'Opprett',
     'update' => 'Oppdater',
     'edit' => 'Rediger',
+    'archive' => 'Archive',
+    'unarchive' => 'Un-Archive',
     'sort' => 'Sortér',
     'move' => 'Flytt',
     'copy' => 'Kopier',
@@ -109,5 +111,5 @@ return [
     'terms_of_service' => 'Bruksvilkår',
 
     // OpenSearch
-    'opensearch_description' => 'Search :appName',
+    'opensearch_description' => 'Søk :appName',
 ];

@@ -578,7 +578,6 @@ function onBeforeInput(event: InputEvent, editor: LexicalEditor): void {
           if ($isRangeSelection(selection)) {
             const anchorNode = selection.anchor.getNode();
             anchorNode.markDirty();
-            selection.format = anchorNode.getFormat();
             invariant(
               $isTextNode(anchorNode),
               'Anchor node must be a TextNode',
@@ -912,7 +911,6 @@ function onCompositionStart(
         // need to invoke the empty space heuristic below.
         anchor.type === 'element' ||
         !selection.isCollapsed() ||
-        node.getFormat() !== selection.format ||
         ($isTextNode(node) && node.getStyle() !== selection.style)
       ) {
         // We insert a zero width character, ready for the composition

@@ -5,11 +5,10 @@ import {
     EditorSelectFormFieldDefinition
 } from "../../framework/forms";
 import {EditorUiContext} from "../../framework/core";
-import {$createNodeSelection, $createTextNode, $getSelection, $insertNodes, $setSelection} from "lexical";
-import {$isImageNode, ImageNode} from "../../../nodes/image";
-import {$createLinkNode, $isLinkNode, LinkNode} from "@lexical/link";
-import {$createMediaNodeFromHtml, $createMediaNodeFromSrc, $isMediaNode, MediaNode} from "../../../nodes/media";
-import {$insertNodeToNearestRoot} from "@lexical/utils";
+import {$createNodeSelection, $getSelection, $insertNodes, $setSelection} from "lexical";
+import {$isImageNode, ImageNode} from "@lexical/rich-text/LexicalImageNode";
+import {LinkNode} from "@lexical/link";
+import {$createMediaNodeFromHtml, $createMediaNodeFromSrc, $isMediaNode, MediaNode} from "@lexical/rich-text/LexicalMediaNode";
 import {$getNodeFromSelection, getLastSelection} from "../../../utils/selection";
 import {EditorFormModal} from "../../framework/modals";
 import {EditorActionField} from "../../framework/blocks/action-field";
@@ -20,6 +19,7 @@ import searchIcon from "@icons/search.svg";
 import {showLinkSelector} from "../../../utils/links";
 import {LinkField} from "../../framework/blocks/link-field";
 import {insertOrUpdateLink} from "../../../utils/formats";
+import {$isDetailsNode, DetailsNode} from "@lexical/rich-text/LexicalDetailsNode";
 
 export function $showImageForm(image: ImageNode, context: EditorUiContext) {
     const imageModal: EditorFormModal = context.manager.createModal('image');
@@ -186,6 +186,29 @@ export const link: EditorFormDefinition = {
     ],
 };
 
+export function $showMediaForm(media: MediaNode|null, context: EditorUiContext): void {
+    const mediaModal = context.manager.createModal('media');
+
+    let formDefaults = {};
+    if (media) {
+        const nodeAttrs = media.getAttributes();
+        const nodeDOM = media.exportDOM(context.editor).element;
+        const nodeHtml = (nodeDOM instanceof HTMLElement) ? nodeDOM.outerHTML : '';
+
+        formDefaults = {
+            src: nodeAttrs.src || nodeAttrs.data || media.getSources()[0]?.src || '',
+            width: nodeAttrs.width,
+            height: nodeAttrs.height,
+            embed: nodeHtml,
+
+            // This is used so we can check for edits against the embed field on submit
+            embed_check: nodeHtml,
+        }
+    }
+
+    mediaModal.show(formDefaults);
+}
+
 export const media: EditorFormDefinition = {
     submitText: 'Save',
     async action(formData, context: EditorUiContext) {
@@ -197,7 +220,8 @@ export const media: EditorFormDefinition = {
         }));
 
         const embedCode = (formData.get('embed') || '').toString().trim();
-        if (embedCode) {
+        const embedCheck = (formData.get('embed_check') || '').toString().trim();
+        if (embedCode && embedCode !== embedCheck) {
             context.editor.update(() => {
                 const node = $createMediaNodeFromHtml(embedCode);
                 if (selectedNode && node) {
@@ -215,12 +239,20 @@ export const media: EditorFormDefinition = {
             const height = (formData.get('height') || '').toString().trim();
             const width = (formData.get('width') || '').toString().trim();
 
-            const updateNode = selectedNode || $createMediaNodeFromSrc(src);
-            updateNode.setSrc(src);
-            updateNode.setWidthAndHeight(width, height);
-            if (!selectedNode) {
-                $insertNodes([updateNode]);
+            // Update existing
+            if (selectedNode) {
+                selectedNode.setSrc(src);
+                selectedNode.setWidthAndHeight(width, height);
+                context.manager.triggerFutureStateRefresh();
+                return;
             }
+
+            // Insert new
+            const node = $createMediaNodeFromSrc(src);
+            if (width || height) {
+                node.setWidthAndHeight(width, height);
+            }
+            $insertNodes([node]);
         });
 
         return true;
@@ -257,10 +289,48 @@ export const media: EditorFormDefinition = {
                                 name: 'embed',
                                 type: 'textarea',
                             },
+                            {
+                                label: '',
+                                name: 'embed_check',
+                                type: 'hidden',
+                            },
                         ],
                     }
                 ])
             }
+        },
+    ],
+};
+
+export function $showDetailsForm(details: DetailsNode|null, context: EditorUiContext) {
+    const linkModal = context.manager.createModal('details');
+    if (!details) {
+        return;
+    }
+
+    linkModal.show({
+        summary: details.getSummary()
+    });
+}
+
+export const details: EditorFormDefinition = {
+    submitText: 'Save',
+    async action(formData, context: EditorUiContext) {
+        context.editor.update(() => {
+            const node = $getNodeFromSelection($getSelection(), $isDetailsNode);
+            const summary = (formData.get('summary') || '').toString().trim();
+            if ($isDetailsNode(node)) {
+                node.setSummary(summary);
+            }
+        });
+
+        return true;
+    },
+    fields: [
+        {
+            label: 'Toggle label',
+            name: 'summary',
+            type: 'text',
         },
     ],
 };

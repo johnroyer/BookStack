@@ -84,6 +84,14 @@ return [
     'webhook_delete' => 'обрисан вебхоок',
     'webhook_delete_notification' => 'Вебхоок је успешно обрисан',
 
+    // Imports
+    'import_create' => 'created import',
+    'import_create_notification' => 'Import successfully uploaded',
+    'import_run' => 'updated import',
+    'import_run_notification' => 'Content successfully imported',
+    'import_delete' => 'deleted import',
+    'import_delete_notification' => 'Import successfully deleted',
+
     // Users
     'user_create' => 'креирао корисника',
     'user_create_notification' => 'Корисник је успешно креиран',
@@ -118,6 +126,14 @@ return [
     'comment_create'              => 'додао/ла коментар',
     'comment_update'              => 'ажуриран коментар',
     'comment_delete'              => 'обрисан коментар',
+
+    // Sort Rules
+    'sort_rule_create' => 'created sort rule',
+    'sort_rule_create_notification' => 'Sort rule successfully created',
+    'sort_rule_update' => 'updated sort rule',
+    'sort_rule_update_notification' => 'Sort rule successfully updated',
+    'sort_rule_delete' => 'deleted sort rule',
+    'sort_rule_delete_notification' => 'Sort rule successfully deleted',
 
     // Other
     'permissions_update'          => 'ажуриране дозволе',

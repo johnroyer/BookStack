@@ -1,23 +1,30 @@
 import {LexicalEditor} from "lexical";
-import {
-    getCodeToolbarContent,
-    getImageToolbarContent,
-    getLinkToolbarContent,
-    getMainEditorFullToolbar, getTableToolbarContent
-} from "./toolbars";
 import {EditorUIManager} from "./framework/manager";
 import {EditorUiContext} from "./framework/core";
-import {CodeBlockDecorator} from "./decorators/code-block";
-import {DiagramDecorator} from "./decorators/diagram";
-import {modals} from "./defaults/modals";
+import {el} from "../utils/dom";
 
-export function buildEditorUI(container: HTMLElement, element: HTMLElement, scrollContainer: HTMLElement, editor: LexicalEditor, options: Record<string, any>): EditorUiContext {
+export function buildEditorUI(containerDOM: HTMLElement, editor: LexicalEditor, options: Record<string, any>): EditorUiContext {
+    const editorDOM = el('div', {
+        contenteditable: 'true',
+        class: `editor-content-area ${options.editorClass || ''}`,
+    });
+    const scrollDOM = el('div', {
+        class: 'editor-content-wrap',
+    }, [editorDOM]);
+
+    containerDOM.append(scrollDOM);
+    containerDOM.classList.add('editor-container');
+    containerDOM.setAttribute('dir', options.textDirection);
+    if (options.darkMode) {
+        containerDOM.classList.add('editor-dark');
+    }
+
     const manager = new EditorUIManager();
     const context: EditorUiContext = {
         editor,
-        containerDOM: container,
-        editorDOM: element,
-        scrollDOM: scrollContainer,
+        containerDOM: containerDOM,
+        editorDOM: editorDOM,
+        scrollDOM: scrollDOM,
         manager,
         translate(text: string): string {
             const translations = options.translations;
@@ -30,44 +37,6 @@ export function buildEditorUI(container: HTMLElement, element: HTMLElement, scro
         options,
     };
     manager.setContext(context);
-
-    // Create primary toolbar
-    manager.setToolbar(getMainEditorFullToolbar(context));
-
-    // Register modals
-    for (const key of Object.keys(modals)) {
-        manager.registerModal(key, modals[key]);
-    }
-
-    // Register context toolbars
-    manager.registerContextToolbar('image', {
-        selector: 'img:not([drawio-diagram] img)',
-        content: getImageToolbarContent(),
-    });
-    manager.registerContextToolbar('link', {
-        selector: 'a',
-        content: getLinkToolbarContent(),
-        displayTargetLocator(originalTarget: HTMLElement): HTMLElement {
-            const image = originalTarget.querySelector('img');
-            return image || originalTarget;
-        }
-    });
-    manager.registerContextToolbar('code', {
-        selector: '.editor-code-block-wrap',
-        content: getCodeToolbarContent(),
-    });
-
-    manager.registerContextToolbar('table', {
-        selector: 'td,th',
-        content: getTableToolbarContent(),
-        displayTargetLocator(originalTarget: HTMLElement): HTMLElement {
-            return originalTarget.closest('table') as HTMLTableElement;
-        }
-    });
-
-    // Register image decorator listener
-    manager.registerDecoratorType('code', CodeBlockDecorator);
-    manager.registerDecoratorType('diagram', DiagramDecorator);
 
     return context;
 }

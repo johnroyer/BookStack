@@ -1,4 +1,3 @@
-import {handleDropdown} from "../helpers/dropdowns";
 import {EditorContainerUiElement, EditorUiElement} from "../core";
 import {EditorBasicButtonDefinition, EditorButton} from "../buttons";
 import {el} from "../../../utils/dom";
@@ -7,12 +6,16 @@ import {EditorMenuButton} from "./menu-button";
 export type EditorDropdownButtonOptions = {
     showOnHover?: boolean;
     direction?: 'vertical'|'horizontal';
+    showAside?: boolean;
+    hideOnAction?: boolean;
     button: EditorBasicButtonDefinition|EditorButton;
 };
 
 const defaultOptions: EditorDropdownButtonOptions = {
     showOnHover: false,
     direction: 'horizontal',
+    showAside: undefined,
+    hideOnAction: true,
     button: {label: 'Menu'},
 }
 
@@ -38,7 +41,7 @@ export class EditorDropdownButton extends EditorContainerUiElement {
                 },
                 isActive: () => {
                     return this.open;
-                }
+                },
             });
         }
 
@@ -63,8 +66,9 @@ export class EditorDropdownButton extends EditorContainerUiElement {
             class: 'editor-dropdown-menu-container',
         }, [button, menu]);
 
-        handleDropdown({toggle: button, menu : menu,
+        this.getContext().manager.dropdowns.handle({toggle: button, menu : menu,
             showOnHover: this.options.showOnHover,
+            showAside: typeof this.options.showAside === 'boolean' ? this.options.showAside : (this.options.direction === 'vertical'),
             onOpen : () => {
             this.open = true;
             this.getContext().manager.triggerStateUpdateForElement(this.button);
@@ -72,6 +76,12 @@ export class EditorDropdownButton extends EditorContainerUiElement {
             this.open = false;
             this.getContext().manager.triggerStateUpdateForElement(this.button);
         }});
+
+        if (this.options.hideOnAction) {
+            this.onEvent('button-action', () => {
+                this.getContext().manager.dropdowns.closeAll();
+            }, wrapper);
+        }
 
         return wrapper;
     }

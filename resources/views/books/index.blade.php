@@ -23,7 +23,7 @@
 
     <div id="new" class="mb-xl">
         <h5>{{ trans('entities.books_new') }}</h5>
-        @if(count($popular) > 0)
+        @if(count($new) > 0)
             @include('entities.list', ['entities' => $new, 'style' => 'compact'])
         @else
             <p class="text-muted pb-l mb-none">{{ trans('entities.books_new_empty') }}</p>
@@ -36,7 +36,7 @@
     <div class="actions mb-xl">
         <h5>{{ trans('common.actions') }}</h5>
         <div class="icon-list text-link">
-            @if(userCan('book-create-all'))
+            @if(userCan(\BookStack\Permissions\Permission::BookCreateAll))
                 <a href="{{ url("/create-book") }}" data-shortcut="new" class="icon-list-item">
                     <span>@icon('add')</span>
                     <span>{{ trans('entities.books_create') }}</span>
@@ -49,6 +49,13 @@
                 <span>@icon('tag')</span>
                 <span>{{ trans('entities.tags_view_tags') }}</span>
             </a>
+
+            @if(userCan(\BookStack\Permissions\Permission::ContentImport))
+                <a href="{{ url('/import') }}" class="icon-list-item">
+                    <span>@icon('upload')</span>
+                    <span>{{ trans('entities.import') }}</span>
+                </a>
+            @endif
         </div>
     </div>
 

@@ -10,10 +10,10 @@ const isProd = process.argv[2] === 'production';
 
 // Gather our input files
 const entryPoints = {
-    app: path.join(__dirname, '../../resources/js/app.js'),
+    app: path.join(__dirname, '../../resources/js/app.ts'),
     code: path.join(__dirname, '../../resources/js/code/index.mjs'),
     'legacy-modes': path.join(__dirname, '../../resources/js/code/legacy-modes.mjs'),
-    markdown: path.join(__dirname, '../../resources/js/markdown/index.mjs'),
+    markdown: path.join(__dirname, '../../resources/js/markdown/index.mts'),
     wysiwyg: path.join(__dirname, '../../resources/js/wysiwyg/index.ts'),
 };
 

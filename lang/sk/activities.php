@@ -51,8 +51,8 @@ return [
 
     // Revisions
     'revision_restore' => 'restored revision',
-    'revision_delete' => 'deleted revision',
-    'revision_delete_notification' => 'Revision successfully deleted',
+    'revision_delete' => 'odstránil(a) revíziu',
+    'revision_delete_notification' => 'Revízia úspešne odstránená',
 
     // Favourites
     'favourite_add_notification' => '":name" bol pridaný medzi obľúbené',
@@ -62,7 +62,7 @@ return [
     'watch_update_level_notification' => 'Watch preferences successfully updated',
 
     // Auth
-    'auth_login' => 'logged in',
+    'auth_login' => 'sa prihlásil(a)',
     'auth_register' => 'registered as new user',
     'auth_password_reset_request' => 'requested user password reset',
     'auth_password_reset_update' => 'reset user password',
@@ -83,6 +83,14 @@ return [
     'webhook_update_notification' => 'Webhook úspešne aktualizovaný',
     'webhook_delete' => 'odstránil(a) si webhook',
     'webhook_delete_notification' => 'Webhook úspešne odstránený',
+
+    // Imports
+    'import_create' => 'created import',
+    'import_create_notification' => 'Import successfully uploaded',
+    'import_run' => 'updated import',
+    'import_run_notification' => 'Content successfully imported',
+    'import_delete' => 'deleted import',
+    'import_delete_notification' => 'Import successfully deleted',
 
     // Users
     'user_create' => 'užívateľ vytvorený',
@@ -115,9 +123,17 @@ return [
 
     // Comments
     'commented_on'                => 'komentoval(a)',
-    'comment_create'              => 'added comment',
-    'comment_update'              => 'updated comment',
+    'comment_create'              => 'pridal(a) komentár',
+    'comment_update'              => 'aktualizoval(a) komentár',
     'comment_delete'              => 'odstrániť komentár',
+
+    // Sort Rules
+    'sort_rule_create' => 'created sort rule',
+    'sort_rule_create_notification' => 'Sort rule successfully created',
+    'sort_rule_update' => 'updated sort rule',
+    'sort_rule_update_notification' => 'Sort rule successfully updated',
+    'sort_rule_delete' => 'deleted sort rule',
+    'sort_rule_delete_notification' => 'Sort rule successfully deleted',
 
     // Other
     'permissions_update'          => 'aktualizované oprávnenia',

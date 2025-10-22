@@ -62,7 +62,6 @@ describe('LexicalHeadlessEditor', () => {
   it('should be headless environment', async () => {
     expect(typeof window === 'undefined').toBe(true);
     expect(typeof document === 'undefined').toBe(true);
-    expect(typeof navigator === 'undefined').toBe(true);
   });
 
   it('can update editor', async () => {
@@ -147,12 +146,12 @@ describe('LexicalHeadlessEditor', () => {
       editor.dispatchCommand(CONTROLLED_TEXT_INSERTION_COMMAND, 'foo');
     });
 
-    expect(onUpdate).toBeCalled();
-    expect(onCommand).toBeCalledWith('foo', expect.anything());
-    expect(onTransform).toBeCalledWith(
+    expect(onUpdate).toHaveBeenCalled();
+    expect(onCommand).toHaveBeenCalledWith('foo', expect.anything());
+    expect(onTransform).toHaveBeenCalledWith(
       expect.objectContaining({__type: 'paragraph'}),
     );
-    expect(onTextContent).toBeCalledWith('Helloworld');
+    expect(onTextContent).toHaveBeenCalledWith('Helloworld');
   });
 
   it('can preserve selection for pending editor state (within update loop)', async () => {
@@ -206,7 +205,7 @@ describe('LexicalHeadlessEditor', () => {
     cleanup();
 
     expect(html).toBe(
-      '<p>hello world</p>',
+      '<p dir="ltr">hello world</p>',
     );
   });
 });

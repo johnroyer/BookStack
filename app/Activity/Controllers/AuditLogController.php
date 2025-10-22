@@ -5,6 +5,8 @@ namespace BookStack\Activity\Controllers;
 use BookStack\Activity\ActivityType;
 use BookStack\Activity\Models\Activity;
 use BookStack\Http\Controller;
+use BookStack\Permissions\Permission;
+use BookStack\Sorting\SortUrl;
 use BookStack\Util\SimpleListOptions;
 use Illuminate\Http\Request;
 
@@ -12,8 +14,8 @@ class AuditLogController extends Controller
 {
     public function index(Request $request)
     {
-        $this->checkPermission('settings-manage');
-        $this->checkPermission('users-manage');
+        $this->checkPermission(Permission::SettingsManage);
+        $this->checkPermission(Permission::UsersManage);
 
         $sort = $request->get('sort', 'activity_date');
         $order = $request->get('order', 'desc');
@@ -65,6 +67,7 @@ class AuditLogController extends Controller
             'filters'       => $filters,
             'listOptions'   => $listOptions,
             'activityTypes' => $types,
+            'filterSortUrl' => new SortUrl('settings/audit', array_filter($request->except('page')))
         ]);
     }
 }

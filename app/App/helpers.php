@@ -1,6 +1,9 @@
 <?php
 
+use BookStack\App\AppVersion;
 use BookStack\App\Model;
+use BookStack\Facades\Theme;
+use BookStack\Permissions\Permission;
 use BookStack\Permissions\PermissionApplicator;
 use BookStack\Settings\SettingService;
 use BookStack\Users\Models\User;
@@ -12,12 +15,7 @@ use BookStack\Users\Models\User;
  */
 function versioned_asset(string $file = ''): string
 {
-    static $version = null;
-
-    if (is_null($version)) {
-        $versionFile = base_path('version');
-        $version = trim(file_get_contents($versionFile));
-    }
+    $version = AppVersion::get();
 
     $additional = '';
     if (config('app.env') === 'development') {
@@ -42,9 +40,9 @@ function user(): User
  * Check if the current user has a permission. If an ownable element
  * is passed in the jointPermissions are checked against that particular item.
  */
-function userCan(string $permission, Model $ownable = null): bool
+function userCan(string|Permission $permission, ?Model $ownable = null): bool
 {
-    if ($ownable === null) {
+    if (is_null($ownable)) {
         return user()->can($permission);
     }
 
@@ -58,7 +56,7 @@ function userCan(string $permission, Model $ownable = null): bool
  * Check if the current user can perform the given action on any items in the system.
  * Can be provided the class name of an entity to filter ability to that specific entity type.
  */
-function userCanOnAny(string $action, string $entityClass = ''): bool
+function userCanOnAny(string|Permission $action, string $entityClass = ''): bool
 {
     $permissions = app()->make(PermissionApplicator::class);
 
@@ -70,7 +68,7 @@ function userCanOnAny(string $action, string $entityClass = ''): bool
  *
  * @return mixed|SettingService
  */
-function setting(string $key = null, $default = null)
+function setting(?string $key = null, mixed $default = null): mixed
 {
     $settingService = app()->make(SettingService::class);
 
@@ -88,43 +86,10 @@ function setting(string $key = null, $default = null)
  */
 function theme_path(string $path = ''): ?string
 {
-    $theme = config('view.theme');
-
+    $theme = Theme::getTheme();
     if (!$theme) {
         return null;
     }
 
     return base_path('themes/' . $theme . ($path ? DIRECTORY_SEPARATOR . $path : $path));
-}
-
-/**
- * Generate a URL with multiple parameters for sorting purposes.
- * Works out the logic to set the correct sorting direction
- * Discards empty parameters and allows overriding.
- */
-function sortUrl(string $path, array $data, array $overrideData = []): string
-{
-    $queryStringSections = [];
-    $queryData = array_merge($data, $overrideData);
-
-    // Change sorting direction is already sorted on current attribute
-    if (isset($overrideData['sort']) && $overrideData['sort'] === $data['sort']) {
-        $queryData['order'] = ($data['order'] === 'asc') ? 'desc' : 'asc';
-    } elseif (isset($overrideData['sort'])) {
-        $queryData['order'] = 'asc';
-    }
-
-    foreach ($queryData as $name => $value) {
-        $trimmedVal = trim($value);
-        if ($trimmedVal === '') {
-            continue;
-        }
-        $queryStringSections[] = urlencode($name) . '=' . urlencode($trimmedVal);
-    }
-
-    if (count($queryStringSections) === 0) {
-        return url($path);
-    }
-
-    return url($path . '?' . implode('&', $queryStringSections));
 }

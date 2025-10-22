@@ -31,7 +31,7 @@ return [
     'book_create'                 => 'criou o livro',
     'book_create_notification'    => 'Livro criado com sucesso',
     'book_create_from_chapter'              => 'capítulo convertido em livro',
-    'book_create_from_chapter_notification' => 'Capítulo convertido com sucesso em um livro',
+    'book_create_from_chapter_notification' => 'Capítulo convertido em livro com sucesso',
     'book_update'                 => 'atualizou o livro',
     'book_update_notification'    => 'Livro atualizado com sucesso',
     'book_delete'                 => 'excluiu o livro',
@@ -40,14 +40,14 @@ return [
     'book_sort_notification'      => 'Livro reordenado com sucesso',
 
     // Bookshelves
-    'bookshelf_create'            => 'prateleira criada',
-    'bookshelf_create_notification'    => 'Prateleira criada com sucesso',
+    'bookshelf_create'            => 'estante criada',
+    'bookshelf_create_notification'    => 'Estante criada com sucesso',
     'bookshelf_create_from_book'    => 'livro convertido em estante',
-    'bookshelf_create_from_book_notification'    => 'Capítulo convertido com sucesso em um livro',
-    'bookshelf_update'                 => 'prateleira atualizada',
-    'bookshelf_update_notification'    => 'Prateleira atualizada com sucesso',
-    'bookshelf_delete'                 => 'prateleira excluída',
-    'bookshelf_delete_notification'    => 'Prateleira excluída com sucesso',
+    'bookshelf_create_from_book_notification'    => 'Livro convertido com sucesso em uma estante',
+    'bookshelf_update'                 => 'estante atualizada',
+    'bookshelf_update_notification'    => 'Estante atualizada com sucesso',
+    'bookshelf_delete'                 => 'estante excluída',
+    'bookshelf_delete_notification'    => 'Estante excluída com sucesso',
 
     // Revisions
     'revision_restore' => 'revisão restaurada',
@@ -84,6 +84,14 @@ return [
     'webhook_delete' => 'webhook excluído',
     'webhook_delete_notification' => 'Webhook excluido com sucesso',
 
+    // Imports
+    'import_create' => 'importação criada',
+    'import_create_notification' => 'Importação carregada com sucesso',
+    'import_run' => 'importação atualizada',
+    'import_run_notification' => 'Conteúdo importado com sucesso',
+    'import_delete' => 'importação excluída',
+    'import_delete_notification' => 'Importação excluída com sucesso',
+
     // Users
     'user_create' => 'usuário criado',
     'user_create_notification' => 'Usuário criado com sucesso',
@@ -101,9 +109,9 @@ return [
     'api_token_delete_notification' => 'Token de API excluído com sucesso',
 
     // Roles
-    'role_create' => 'função criada',
+    'role_create' => 'perfil criado',
     'role_create_notification' => 'Perfil criado com sucesso',
-    'role_update' => 'função atualizada',
+    'role_update' => 'perfil atualizado',
     'role_update_notification' => 'Perfil atualizado com sucesso',
     'role_delete' => 'Excluir papel',
     'role_delete_notification' => 'Perfil excluído com sucesso',
@@ -118,6 +126,14 @@ return [
     'comment_create'              => 'Adicionou comentário',
     'comment_update'              => 'Atualizar descrição',
     'comment_delete'              => 'Comentário deletado',
+
+    // Sort Rules
+    'sort_rule_create' => 'criou regra de ordenação',
+    'sort_rule_create_notification' => 'Regra de ordenação criada com sucesso',
+    'sort_rule_update' => 'atualizou regra de ordenação',
+    'sort_rule_update_notification' => 'Regra de ordenação atualizada com sucesso',
+    'sort_rule_delete' => 'excluiu regra de ordenação',
+    'sort_rule_delete_notification' => 'Regra de ordenação excluída com sucesso',
 
     // Other
     'permissions_update'          => 'atualizou permissões',
