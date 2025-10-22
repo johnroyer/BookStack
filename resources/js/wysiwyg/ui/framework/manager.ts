@@ -6,10 +6,13 @@ import {DecoratorListener} from "lexical/LexicalEditor";
 import type {NodeKey} from "lexical/LexicalNode";
 import {EditorContextToolbar, EditorContextToolbarDefinition} from "./toolbars";
 import {getLastSelection, setLastSelection} from "../../utils/selection";
+import {DropDownManager} from "./helpers/dropdowns";
 
 export type SelectionChangeHandler = (selection: BaseSelection|null) => void;
 
 export class EditorUIManager {
+
+    public dropdowns: DropDownManager = new DropDownManager();
 
     protected modalDefinitionsByKey: Record<string, EditorFormModalDefinition> = {};
     protected activeModalsByKey: Record<string, EditorFormModal> = {};
@@ -20,10 +23,12 @@ export class EditorUIManager {
     protected contextToolbarDefinitionsByKey: Record<string, EditorContextToolbarDefinition> = {};
     protected activeContextToolbars: EditorContextToolbar[] = [];
     protected selectionChangeHandlers: Set<SelectionChangeHandler> = new Set();
+    protected domEventAbortController = new AbortController();
+    protected teardownCallbacks: (()=>void)[] = [];
 
     setContext(context: EditorUiContext) {
         this.context = context;
-        this.setupEventListeners(context);
+        this.setupEventListeners();
         this.setupEditor(context.editor);
     }
 
@@ -96,7 +101,7 @@ export class EditorUIManager {
 
     setToolbar(toolbar: EditorContainerUiElement) {
         if (this.toolbar) {
-            this.toolbar.getDOMElement().remove();
+            this.toolbar.teardown();
         }
 
         this.toolbar = toolbar;
@@ -167,10 +172,40 @@ export class EditorUIManager {
         return this.getContext().options.textDirection === 'rtl' ? 'rtl' : 'ltr';
     }
 
+    onTeardown(callback: () => void): void {
+        this.teardownCallbacks.push(callback);
+    }
+
+    teardown(): void {
+        this.domEventAbortController.abort('teardown');
+
+        for (const [_, modal] of Object.entries(this.activeModalsByKey)) {
+            modal.teardown();
+        }
+
+        for (const [_, decorator] of Object.entries(this.decoratorInstancesByNodeKey)) {
+            decorator.teardown();
+        }
+
+        if (this.toolbar) {
+            this.toolbar.teardown();
+        }
+
+        for (const toolbar of this.activeContextToolbars) {
+            toolbar.teardown();
+        }
+
+        this.dropdowns.teardown();
+
+        for (const callback of this.teardownCallbacks) {
+            callback();
+        }
+    }
+
     protected updateContextToolbars(update: EditorUiStateUpdate): void {
         for (let i = this.activeContextToolbars.length - 1; i >= 0; i--) {
             const toolbar = this.activeContextToolbars[i];
-            toolbar.destroy();
+            toolbar.teardown();
             this.activeContextToolbars.splice(i, 1);
         }
 
@@ -195,7 +230,7 @@ export class EditorUIManager {
                     contentByTarget.set(targetEl, [])
                 }
                 // @ts-ignore
-                contentByTarget.get(targetEl).push(...definition.content);
+                contentByTarget.get(targetEl).push(...definition.content());
             }
         }
 
@@ -241,6 +276,7 @@ export class EditorUIManager {
             if (selectionChange) {
                 editor.update(() => {
                     const selection = $getSelection();
+                    // console.log('manager::selection', selection);
                     this.triggerStateUpdate({
                         editor, selection,
                     });
@@ -249,9 +285,9 @@ export class EditorUIManager {
         });
     }
 
-    protected setupEventListeners(context: EditorUiContext) {
+    protected setupEventListeners() {
         const layoutUpdate = this.triggerLayoutUpdate.bind(this);
-        window.addEventListener('scroll', layoutUpdate, {capture: true, passive: true});
-        window.addEventListener('resize', layoutUpdate, {passive: true});
+        window.addEventListener('scroll', layoutUpdate, {capture: true, passive: true, signal: this.domEventAbortController.signal});
+        window.addEventListener('resize', layoutUpdate, {passive: true, signal: this.domEventAbortController.signal});
     }
 }

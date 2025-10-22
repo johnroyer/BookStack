@@ -16,7 +16,7 @@ class ContentPermissionApiController extends ApiController
     ) {
     }
 
-    protected $rules = [
+    protected array $rules = [
         'update' => [
             'owner_id'  => ['int'],
 
@@ -51,7 +51,7 @@ class ContentPermissionApiController extends ApiController
         $entity = $this->entities->get($contentType)
             ->newQuery()->scopes(['visible'])->findOrFail($contentId);
 
-        $this->checkOwnablePermission('restrictions-manage', $entity);
+        $this->checkOwnablePermission(Permission::RestrictionsManage, $entity);
 
         return response()->json($this->formattedPermissionDataForEntity($entity));
     }
@@ -71,7 +71,7 @@ class ContentPermissionApiController extends ApiController
         $entity = $this->entities->get($contentType)
             ->newQuery()->scopes(['visible'])->findOrFail($contentId);
 
-        $this->checkOwnablePermission('restrictions-manage', $entity);
+        $this->checkOwnablePermission(Permission::RestrictionsManage, $entity);
 
         $data = $this->validate($request, $this->rules()['update']);
         $this->permissionsUpdater->updateFromApiRequestData($entity, $data);

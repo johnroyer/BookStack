@@ -1069,6 +1069,7 @@ describe('LexicalEditor tests', () => {
           __prev: null,
           __size: 1,
           __style: '',
+          __textFormat: 0,
           __textStyle: '',
           __type: 'paragraph',
         });
@@ -1149,6 +1150,7 @@ describe('LexicalEditor tests', () => {
           __prev: null,
           __size: 1,
           __style: '',
+          __textFormat: 0,
           __textStyle: '',
           __type: 'paragraph',
         });
@@ -2508,8 +2510,8 @@ describe('LexicalEditor tests', () => {
       );
     });
 
-    expect(onError).toBeCalledWith(updateError);
-    expect(textListener).toBeCalledWith('Hello\n\nworld');
+    expect(onError).toHaveBeenCalledWith(updateError);
+    expect(textListener).toHaveBeenCalledWith('Hello\n\nworld');
     expect(updateListener.mock.lastCall[0].prevEditorState).toBe(editorState);
   });
 

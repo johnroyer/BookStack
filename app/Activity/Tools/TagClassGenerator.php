@@ -3,17 +3,16 @@
 namespace BookStack\Activity\Tools;
 
 use BookStack\Activity\Models\Tag;
+use BookStack\Entities\Models\BookChild;
+use BookStack\Entities\Models\Entity;
+use BookStack\Entities\Models\Page;
+use BookStack\Permissions\Permission;
 
 class TagClassGenerator
 {
-    protected array $tags;
-
-    /**
-     * @param Tag[] $tags
-     */
-    public function __construct(array $tags)
-    {
-        $this->tags = $tags;
+    public function __construct(
+        protected Entity $entity
+    ) {
     }
 
     /**
@@ -22,14 +21,23 @@ class TagClassGenerator
     public function generate(): array
     {
         $classes = [];
+        $tags = $this->entity->tags->all();
 
-        foreach ($this->tags as $tag) {
-            $name = $this->normalizeTagClassString($tag->name);
-            $value = $this->normalizeTagClassString($tag->value);
-            $classes[] = 'tag-name-' . $name;
-            if ($value) {
-                $classes[] = 'tag-value-' . $value;
-                $classes[] = 'tag-pair-' . $name . '-' . $value;
+        foreach ($tags as $tag) {
+             array_push($classes, ...$this->generateClassesForTag($tag));
+        }
+
+        if ($this->entity instanceof BookChild && userCan(Permission::BookView, $this->entity->book)) {
+            $bookTags = $this->entity->book->tags;
+            foreach ($bookTags as $bookTag) {
+                 array_push($classes, ...$this->generateClassesForTag($bookTag, 'book-'));
+            }
+        }
+
+        if ($this->entity instanceof Page && $this->entity->chapter && userCan(Permission::ChapterView, $this->entity->chapter)) {
+            $chapterTags = $this->entity->chapter->tags;
+            foreach ($chapterTags as $chapterTag) {
+                 array_push($classes, ...$this->generateClassesForTag($chapterTag, 'chapter-'));
             }
         }
 
@@ -39,6 +47,22 @@ class TagClassGenerator
     public function generateAsString(): string
     {
         return implode(' ', $this->generate());
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function generateClassesForTag(Tag $tag, string $prefix = ''): array
+    {
+        $classes = [];
+        $name = $this->normalizeTagClassString($tag->name);
+        $value = $this->normalizeTagClassString($tag->value);
+        $classes[] = "{$prefix}tag-name-{$name}";
+        if ($value) {
+            $classes[] = "{$prefix}tag-value-{$value}";
+            $classes[] = "{$prefix}tag-pair-{$name}-{$value}";
+        }
+        return $classes;
     }
 
     protected function normalizeTagClassString(string $value): string

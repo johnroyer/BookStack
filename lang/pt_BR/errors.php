@@ -54,7 +54,7 @@ return [
     'image_upload_memory_limit' => 'Falha ao processar o ‘upload’ de imagem e/ou criar miniaturas devido a limites de recursos do sistema.',
     'image_thumbnail_memory_limit' => 'Falha ao criar variações de tamanho de imagem devido a limites de recursos do sistema.',
     'image_gallery_thumbnail_memory_limit' => 'Falha ao criar miniaturas da galeria devido aos limites de recursos do sistema.',
-    'drawing_data_not_found' => 'Dados de desenho não puderam ser carregados. O arquivo de desenho pode não existir mais ou você não tenha permissão para acessá-lo.',
+    'drawing_data_not_found' => 'Dados de diagrama não puderam ser carregados. O arquivo do diagrama pode não existir mais ou você não tenha permissão para acessá-lo.',
 
     // Attachments
     'attachment_not_found' => 'Documento não encontrado',
@@ -68,7 +68,7 @@ return [
     // Entities
     'entity_not_found' => 'Entidade não encontrada
 ',
-    'bookshelf_not_found' => 'Prateleira não encontrada',
+    'bookshelf_not_found' => 'Estante não encontrada',
     'book_not_found' => 'Livro não encontrado',
     'page_not_found' => 'Página não encontrada',
     'chapter_not_found' => 'Capítulo não encontrado',
@@ -82,10 +82,10 @@ return [
     'users_could_not_send_invite' => 'Não foi possível criar o usuário porque o endereço eletrônico de convite não foi enviado',
 
     // Roles
-    'role_cannot_be_edited' => 'Essa função não pode ser editada',
-    'role_system_cannot_be_deleted' => 'Essa é uma função do sistema e não pode ser excluída',
-    'role_registration_default_cannot_delete' => 'Essa função não poderá se excluída enquanto estiver registrada como função de registro padrão',
-    'role_cannot_remove_only_admin' => 'Este usuário é o único vinculado ao cargo de administrador. Atribua o cargo de administrador a outro usuário antes de tentar removê-lo aqui.',
+    'role_cannot_be_edited' => 'Esse perfil não pode ser editado',
+    'role_system_cannot_be_deleted' => 'Este é um perfil do sistema e não pode ser excluído',
+    'role_registration_default_cannot_delete' => 'Esse perfil não poderá se excluído enquanto estiver registrado como perfil padrão de registro',
+    'role_cannot_remove_only_admin' => 'Este usuário é o único vinculado ao perfil de administrador. Atribua o perfil de administrador a outro usuário antes de tentar removê-lo daqui.',
 
     // Comments
     'comment_list' => 'Ocorreu um erro ao buscar os comentários.',

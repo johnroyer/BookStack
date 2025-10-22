@@ -32,8 +32,9 @@ import {
 } from "../../../utils/selection";
 import {$isDiagramNode, $openDrawingEditorForNode, showDiagramManagerForInsert} from "../../../utils/diagrams";
 import {$createLinkedImageNodeFromImageData, showImageManager} from "../../../utils/images";
-import {$showDetailsForm, $showImageForm, $showLinkForm} from "../forms/objects";
+import {$showDetailsForm, $showImageForm, $showLinkForm, $showMediaForm} from "../forms/objects";
 import {formatCodeBlock} from "../../../utils/formats";
+import {$unwrapDetailsNode} from "../../../utils/details";
 
 export const link: EditorButtonDefinition = {
     label: 'Insert/edit link',
@@ -92,6 +93,7 @@ export const image: EditorButtonDefinition = {
                 context.editor.update(() => {
                     const link = $createLinkedImageNodeFromImageData(image);
                     $insertNodes([link]);
+                    link.select();
                 });
             })
         });
@@ -165,27 +167,14 @@ export const diagramManager: EditorButtonDefinition = {
 };
 
 export const media: EditorButtonDefinition = {
-    label: 'Insert/edit Media',
+    label: 'Insert/edit media',
     icon: mediaIcon,
     action(context: EditorUiContext) {
-        const mediaModal = context.manager.createModal('media');
-
         context.editor.getEditorState().read(() => {
             const selection = $getSelection();
             const selectedNode = $getNodeFromSelection(selection, $isMediaNode) as MediaNode | null;
 
-            let formDefaults = {};
-            if (selectedNode) {
-                const nodeAttrs = selectedNode.getAttributes();
-                formDefaults = {
-                    src: nodeAttrs.src || nodeAttrs.data || '',
-                    width: nodeAttrs.width,
-                    height: nodeAttrs.height,
-                    embed: '',
-                }
-            }
-
-            mediaModal.show(formDefaults);
+            $showMediaForm(selectedNode, context);
         });
     },
     isActive(selection: BaseSelection | null): boolean {
@@ -204,6 +193,8 @@ export const details: EditorButtonDefinition = {
             const topLevels = selectionNodes.map(n => n.getTopLevelElement())
                 .filter(n => n !== null) as ElementNode[];
             const uniqueTopLevels = [...new Set(topLevels)];
+
+            detailsNode.setOpen(true);
 
             if (uniqueTopLevels.length > 0) {
                 uniqueTopLevels[0].insertAfter(detailsNode);
@@ -261,11 +252,7 @@ export const detailsUnwrap: EditorButtonDefinition = {
         context.editor.update(() => {
             const details = $getNodeFromSelection($getSelection(), $isDetailsNode);
             if ($isDetailsNode(details)) {
-                const children = details.getChildren();
-                for (const child of children) {
-                    details.insertBefore(child);
-                }
-                details.remove();
+                $unwrapDetailsNode(details);
                 context.manager.triggerLayoutUpdate();
             }
         })

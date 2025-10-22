@@ -3,8 +3,10 @@
 namespace BookStack\Settings;
 
 use BookStack\Activity\ActivityType;
+use BookStack\App\AppVersion;
 use BookStack\Entities\Tools\TrashCan;
 use BookStack\Http\Controller;
+use BookStack\Permissions\Permission;
 use BookStack\References\ReferenceStore;
 use BookStack\Uploads\ImageService;
 use Illuminate\Http\Request;
@@ -16,17 +18,14 @@ class MaintenanceController extends Controller
      */
     public function index(TrashCan $trashCan)
     {
-        $this->checkPermission('settings-manage');
+        $this->checkPermission(Permission::SettingsManage);
         $this->setPageTitle(trans('settings.maint'));
-
-        // Get application version
-        $version = trim(file_get_contents(base_path('version')));
 
         // Recycle bin details
         $recycleStats = $trashCan->getTrashedCounts();
 
         return view('settings.maintenance', [
-            'version'      => $version,
+            'version'      => AppVersion::get(),
             'recycleStats' => $recycleStats,
         ]);
     }
@@ -36,7 +35,7 @@ class MaintenanceController extends Controller
      */
     public function cleanupImages(Request $request, ImageService $imageService)
     {
-        $this->checkPermission('settings-manage');
+        $this->checkPermission(Permission::SettingsManage);
         $this->logActivity(ActivityType::MAINTENANCE_ACTION_RUN, 'cleanup-images');
 
         $checkRevisions = !($request->get('ignore_revisions', 'false') === 'true');
@@ -64,7 +63,7 @@ class MaintenanceController extends Controller
      */
     public function sendTestEmail()
     {
-        $this->checkPermission('settings-manage');
+        $this->checkPermission(Permission::SettingsManage);
         $this->logActivity(ActivityType::MAINTENANCE_ACTION_RUN, 'send-test-email');
 
         try {
@@ -83,7 +82,7 @@ class MaintenanceController extends Controller
      */
     public function regenerateReferences(ReferenceStore $referenceStore)
     {
-        $this->checkPermission('settings-manage');
+        $this->checkPermission(Permission::SettingsManage);
         $this->logActivity(ActivityType::MAINTENANCE_ACTION_RUN, 'regenerate-references');
 
         try {

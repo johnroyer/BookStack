@@ -12,6 +12,7 @@ import subscriptIcon from "@icons/editor/subscript.svg";
 import codeIcon from "@icons/editor/code.svg";
 import formatClearIcon from "@icons/editor/format-clear.svg";
 import {$selectionContainsTextFormat} from "../../../utils/selection";
+import {$patchStyleText} from "@lexical/selection";
 
 function buildFormatButton(label: string, format: TextFormatType, icon: string): EditorButtonDefinition {
     return {
@@ -30,7 +31,19 @@ export const bold: EditorButtonDefinition = buildFormatButton('Bold', 'bold', bo
 export const italic: EditorButtonDefinition = buildFormatButton('Italic', 'italic', italicIcon);
 export const underline: EditorButtonDefinition = buildFormatButton('Underline', 'underline', underlinedIcon);
 export const textColor: EditorBasicButtonDefinition = {label: 'Text color', icon: textColorIcon};
-export const highlightColor: EditorBasicButtonDefinition = {label: 'Background color', icon: highlightIcon};
+export const highlightColor: EditorBasicButtonDefinition = {label: 'Highlight color', icon: highlightIcon};
+
+function colorAction(context: EditorUiContext, property: string, color: string): void {
+    context.editor.update(() => {
+        const selection = $getSelection();
+        if (selection) {
+            $patchStyleText(selection, {[property]: color || null});
+        }
+    });
+}
+
+export const textColorAction = (color: string, context: EditorUiContext) => colorAction(context, 'color', color);
+export const highlightColorAction = (color: string, context: EditorUiContext) => colorAction(context, 'background-color', color);
 
 export const strikethrough: EditorButtonDefinition = buildFormatButton('Strikethrough', 'strikethrough', strikethroughIcon);
 export const superscript: EditorButtonDefinition = buildFormatButton('Superscript', 'superscript', superscriptIcon);

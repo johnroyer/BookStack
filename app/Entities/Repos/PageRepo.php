@@ -16,8 +16,10 @@ use BookStack\Entities\Tools\TrashCan;
 use BookStack\Exceptions\MoveOperationException;
 use BookStack\Exceptions\PermissionsException;
 use BookStack\Facades\Activity;
+use BookStack\Permissions\Permission;
 use BookStack\References\ReferenceStore;
 use BookStack\References\ReferenceUpdater;
+use BookStack\Util\DatabaseTransaction;
 use Exception;
 
 class PageRepo
@@ -35,7 +37,7 @@ class PageRepo
     /**
      * Get a new draft page belonging to the given parent entity.
      */
-    public function getNewDraftPage(Entity $parent)
+    public function getNewDraftPage(Entity $parent): Page
     {
         $page = (new Page())->forceFill([
             'name'       => trans('entities.pages_initial_name'),
@@ -44,6 +46,9 @@ class PageRepo
             'updated_by' => user()->id,
             'draft'      => true,
             'editor'     => PageEditorType::getSystemDefault()->value,
+            'html'       => '',
+            'markdown'   => '',
+            'text'       => '',
         ]);
 
         if ($parent instanceof Chapter) {
@@ -53,16 +58,19 @@ class PageRepo
             $page->book_id = $parent->id;
         }
 
-        $defaultTemplate = $page->chapter->defaultTemplate ?? $page->book->defaultTemplate;
-        if ($defaultTemplate && userCan('view', $defaultTemplate)) {
+        $defaultTemplate = $page->chapter?->defaultTemplate()->get() ?? $page->book?->defaultTemplate()->get();
+        if ($defaultTemplate) {
             $page->forceFill([
                 'html'  => $defaultTemplate->html,
                 'markdown' => $defaultTemplate->markdown,
             ]);
+            $page->text = (new PageContent($page))->toPlainText();
         }
 
-        $page->save();
-        $page->refresh()->rebuildPermissions();
+        (new DatabaseTransaction(function () use ($page) {
+            $page->save();
+            $page->rebuildPermissions();
+        }))->run();
 
         return $page;
     }
@@ -72,25 +80,30 @@ class PageRepo
      */
     public function publishDraft(Page $draft, array $input): Page
     {
-        $draft->draft = false;
-        $draft->revision_count = 1;
-        $draft->priority = $this->getNewPriority($draft);
-        $this->updateTemplateStatusAndContentFromInput($draft, $input);
-        $this->baseRepo->update($draft, $input);
+        return (new DatabaseTransaction(function () use ($draft, $input) {
+            $draft->draft = false;
+            $draft->revision_count = 1;
+            $draft->priority = $this->getNewPriority($draft);
+            $this->updateTemplateStatusAndContentFromInput($draft, $input);
 
-        $summary = trim($input['summary'] ?? '') ?: trans('entities.pages_initial_revision');
-        $this->revisionRepo->storeNewForPage($draft, $summary);
-        $draft->refresh();
+            $draft = $this->baseRepo->update($draft, $input);
+            $draft->rebuildPermissions();
 
-        Activity::add(ActivityType::PAGE_CREATE, $draft);
+            $summary = trim($input['summary'] ?? '') ?: trans('entities.pages_initial_revision');
+            $this->revisionRepo->storeNewForPage($draft, $summary);
+            $draft->refresh();
 
-        return $draft;
+            Activity::add(ActivityType::PAGE_CREATE, $draft);
+            $this->baseRepo->sortParent($draft);
+
+            return $draft;
+        }))->run();
     }
 
     /**
      * Directly update the content for the given page from the provided input.
      * Used for direct content access in a way that performs required changes
-     * (Search index & reference regen) without performing an official update.
+     * (Search index and reference regen) without performing an official update.
      */
     public function setContentFromInput(Page $page, array $input): void
     {
@@ -104,18 +117,18 @@ class PageRepo
     public function update(Page $page, array $input): Page
     {
         // Hold the old details to compare later
-        $oldHtml = $page->html;
         $oldName = $page->name;
+        $oldHtml = $page->html;
         $oldMarkdown = $page->markdown;
 
         $this->updateTemplateStatusAndContentFromInput($page, $input);
-        $this->baseRepo->update($page, $input);
+        $page = $this->baseRepo->update($page, $input);
 
         // Update with new details
         $page->revision_count++;
         $page->save();
 
-        // Remove all update drafts for this user & page.
+        // Remove all update drafts for this user and page.
         $this->revisionRepo->deleteDraftsForCurrentUser($page);
 
         // Save a revision after updating
@@ -128,13 +141,14 @@ class PageRepo
         }
 
         Activity::add(ActivityType::PAGE_UPDATE, $page);
+        $this->baseRepo->sortParent($page);
 
         return $page;
     }
 
     protected function updateTemplateStatusAndContentFromInput(Page $page, array $input): void
     {
-        if (isset($input['template']) && userCan('templates-manage')) {
+        if (isset($input['template']) && userCan(Permission::TemplatesManage)) {
             $page->template = ($input['template'] === 'true');
         }
 
@@ -157,7 +171,7 @@ class PageRepo
             $pageContent->setNewHTML($input['html'], user());
         }
 
-        if (($newEditor !== $currentEditor || empty($page->editor)) && userCan('editor-change')) {
+        if (($newEditor !== $currentEditor || empty($page->editor)) && userCan(Permission::EditorChange)) {
             $page->editor = $newEditor->value;
         } elseif (empty($page->editor)) {
             $page->editor = $defaultEditor->value;
@@ -167,12 +181,12 @@ class PageRepo
     /**
      * Save a page update draft.
      */
-    public function updatePageDraft(Page $page, array $input)
+    public function updatePageDraft(Page $page, array $input): Page|PageRevision
     {
-        // If the page itself is a draft simply update that
+        // If the page itself is a draft, simply update that
         if ($page->draft) {
             $this->updateTemplateStatusAndContentFromInput($page, $input);
-            $page->fill($input);
+            $page->forceFill(array_intersect_key($input, array_flip(['name'])))->save();
             $page->save();
 
             return $page;
@@ -200,7 +214,7 @@ class PageRepo
      *
      * @throws Exception
      */
-    public function destroy(Page $page)
+    public function destroy(Page $page): void
     {
         $this->trashCan->softDestroyPage($page);
         Activity::add(ActivityType::PAGE_DELETE, $page);
@@ -243,6 +257,8 @@ class PageRepo
         Activity::add(ActivityType::PAGE_RESTORE, $page);
         Activity::add(ActivityType::REVISION_RESTORE, $revision);
 
+        $this->baseRepo->sortParent($page);
+
         return $page;
     }
 
@@ -261,18 +277,22 @@ class PageRepo
             throw new MoveOperationException('Book or chapter to move page into not found');
         }
 
-        if (!userCan('page-create', $parent)) {
+        if (!userCan(Permission::PageCreate, $parent)) {
             throw new PermissionsException('User does not have permission to create a page within the new parent');
         }
 
-        $page->chapter_id = ($parent instanceof Chapter) ? $parent->id : null;
-        $newBookId = ($parent instanceof Chapter) ? $parent->book->id : $parent->id;
-        $page->changeBook($newBookId);
-        $page->rebuildPermissions();
+        return (new DatabaseTransaction(function () use ($page, $parent) {
+            $page->chapter_id = ($parent instanceof Chapter) ? $parent->id : null;
+            $newBookId = ($parent instanceof Chapter) ? $parent->book->id : $parent->id;
+            $page = $page->changeBook($newBookId);
+            $page->rebuildPermissions();
 
-        Activity::add(ActivityType::PAGE_MOVE, $page);
+            Activity::add(ActivityType::PAGE_MOVE, $page);
 
-        return $parent;
+            $this->baseRepo->sortParent($page);
+
+            return $parent;
+        }))->run();
     }
 
     /**

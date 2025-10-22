@@ -2,6 +2,7 @@
 
 namespace Database\Factories\Entities\Models;
 
+use BookStack\Entities\Tools\PageEditorType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -16,10 +17,8 @@ class PageFactory extends Factory
 
     /**
      * Define the model's default state.
-     *
-     * @return array
      */
-    public function definition()
+    public function definition(): array
     {
         $html = '<p>' . implode('</p>', $this->faker->paragraphs(5)) . '</p>';
 
@@ -29,6 +28,8 @@ class PageFactory extends Factory
             'html'           => $html,
             'text'           => strip_tags($html),
             'revision_count' => 1,
+            'editor'         => 'wysiwyg',
+            'priority'       => 1,
         ];
     }
 }

@@ -286,7 +286,7 @@ class PagesApiTest extends TestCase
     {
         $this->actingAsApiEditor();
         $page = $this->entities->page();
-        DB::table('pages')->where('id', '=', $page->id)->update(['updated_at' => Carbon::now()->subWeek()]);
+        $page->newQuery()->where('id', '=', $page->id)->update(['updated_at' => Carbon::now()->subWeek()]);
 
         $details = [
             'tags' => [['name' => 'Category', 'value' => 'Testing']],
@@ -307,61 +307,5 @@ class PagesApiTest extends TestCase
 
         $resp->assertStatus(204);
         $this->assertActivityExists('page_delete', $page);
-    }
-
-    public function test_export_html_endpoint()
-    {
-        $this->actingAsApiEditor();
-        $page = $this->entities->page();
-
-        $resp = $this->get($this->baseEndpoint . "/{$page->id}/export/html");
-        $resp->assertStatus(200);
-        $resp->assertSee($page->name);
-        $resp->assertHeader('Content-Disposition', 'attachment; filename="' . $page->slug . '.html"');
-    }
-
-    public function test_export_plain_text_endpoint()
-    {
-        $this->actingAsApiEditor();
-        $page = $this->entities->page();
-
-        $resp = $this->get($this->baseEndpoint . "/{$page->id}/export/plaintext");
-        $resp->assertStatus(200);
-        $resp->assertSee($page->name);
-        $resp->assertHeader('Content-Disposition', 'attachment; filename="' . $page->slug . '.txt"');
-    }
-
-    public function test_export_pdf_endpoint()
-    {
-        $this->actingAsApiEditor();
-        $page = $this->entities->page();
-
-        $resp = $this->get($this->baseEndpoint . "/{$page->id}/export/pdf");
-        $resp->assertStatus(200);
-        $resp->assertHeader('Content-Disposition', 'attachment; filename="' . $page->slug . '.pdf"');
-    }
-
-    public function test_export_markdown_endpoint()
-    {
-        $this->actingAsApiEditor();
-        $page = $this->entities->page();
-
-        $resp = $this->get($this->baseEndpoint . "/{$page->id}/export/markdown");
-        $resp->assertStatus(200);
-        $resp->assertSee('# ' . $page->name);
-        $resp->assertHeader('Content-Disposition', 'attachment; filename="' . $page->slug . '.md"');
-    }
-
-    public function test_cant_export_when_not_have_permission()
-    {
-        $types = ['html', 'plaintext', 'pdf', 'markdown'];
-        $this->actingAsApiEditor();
-        $this->permissions->removeUserRolePermissions($this->users->editor(), ['content-export']);
-
-        $page = $this->entities->page();
-        foreach ($types as $type) {
-            $resp = $this->get($this->baseEndpoint . "/{$page->id}/export/{$type}");
-            $this->assertPermissionError($resp);
-        }
     }
 }

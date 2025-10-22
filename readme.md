@@ -5,13 +5,13 @@
 [![Crowdin](https://badges.crowdin.net/bookstack/localized.svg)](https://crowdin.com/project/bookstack)
 [![Build Status](https://github.com/BookStackApp/BookStack/workflows/test-php/badge.svg)](https://github.com/BookStackApp/BookStack/actions)
 [![Lint Status](https://github.com/BookStackApp/BookStack/workflows/lint-php/badge.svg)](https://github.com/BookStackApp/BookStack/actions)
-[![Maintainability](https://api.codeclimate.com/v1/badges/5551731994dd22fa1f4f/maintainability)](https://codeclimate.com/github/BookStackApp/BookStack/maintainability)
-
+[![php-metrics](https://img.shields.io/static/v1?label=Metrics&message=php&color=4F5B93)](https://source.bookstackapp.com/php-stats/index.html)
+<br>
 [![Alternate Source](https://img.shields.io/static/v1?label=Alt+Source&message=Git&color=ef391a&logo=git)](https://source.bookstackapp.com/)
 [![Repo Stats](https://img.shields.io/static/v1?label=GitHub+project&message=stats&color=f27e3f)](https://gh-stats.bookstackapp.com/)
-[![Discord](https://img.shields.io/static/v1?label=Discord&message=chat&color=738adb&logo=discord)](https://discord.gg/ztkBqR2)
-[![Mastodon](https://img.shields.io/static/v1?label=Mastodon&message=@bookstack&color=595aff&logo=mastodon)](https://fosstodon.org/@bookstack)
-
+[![Discord](https://img.shields.io/static/v1?label=Discord&message=chat&color=738adb&logo=discord)](https://www.bookstackapp.com/links/discord)
+[![Mastodon](https://img.shields.io/static/v1?label=Mastodon&message=@bookstack&color=595aff&logo=mastodon)](https://www.bookstackapp.com/links/mastodon)
+<br>
 [![PeerTube](https://img.shields.io/static/v1?label=PeerTube&message=bookstack@foss.video&color=f2690d&logo=peertube)](https://foss.video/c/bookstack)
 [![YouTube](https://img.shields.io/static/v1?label=YouTube&message=bookstackapp&color=ff0000&logo=youtube)](https://www.youtube.com/bookstackapp)
 
@@ -24,16 +24,16 @@ A platform for storing and organising information and documentation. Details for
 * [Screenshots](https://www.bookstackapp.com/#screenshots) 
 * [BookStack Blog](https://www.bookstackapp.com/blog)
 * [Issue List](https://github.com/BookStackApp/BookStack/issues)
-* [Discord Chat](https://discord.gg/ztkBqR2)
+* [Discord Chat](https://www.bookstackapp.com/links/discord)
 * [Support Options](https://www.bookstackapp.com/support/)
 
 ## 📚 Project Definition
 
-BookStack is an opinionated documentation platform that provides a pleasant and simple out-of-the-box experience. New users to an instance should find the experience intuitive and only basic word-processing skills should be required to get involved in creating content on BookStack. The platform should provide advanced power features to those that desire it but they should not interfere with the core simple user experience.
+BookStack is an opinionated documentation platform that provides a pleasant and simple out-of-the-box experience. New users to an instance should find the experience intuitive and only basic word-processing skills should be required to get involved in creating content on BookStack. The platform should provide advanced power features to those that desire it, but they should not interfere with the core simple user experience.
 
 BookStack is not designed as an extensible platform to be used for purposes that differ to the statement above.
 
-In regard to development philosophy, BookStack has a relaxed, open & positive approach. At the end of the day this is free software developed and maintained by people donating their own free time.
+In regard to development philosophy, BookStack has a relaxed, open & positive approach. We aim to slowly yet continuously evolve the platform while providing a stable & easy upgrade path. 
 
 You can read more about the project and its origins in [our FAQ here](https://www.bookstackapp.com/about/project-faq/).
 
@@ -48,49 +48,55 @@ Big thanks to these companies for supporting the project.
 #### Gold Sponsor
 
 <table><tbody><tr>
-<td align="center"><a href="https://www.federated.computer/bookstack/" target="_blank">
+<td align="center"><a href="https://www.federated.computer/bookstack" target="_blank">
     <img width="480" src="https://www.bookstackapp.com/images/sponsors/federated-computer.png" alt="Federated.computer">
 </a></td>
-</tr></tbody></table>
+</tr><tr>
+<td align="center"><a href="https://www.diagrams.net/" target="_blank">
+    <img width="480" src="https://www.bookstackapp.com/images/sponsors/diagramsnet.png" alt="Diagrams.net">
+</a></td>
+</tr>
+</tbody></table>
 
 #### Bronze Sponsors
 
 <table><tbody><tr>
-<td align="center"><a href="https://www.diagrams.net/" target="_blank">
-    <img width="240" src="https://www.bookstackapp.com/images/sponsors/diagramsnet.png" alt="Diagrams.net">
-</a></td>
 <td align="center"><a href="https://cloudabove.com/hosting" target="_blank">
     <img width="200" src="https://www.bookstackapp.com/images/sponsors/cloudabove.png" alt="Cloudabove">
 </a></td>
-</tr><tr>
 <td align="center"><a href="https://www.practicali.be" target="_blank">
     <img width="240" src="https://www.bookstackapp.com/images/sponsors/practicali.png" alt="Practicali">
 </a></td>
+</tr><tr>
 <td align="center"><a href="https://www.stellarhosted.com/bookstack/" target="_blank">
     <img width="240" src="https://www.bookstackapp.com/images/sponsors/stellarhosted.png" alt="Stellar Hosted">
 </a></td>
-</tr>
-<tr>
 <td align="center" style="text-align: center"><a href="https://nws.netways.de/apps/bookstack/" target="_blank">
     <img width="240" src="https://www.bookstackapp.com/images/sponsors/netways.png" alt="NETWAYS Web Services">
 </a></td>
+</tr>
+<tr>
 <td align="center" style="text-align: center"><a href="https://www.schroeck-consulting.de/" target="_blank">
     <img width="200" src="https://www.bookstackapp.com/images/sponsors/schroeck-consulting.png" alt="Schroeck IT Consulting">
 </a></td>
-</tr>
-<tr>
 <td align="center"><a href="https://practinet.be/" target="_blank">
     <img width="240" src="https://www.bookstackapp.com/images/sponsors/practinet.png" alt="Practinet">
 </a></td>
-<td align="center"><a href="https://transporttalent.com" target="_blank">
-    <img width="240" src="https://www.bookstackapp.com/images/sponsors/transport-talent.png" alt="Transport Talent">
+</tr>
+<tr>
+<td align="center"><a href="https://route4me.com/" target="_blank">
+    <img width="240" src="https://www.bookstackapp.com/images/sponsors/route4me.png" alt="Route4Me - Route Optimizer and Route Planner Software">
+</a></td>
+<td align="center"><a href="https://phamos.eu" target="_blank">
+    <img width="136" src="https://www.bookstackapp.com/images/sponsors/phamos.png" alt="phamos">
 </a></td>
 </tr>
 <tr>
-<td colspan="2" align="center"><a href="https://route4me.com/" target="_blank">
-    <img width="240" src="https://www.bookstackapp.com/images/sponsors/route4me.png" alt="Route4Me - Route Optimizer and Route Planner Software">
+<td align="center" colspan="2"><a href="https://sitespeak.ai/bookstack" target="_blank">
+    <img width="240" src="https://www.bookstackapp.com/images/sponsors/sitespeak.png" alt="SiteSpeakAI">
 </a></td>
-</tr></tbody></table>
+</tr>
+</tbody></table>
 
 ## 🛠️ Development & Testing
 
@@ -102,7 +108,7 @@ Details about BookStack's versioning scheme and the general release process [can
 
 ## 🌎 Translations
 
-Translations for text within BookStack is managed through the [BookStack project on Crowdin](https://crowdin.com/project/bookstack). Some strings have colon-prefixed variables such as `:userName`. Leave these values as they are as they will be replaced at run-time.
+Translations for text within BookStack are managed through the [BookStack project on Crowdin](https://crowdin.com/project/bookstack). Some strings have colon-prefixed variables such as `:userName`. Leave these values as they are as they will be replaced at run-time.
 
 Please use [Crowdin](https://crowdin.com/project/bookstack) to contribute translations instead of opening a pull request. The translations within the working codebase can be out-of-date, and merging via code can cause conflicts & sync issues. If for some reason you can't use Crowdin feel free to open an issue to discuss alternative options. 
 
@@ -134,7 +140,7 @@ We want BookStack to remain accessible to as many people as possible. We aim for
 
 ## 🖥️ Website, Docs & Blog
 
-The website which contains the project docs & blog can be found in the [BookStackApp/website](https://github.com/BookStackApp/website) repo.
+The website which contains the project docs & blog can be found in the [BookStackApp/website](https://codeberg.org/bookstack/website) repo.
 
 ## ⚖️ License
 
@@ -161,7 +167,7 @@ Note: This is not an exhaustive list of all libraries and projects that would be
 * [KnpLabs/snappy](https://github.com/KnpLabs/snappy) - _[MIT](https://github.com/KnpLabs/snappy/blob/master/LICENSE)_
 * [WKHTMLtoPDF](http://wkhtmltopdf.org/index.html) - _[LGPL v3.0](https://github.com/wkhtmltopdf/wkhtmltopdf/blob/master/LICENSE)_
 * [diagrams.net](https://github.com/jgraph/drawio) - _[Embedded Version Terms](https://www.diagrams.net/trust/) / [Source Project - Apache-2.0](https://github.com/jgraph/drawio/blob/dev/LICENSE)_
-* [OneLogin's SAML PHP Toolkit](https://github.com/onelogin/php-saml) - _[MIT](https://github.com/onelogin/php-saml/blob/master/LICENSE)_
+* [SAML PHP Toolkit](https://github.com/SAML-Toolkits/php-saml) - _[MIT](https://github.com/SAML-Toolkits/php-saml/blob/master/LICENSE)_
 * [League/CommonMark](https://commonmark.thephpleague.com/) - _[BSD-3-Clause](https://github.com/thephpleague/commonmark/blob/2.2/LICENSE)_
 * [League/Flysystem](https://flysystem.thephpleague.com) - _[MIT](https://github.com/thephpleague/flysystem/blob/3.x/LICENSE)_
 * [League/html-to-markdown](https://github.com/thephpleague/html-to-markdown) - _[MIT](https://github.com/thephpleague/html-to-markdown/blob/master/LICENSE)_

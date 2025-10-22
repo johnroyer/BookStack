@@ -36,6 +36,7 @@ export {NewUserPassword} from './new-user-password';
 export {Notification} from './notification';
 export {OptionalInput} from './optional-input';
 export {PageComment} from './page-comment';
+export {PageCommentReference} from './page-comment-reference';
 export {PageComments} from './page-comments';
 export {PageDisplay} from './page-display';
 export {PageEditor} from './page-editor';
@@ -50,6 +51,7 @@ export {ShelfSort} from './shelf-sort';
 export {Shortcuts} from './shortcuts';
 export {ShortcutInput} from './shortcut-input';
 export {SortableList} from './sortable-list';
+export {SortRuleManager} from './sort-rule-manager'
 export {SubmitOnChange} from './submit-on-change';
 export {Tabs} from './tabs';
 export {TagManager} from './tag-manager';

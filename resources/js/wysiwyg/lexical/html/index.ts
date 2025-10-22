@@ -11,7 +11,6 @@ import type {
   DOMChildConversion,
   DOMConversion,
   DOMConversionFn,
-  ElementFormatType,
   LexicalEditor,
   LexicalNode,
 } from 'lexical';
@@ -58,6 +57,7 @@ export function $generateNodesFromDOM(
       }
     }
   }
+
   $unwrapArtificalNodes(allArtificialNodes);
 
   return lexicalNodes;
@@ -85,7 +85,18 @@ export function $generateHtmlFromNodes(
     $appendNodesToHTML(editor, topLevelNode, container, selection);
   }
 
-  return container.innerHTML;
+  const nodeCode = [];
+  for (const node of container.childNodes) {
+    if ("outerHTML" in node) {
+      nodeCode.push(node.outerHTML)
+    } else {
+      const wrap = document.createElement('div');
+      wrap.appendChild(node.cloneNode(true));
+      nodeCode.push(wrap.innerHTML);
+    }
+  }
+
+  return nodeCode.join('\n');
 }
 
 function $appendNodesToHTML(
@@ -324,8 +335,6 @@ function wrapContinuousInlines(
   nodes: Array<LexicalNode>,
   createWrapperFn: () => ElementNode,
 ): Array<LexicalNode> {
-  const textAlign = (domNode as HTMLElement).style
-    .textAlign as ElementFormatType;
   const out: Array<LexicalNode> = [];
   let continuousInlines: Array<LexicalNode> = [];
   // wrap contiguous inline child nodes in para

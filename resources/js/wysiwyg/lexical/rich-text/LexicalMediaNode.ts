@@ -8,13 +8,12 @@ import {
 } from 'lexical';
 import type {EditorConfig} from "lexical/LexicalEditor";
 
-import {el, setOrRemoveAttribute, sizeToPixels} from "../../utils/dom";
+import {el, setOrRemoveAttribute, sizeToPixels, styleMapToStyleString, styleStringToStyleMap} from "../../utils/dom";
 import {
     CommonBlockAlignment, deserializeCommonBlockNode,
     setCommonBlockPropsFromElement,
     updateElementWithCommonBlockProps
 } from "lexical/nodes/common";
-import {$selectSingleNode} from "../../utils/selection";
 import {SerializedCommonBlockNode} from "lexical/nodes/CommonBlockNode";
 
 export type MediaNodeTag = 'iframe' | 'embed' | 'object' | 'video' | 'audio';
@@ -44,6 +43,19 @@ function filterAttributes(attributes: Record<string, string>): Record<string, st
         }
     }
     return filtered;
+}
+
+function removeStyleFromAttributes(attributes: Record<string, string>, styleName: string): Record<string, string> {
+    const attrCopy = Object.assign({}, attributes);
+    if (!attributes.style) {
+        return attrCopy;
+    }
+
+    const map = styleStringToStyleMap(attributes.style);
+    map.delete(styleName);
+
+    attrCopy.style = styleMapToStyleString(map);
+    return attrCopy;
 }
 
 function domElementToNode(tag: MediaNodeTag, element: HTMLElement): MediaNode {
@@ -118,7 +130,7 @@ export class MediaNode extends ElementNode {
 
     getAttributes(): Record<string, string> {
         const self = this.getLatest();
-        return self.__attributes;
+        return Object.assign({}, self.__attributes);
     }
 
     setSources(sources: MediaNodeSource[]) {
@@ -128,25 +140,37 @@ export class MediaNode extends ElementNode {
 
     getSources(): MediaNodeSource[] {
         const self = this.getLatest();
-        return self.__sources;
+        return self.__sources.map(s => Object.assign({}, s))
     }
 
     setSrc(src: string): void {
-        const attrs = Object.assign({}, this.getAttributes());
+        const attrs = this.getAttributes();
+        const sources = this.getSources();
+
         if (this.__tag ==='object') {
             attrs.data = src;
+        } if (this.__tag === 'video' && sources.length > 0) {
+            sources[0].src = src;
+            delete attrs.src;
+            if (sources.length > 1) {
+                sources.splice(1, sources.length - 1);
+            }
+            this.setSources(sources);
         } else {
             attrs.src = src;
         }
+
         this.setAttributes(attrs);
     }
 
     setWidthAndHeight(width: string, height: string): void {
-        const attrs = Object.assign(
-            {},
+        let attrs: Record<string, string> = Object.assign(
             this.getAttributes(),
             {width, height},
         );
+
+        attrs = removeStyleFromAttributes(attrs, 'width');
+        attrs = removeStyleFromAttributes(attrs, 'height');
         this.setAttributes(attrs);
     }
 
@@ -185,8 +209,8 @@ export class MediaNode extends ElementNode {
             return;
         }
 
-        const attrs = Object.assign({}, this.getAttributes(), {height});
-        this.setAttributes(attrs);
+        const attrs = Object.assign(this.getAttributes(), {height});
+        this.setAttributes(removeStyleFromAttributes(attrs, 'height'));
     }
 
     getHeight(): number {
@@ -195,8 +219,9 @@ export class MediaNode extends ElementNode {
     }
 
     setWidth(width: number): void {
-        const attrs = Object.assign({}, this.getAttributes(), {width});
-        this.setAttributes(attrs);
+        const existingAttrs = this.getAttributes();
+        const attrs: Record<string, string> = Object.assign(existingAttrs, {width});
+        this.setAttributes(removeStyleFromAttributes(attrs, 'width'));
     }
 
     getWidth(): number {
@@ -222,15 +247,9 @@ export class MediaNode extends ElementNode {
 
     createDOM(_config: EditorConfig, _editor: LexicalEditor) {
         const media = this.createInnerDOM();
-        const wrap = el('span', {
+        return el('span', {
             class: media.className + ' editor-media-wrap',
         }, [media]);
-
-        wrap.addEventListener('click', e => {
-            _editor.update(() => $selectSingleNode(this));
-        });
-
-        return wrap;
     }
 
     updateDOM(prevNode: MediaNode, dom: HTMLElement): boolean {
@@ -343,11 +362,55 @@ export function $createMediaNodeFromHtml(html: string): MediaNode | null {
     return domElementToNode(tag as MediaNodeTag, el);
 }
 
+interface UrlPattern {
+    readonly regex: RegExp;
+    readonly w: number;
+    readonly h: number;
+    readonly url: string;
+}
+
+/**
+ * These patterns originate from the tinymce/tinymce project.
+ * https://github.com/tinymce/tinymce/blob/release/6.6/modules/tinymce/src/plugins/media/main/ts/core/UrlPatterns.ts
+ * License: MIT Copyright (c) 2022 Ephox Corporation DBA Tiny Technologies, Inc.
+ * License Link: https://github.com/tinymce/tinymce/blob/584a150679669859a528828e5d2910a083b1d911/LICENSE.TXT
+ */
+const urlPatterns: UrlPattern[] = [
+    {
+        regex: /.*?youtu\.be\/([\w\-_\?&=.]+)/i,
+        w: 560, h: 314,
+        url: 'https://www.youtube.com/embed/$1',
+    },
+    {
+        regex: /.*youtube\.com(.+)v=([^&]+)(&([a-z0-9&=\-_]+))?.*/i,
+        w: 560, h: 314,
+        url: 'https://www.youtube.com/embed/$2?$4',
+    },
+    {
+        regex: /.*youtube.com\/embed\/([a-z0-9\?&=\-_]+).*/i,
+        w: 560, h: 314,
+        url: 'https://www.youtube.com/embed/$1',
+    },
+];
+
 const videoExtensions = ['mp4', 'mpeg', 'm4v', 'm4p', 'mov'];
 const audioExtensions = ['3gp', 'aac', 'flac', 'mp3', 'm4a', 'ogg', 'wav', 'webm'];
 const iframeExtensions = ['html', 'htm', 'php', 'asp', 'aspx', ''];
 
 export function $createMediaNodeFromSrc(src: string): MediaNode {
+
+    for (const pattern of urlPatterns) {
+        const match = src.match(pattern.regex);
+        if (match) {
+            const newSrc = src.replace(pattern.regex, pattern.url);
+            const node = new MediaNode('iframe');
+            node.setSrc(newSrc);
+            node.setHeight(pattern.h);
+            node.setWidth(pattern.w);
+            return node;
+        }
+    }
+
     let nodeTag: MediaNodeTag = 'iframe';
     const srcEnd = src.split('?')[0].split('/').pop() || '';
     const srcEndSplit = srcEnd.split('.');
@@ -360,7 +423,9 @@ export function $createMediaNodeFromSrc(src: string): MediaNode {
         nodeTag = 'embed';
     }
 
-    return new MediaNode(nodeTag);
+    const node = new MediaNode(nodeTag);
+    node.setSrc(src);
+    return node;
 }
 
 export function $isMediaNode(node: LexicalNode | null | undefined): node is MediaNode {

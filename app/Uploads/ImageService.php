@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ImageService
 {
-    protected static array $supportedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+    protected static array $supportedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'avif'];
 
     public function __construct(
         protected ImageStorage $storage,
@@ -31,8 +31,8 @@ class ImageService
         UploadedFile $uploadedFile,
         string $type,
         int $uploadedTo = 0,
-        int $resizeWidth = null,
-        int $resizeHeight = null,
+        ?int $resizeWidth = null,
+        ?int $resizeHeight = null,
         bool $keepRatio = true,
         string $imageName = '',
     ): Image {
@@ -138,7 +138,7 @@ class ImageService
      * Get the raw data content from an image.
      *
      * @throws Exception
-     * @returns ?resource
+     * @return ?resource
      */
     public function getImageStream(Image $image): mixed
     {
@@ -184,7 +184,7 @@ class ImageService
                 /** @var Image $image */
                 foreach ($images as $image) {
                     $searchQuery = '%' . basename($image->path) . '%';
-                    $inPage = DB::table('pages')
+                    $inPage = DB::table('entity_page_data')
                             ->where('html', 'like', $searchQuery)->count() > 0;
 
                     $inRevision = false;

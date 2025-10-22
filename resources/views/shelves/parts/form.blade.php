@@ -1,7 +1,3 @@
-@push('head')
-    <script src="{{ versioned_asset('libs/tinymce/tinymce.min.js') }}" nonce="{{ $cspNonce }}"></script>
-@endpush
-
 {{ csrf_field() }}
 <div class="form-group title-input">
     <label for="name">{{ trans('common.name') }}</label>
@@ -30,15 +26,18 @@
                     @icon('more')
                 </button>
                 <div refs="dropdown@menu shelf-sort@sort-button-container" class="dropdown-menu" role="menu">
-                    <button type="button" class="text-item" data-sort="name">{{ trans('entities.books_sort_name') }}</button>
-                    <button type="button" class="text-item" data-sort="created">{{ trans('entities.books_sort_created') }}</button>
-                    <button type="button" class="text-item" data-sort="updated">{{ trans('entities.books_sort_updated') }}</button>
+                    <button type="button" class="text-item"
+                            data-sort="name">{{ trans('entities.books_sort_name') }}</button>
+                    <button type="button" class="text-item"
+                            data-sort="created">{{ trans('entities.books_sort_created') }}</button>
+                    <button type="button" class="text-item"
+                            data-sort="updated">{{ trans('entities.books_sort_updated') }}</button>
                 </div>
             </div>
         </div>
         <ul refs="shelf-sort@shelf-book-list"
             aria-labelledby="shelf-sort-books-label"
-            class="scroll-box">
+            class="scroll-box configured-option-list">
             @foreach (($shelf->visibleBooks ?? []) as $book)
                 @include('shelves.parts.shelf-sort-book-item', ['book' => $book])
             @endforeach
@@ -46,17 +45,17 @@
     </div>
     <div class="form-group">
         <label for="books" id="shelf-sort-all-books-label">{{ trans('entities.shelves_add_books') }}</label>
-        <input type="text" refs="shelf-sort@book-search" class="scroll-box-search" placeholder="{{ trans('common.search') }}">
+        <input type="text" refs="shelf-sort@book-search" class="scroll-box-search"
+               placeholder="{{ trans('common.search') }}">
         <ul refs="shelf-sort@all-book-list"
             aria-labelledby="shelf-sort-all-books-label"
-            class="scroll-box">
+            class="scroll-box available-option-list">
             @foreach ($books as $book)
                 @include('shelves.parts.shelf-sort-book-item', ['book' => $book])
             @endforeach
         </ul>
     </div>
 </div>
-
 
 
 <div class="form-group collapsible" component="collapsible" id="logo-control">
@@ -68,7 +67,7 @@
 
         @include('form.image-picker', [
             'defaultImage' => url('/book_default_cover.png'),
-            'currentImage' => (isset($shelf) && $shelf->cover) ? $shelf->getBookCover() : url('/book_default_cover.png') ,
+            'currentImage' => (($shelf ?? null)?->coverInfo()->getUrl(440, 250, null) ?? url('/book_default_cover.png')),
             'name' => 'image',
             'imageClass' => 'cover'
         ])
@@ -85,7 +84,8 @@
 </div>
 
 <div class="form-group text-right">
-    <a href="{{ isset($shelf) ? $shelf->getUrl() : url('/shelves') }}" class="button outline">{{ trans('common.cancel') }}</a>
+    <a href="{{ isset($shelf) ? $shelf->getUrl() : url('/shelves') }}"
+       class="button outline">{{ trans('common.cancel') }}</a>
     <button type="submit" class="button">{{ trans('entities.shelves_save') }}</button>
 </div>
 

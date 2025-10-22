@@ -59,7 +59,7 @@ return [
     'favourite_remove_notification' => '":name" odstranjen iz priljubljenih',
 
     // Watching
-    'watch_update_level_notification' => 'Nastavitve opazovanja uspešno posodobljene',
+    'watch_update_level_notification' => 'Nastavitve spremljanja uspešno posodobljene',
 
     // Auth
     'auth_login' => 'prijavljen',
@@ -126,6 +126,14 @@ return [
     'comment_create'              => 'dodan komentar',
     'comment_update'              => 'posodobljen komentar',
     'comment_delete'              => 'izbrisan komentar',
+
+    // Sort Rules
+    'sort_rule_create' => 'created sort rule',
+    'sort_rule_create_notification' => 'Sort rule successfully created',
+    'sort_rule_update' => 'updated sort rule',
+    'sort_rule_update_notification' => 'Sort rule successfully updated',
+    'sort_rule_delete' => 'deleted sort rule',
+    'sort_rule_delete_notification' => 'Sort rule successfully deleted',
 
     // Other
     'permissions_update'          => 'pravice so posodobljene',

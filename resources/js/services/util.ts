@@ -5,7 +5,7 @@
  * leading edge, instead of the trailing.
  * @attribution https://davidwalsh.name/javascript-debounce-function
  */
-export function debounce(func: Function, waitMs: number, immediate: boolean): Function {
+export function debounce<T extends (...args: any[]) => any>(func: T, waitMs: number, immediate: boolean): T {
     let timeout: number|null = null;
     return function debouncedWrapper(this: any, ...args: any[]) {
         const context: any = this;
@@ -19,7 +19,7 @@ export function debounce(func: Function, waitMs: number, immediate: boolean): Fu
         }
         timeout = window.setTimeout(later, waitMs);
         if (callNow) func.apply(context, args);
-    };
+    } as T;
 }
 
 function isDetailsElement(element: HTMLElement): element is HTMLDetailsElement {
@@ -144,4 +144,25 @@ function getVersion(): string {
 export function importVersioned(moduleName: string): Promise<object> {
     const importPath = window.baseUrl(`dist/${moduleName}.js?version=${getVersion()}`);
     return import(importPath);
+}
+
+/*
+    cyrb53 (c) 2018 bryc (github.com/bryc)
+    License: Public domain (or MIT if needed). Attribution appreciated.
+    A fast and simple 53-bit string hash function with decent collision resistance.
+    Largely inspired by MurmurHash2/3, but with a focus on speed/simplicity.
+    Taken from: https://github.com/bryc/code/blob/master/jshash/experimental/cyrb53.js
+*/
+export function cyrb53(str: string, seed: number = 0): string {
+    let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
+    for(let i = 0, ch; i < str.length; i++) {
+        ch = str.charCodeAt(i);
+        h1 = Math.imul(h1 ^ ch, 2654435761);
+        h2 = Math.imul(h2 ^ ch, 1597334677);
+    }
+    h1  = Math.imul(h1 ^ (h1 >>> 16), 2246822507);
+    h1 ^= Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+    h2  = Math.imul(h2 ^ (h2 >>> 16), 2246822507);
+    h2 ^= Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+    return String((4294967296 * (2097151 & h2) + (h1 >>> 0)));
 }

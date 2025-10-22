@@ -37,8 +37,8 @@ import {QuoteNode} from "@lexical/rich-text/LexicalQuoteNode";
 import {DetailsNode} from "@lexical/rich-text/LexicalDetailsNode";
 import {EditorUiContext} from "../../../../ui/framework/core";
 import {EditorUIManager} from "../../../../ui/framework/manager";
-import {turtle} from "@codemirror/legacy-modes/mode/turtle";
-
+import {ImageNode} from "@lexical/rich-text/LexicalImageNode";
+import {MediaNode} from "@lexical/rich-text/LexicalMediaNode";
 
 type TestEnv = {
   readonly container: HTMLDivElement;
@@ -47,6 +47,9 @@ type TestEnv = {
   readonly innerHTML: string;
 };
 
+/**
+ * @deprecated - Consider using `createTestContext` instead within the test case.
+ */
 export function initializeUnitTest(
   runTests: (testEnv: TestEnv) => void,
   editorConfig: CreateEditorArgs = {namespace: 'test', theme: {}},
@@ -483,6 +486,10 @@ export function createTestContext(): EditorUiContext {
   const editor = createTestEditor({
     namespace: 'testing',
     theme: {},
+    nodes: [
+        ImageNode,
+        MediaNode,
+    ]
   });
 
   editor.setRootElement(editorDOM);
@@ -795,6 +802,30 @@ export function expectNodeShapeToMatch(editor: LexicalEditor, expected: nodeShap
   expect(shape.children).toMatchObject(expected);
 }
 
+/**
+ * Expect a given prop within the JSON editor state structure to be the given value.
+ * Uses dot notation for the provided `propPath`. Example:
+ * 0.5.cat => First child, Sixth child, cat property
+ */
+export function expectEditorStateJSONPropToEqual(editor: LexicalEditor, propPath: string, expected: any) {
+  let currentItem: any = editor.getEditorState().toJSON().root;
+  let currentPath = [];
+  const pathParts = propPath.split('.');
+
+  for (const part of pathParts) {
+    currentPath.push(part);
+    const childAccess = Number.isInteger(Number(part)) && Array.isArray(currentItem.children);
+    const target = childAccess ? currentItem.children : currentItem;
+
+    if (typeof target[part] === 'undefined') {
+      throw new Error(`Could not resolve editor state at path ${currentPath.join('.')}`)
+    }
+    currentItem = target[part];
+  }
+
+  expect(currentItem).toBe(expected);
+}
+
 function formatHtml(s: string): string {
   return s.replace(/>\s+</g, '><').replace(/\s*\n\s*/g, ' ').trim();
 }
@@ -817,4 +848,42 @@ export function dispatchKeydownEventForSelectedNode(editor: LexicalEditor, key: 
       dispatchKeydownEventForNode(node, editor, key);
     }
   });
+}
+
+export function dispatchEditorMouseClick(editor: LexicalEditor, clientX: number, clientY: number) {
+  const dom = editor.getRootElement();
+  if (!dom) {
+    return;
+  }
+
+  const event = new MouseEvent('click', {
+    clientX: clientX,
+    clientY: clientY,
+    bubbles: true,
+    cancelable: true,
+  });
+  dom?.dispatchEvent(event);
+  editor.commitUpdates();
+}
+
+export function patchRange() {
+    const RangePrototype = Object.getPrototypeOf(document.createRange());
+    RangePrototype.getBoundingClientRect = function (): DOMRect {
+        const rect = {
+            bottom: 0,
+            height: 0,
+            left: 0,
+            right: 0,
+            top: 0,
+            width: 0,
+            x: 0,
+            y: 0,
+        };
+        return {
+            ...rect,
+            toJSON() {
+                return rect;
+            },
+        };
+    };
 }

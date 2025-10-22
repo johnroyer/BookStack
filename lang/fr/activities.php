@@ -127,6 +127,14 @@ return [
     'comment_update'              => 'Commentaire mis à jour',
     'comment_delete'              => 'Commentaire supprimé',
 
+    // Sort Rules
+    'sort_rule_create' => 'règle de tri crée',
+    'sort_rule_create_notification' => 'Règle de tri crée avec succès',
+    'sort_rule_update' => 'règle de tri mise à jour',
+    'sort_rule_update_notification' => 'Règle de tri mise à jour avec succès',
+    'sort_rule_delete' => 'règle de tri supprimée',
+    'sort_rule_delete_notification' => 'La règle de tri a été supprimée avec succès',
+
     // Other
     'permissions_update'          => 'a mis à jour les autorisations sur',
 ];

@@ -127,6 +127,13 @@ Copyright: Copyright (c) 2023 ECMAScript Shims
 Source: git+https://github.com/es-shims/ArrayBuffer.prototype.slice.git
 Link: https://github.com/es-shims/ArrayBuffer.prototype.slice#readme
 -----------
+async-function
+License: MIT
+License File: node_modules/async-function/LICENSE
+Copyright: Copyright (c) 2016 EduardoRFS
+Source: git+https://github.com/ljharb/async-function.git
+Link: https://github.com/ljharb/async-function#readme
+-----------
 async
 License: MIT
 License File: node_modules/async/LICENSE
@@ -239,12 +246,26 @@ Copyright: Copyright (c) 2016, 2018 Linus Unnebäck
 Source: LinusU/buffer-from
 Link: LinusU/buffer-from
 -----------
+call-bind-apply-helpers
+License: MIT
+License File: node_modules/call-bind-apply-helpers/LICENSE
+Copyright: Copyright (c) 2024 Jordan Harband
+Source: git+https://github.com/ljharb/call-bind-apply-helpers.git
+Link: https://github.com/ljharb/call-bind-apply-helpers#readme
+-----------
 call-bind
 License: MIT
 License File: node_modules/call-bind/LICENSE
 Copyright: Copyright (c) 2020 Jordan Harband
 Source: git+https://github.com/ljharb/call-bind.git
 Link: https://github.com/ljharb/call-bind#readme
+-----------
+call-bound
+License: MIT
+License File: node_modules/call-bound/LICENSE
+Copyright: Copyright (c) 2024 Jordan Harband
+Source: git+https://github.com/ljharb/call-bound.git
+Link: https://github.com/ljharb/call-bound#readme
 -----------
 callsites
 License: MIT
@@ -303,6 +324,7 @@ Link: https://github.com/watson/ci-info
 cjs-module-lexer
 License: MIT
 License File: node_modules/cjs-module-lexer/LICENSE
+Copyright: Copyright (C) 2018-2020 Guy Bedford
 Source: git+https://github.com/nodejs/cjs-module-lexer.git
 Link: https://github.com/nodejs/cjs-module-lexer#readme
 -----------
@@ -323,7 +345,7 @@ Link: tj/co
 codemirror
 License: MIT
 License File: node_modules/codemirror/LICENSE
-Copyright: Copyright (C) 2018-2021 by Marijn Haverbeke <*******@*****.***> and others
+Copyright: Copyright (C) 2018-2021 by Marijn Haverbeke <******@*********.******> and others
 Source: https://github.com/codemirror/basic-setup.git
 Link: https://github.com/codemirror/basic-setup.git
 -----------
@@ -359,13 +381,6 @@ License: MIT
 License File: node_modules/concat-map/LICENSE
 Source: git://github.com/substack/node-concat-map.git
 Link: git://github.com/substack/node-concat-map.git
------------
-confusing-browser-globals
-License: MIT
-License File: node_modules/confusing-browser-globals/LICENSE
-Copyright: Copyright (c) 2013-present, Facebook, Inc.
-Source: https://github.com/facebook/create-react-app.git
-Link: https://github.com/facebook/create-react-app.git
 -----------
 convert-source-map
 License: MIT
@@ -427,22 +442,22 @@ data-view-buffer
 License: MIT
 License File: node_modules/data-view-buffer/LICENSE
 Copyright: Copyright (c) 2023 Jordan Harband
-Source: git+https://github.com/ljharb/data-view-buffer.git
-Link: https://github.com/ljharb/data-view-buffer#readme
+Source: git+https://github.com/inspect-js/data-view-buffer.git
+Link: https://github.com/inspect-js/data-view-buffer#readme
 -----------
 data-view-byte-length
 License: MIT
 License File: node_modules/data-view-byte-length/LICENSE
 Copyright: Copyright (c) 2024 Jordan Harband
-Source: git+https://github.com/ljharb/data-view-byte-length.git
-Link: https://github.com/ljharb/data-view-byte-length#readme
+Source: git+https://github.com/inspect-js/data-view-byte-length.git
+Link: https://github.com/inspect-js/data-view-byte-length#readme
 -----------
 data-view-byte-offset
 License: MIT
 License File: node_modules/data-view-byte-offset/LICENSE
 Copyright: Copyright (c) 2024 Jordan Harband
-Source: git+https://github.com/ljharb/data-view-byte-offset.git
-Link: https://github.com/ljharb/data-view-byte-offset#readme
+Source: git+https://github.com/inspect-js/data-view-byte-offset.git
+Link: https://github.com/inspect-js/data-view-byte-offset#readme
 -----------
 debug
 License: MIT
@@ -545,6 +560,13 @@ License: MIT
 License File: node_modules/domexception/LICENSE.txt
 Source: jsdom/domexception
 Link: jsdom/domexception
+-----------
+dunder-proto
+License: MIT
+License File: node_modules/dunder-proto/LICENSE
+Copyright: Copyright (c) 2024 ECMAScript Shims
+Source: git+https://github.com/es-shims/dunder-proto.git
+Link: https://github.com/es-shims/dunder-proto#readme
 -----------
 ejs
 License: Apache-2.0
@@ -664,13 +686,6 @@ Copyright: Copyright (C) 2012 Yusuke Suzuki (twitter: @Constellation) and other 
 Source: http://github.com/estools/escodegen.git
 Link: http://github.com/estools/escodegen
 -----------
-eslint-config-airbnb-base
-License: MIT
-License File: node_modules/eslint-config-airbnb-base/LICENSE.md
-Copyright: Copyright (c) 2012 Airbnb
-Source: https://github.com/airbnb/javascript
-Link: https://github.com/airbnb/javascript
------------
 eslint-import-resolver-node
 License: MIT
 License File: node_modules/eslint-import-resolver-node/LICENSE
@@ -696,14 +711,14 @@ eslint-scope
 License: BSD-2-Clause
 License File: node_modules/eslint-scope/LICENSE
 Copyright: Copyright (C) 2012-2013 Yusuke Suzuki (twitter: @Constellation) and other contributors.
-Source: eslint/eslint-scope
-Link: http://github.com/eslint/eslint-scope
+Source: https://github.com/eslint/js.git
+Link: https://github.com/eslint/js/blob/main/packages/eslint-scope/README.md
 -----------
 eslint-visitor-keys
 License: Apache-2.0
 License File: node_modules/eslint-visitor-keys/LICENSE
-Source: eslint/eslint-visitor-keys
-Link: https://github.com/eslint/eslint-visitor-keys#readme
+Source: https://github.com/eslint/js.git
+Link: https://github.com/eslint/js/blob/main/packages/eslint-visitor-keys/README.md
 -----------
 eslint
 License: MIT
@@ -716,8 +731,8 @@ License: BSD-2-Clause
 License File: node_modules/espree/LICENSE
 Copyright: Copyright (c) Open JS Foundation
 All rights reserved.
-Source: eslint/espree
-Link: https://github.com/eslint/espree
+Source: https://github.com/eslint/js.git
+Link: https://github.com/eslint/js/blob/main/packages/espree/README.md
 -----------
 esprima
 License: BSD-2-Clause
@@ -790,13 +805,6 @@ Copyright: Copyright (c) 2013 [Ramesh Nair](http://www.hiddentao.com/)
 Source: https://github.com/hiddentao/fast-levenshtein.git
 Link: https://github.com/hiddentao/fast-levenshtein.git
 -----------
-fastq
-License: ISC
-License File: node_modules/fastq/LICENSE
-Copyright: Copyright (c) 2015-2020, Matteo Collina <******.*******@*****.***>
-Source: git+https://github.com/mcollina/fastq.git
-Link: https://github.com/mcollina/fastq#readme
------------
 fb-watchman
 License: Apache-2.0
 Source: git@github.com:facebook/watchman.git
@@ -805,9 +813,9 @@ Link: https://facebook.github.io/watchman/
 file-entry-cache
 License: MIT
 License File: node_modules/file-entry-cache/LICENSE
-Copyright: Copyright (c) 2015 Roy Riojas
-Source: royriojas/file-entry-cache
-Link: royriojas/file-entry-cache
+Copyright: Copyright (c) Roy Riojas & Jared Wray
+Source: jaredwray/file-entry-cache
+Link: jaredwray/file-entry-cache
 -----------
 filelist
 License: Apache-2.0
@@ -846,7 +854,7 @@ for-each
 License: MIT
 License File: node_modules/for-each/LICENSE
 Copyright: Copyright (c) 2012 Raynos.
-Source: git://github.com/Raynos/for-each.git
+Source: https://github.com/Raynos/for-each.git
 Link: https://github.com/Raynos/for-each
 -----------
 form-data
@@ -912,6 +920,13 @@ Copyright: Copyright (c) 2020 CFWare, LLC
 Source: git+https://github.com/cfware/get-package-type.git
 Link: https://github.com/cfware/get-package-type#readme
 -----------
+get-proto
+License: MIT
+License File: node_modules/get-proto/LICENSE
+Copyright: Copyright (c) 2025 Jordan Harband
+Source: git+https://github.com/ljharb/get-proto.git
+Link: https://github.com/ljharb/get-proto#readme
+-----------
 get-stream
 License: MIT
 License File: node_modules/get-stream/license
@@ -967,13 +982,6 @@ License File: node_modules/graceful-fs/LICENSE
 Copyright: Copyright (c) 2011-2022 Isaac Z. Schlueter, Ben Noordhuis, and Contributors
 Source: https://github.com/isaacs/node-graceful-fs
 Link: https://github.com/isaacs/node-graceful-fs
------------
-graphemer
-License: MIT
-License File: node_modules/graphemer/LICENSE
-Copyright: Copyright 2020 Filament (Anomalous Technologies Limited)
-Source: https://github.com/flmnt/graphemer.git
-Link: https://github.com/flmnt/graphemer
 -----------
 has-bigints
 License: MIT
@@ -1139,6 +1147,13 @@ Copyright: Copyright (c) 2015 JD Ballard
 Source: https://github.com/qix-/node-is-arrayish.git
 Link: https://github.com/qix-/node-is-arrayish.git
 -----------
+is-async-function
+License: MIT
+License File: node_modules/is-async-function/LICENSE
+Copyright: Copyright (c) 2021 Jordan Harband
+Source: git://github.com/inspect-js/is-async-function.git
+Link: git://github.com/inspect-js/is-async-function.git
+-----------
 is-bigint
 License: MIT
 License File: node_modules/is-bigint/LICENSE
@@ -1195,6 +1210,13 @@ Copyright: Copyright (c) 2014-2016, Jon Schlinkert
 Source: jonschlinkert/is-extglob
 Link: https://github.com/jonschlinkert/is-extglob
 -----------
+is-finalizationregistry
+License: MIT
+License File: node_modules/is-finalizationregistry/LICENSE
+Copyright: Copyright (c) 2020 Inspect JS
+Source: git+https://github.com/inspect-js/is-finalizationregistry.git
+Link: https://github.com/inspect-js/is-finalizationregistry#readme
+-----------
 is-fullwidth-code-point
 License: MIT
 License File: node_modules/is-fullwidth-code-point/license
@@ -1209,12 +1231,26 @@ Copyright: Copyright (c) Sindre Sorhus <************@*****.***> (sindresorhus.co
 Source: sindresorhus/is-generator-fn
 Link: sindresorhus/is-generator-fn
 -----------
+is-generator-function
+License: MIT
+License File: node_modules/is-generator-function/LICENSE
+Copyright: Copyright (c) 2014 Jordan Harband
+Source: git://github.com/inspect-js/is-generator-function.git
+Link: git://github.com/inspect-js/is-generator-function.git
+-----------
 is-glob
 License: MIT
 License File: node_modules/is-glob/LICENSE
 Copyright: Copyright (c) 2014-2017, Jon Schlinkert.
 Source: micromatch/is-glob
 Link: https://github.com/micromatch/is-glob
+-----------
+is-map
+License: MIT
+License File: node_modules/is-map/LICENSE
+Copyright: Copyright (c) 2019 Inspect JS
+Source: git+https://github.com/inspect-js/is-map.git
+Link: https://github.com/inspect-js/is-map#readme
 -----------
 is-negative-zero
 License: MIT
@@ -1237,13 +1273,6 @@ Copyright: Copyright (c) 2014-present, Jon Schlinkert.
 Source: jonschlinkert/is-number
 Link: https://github.com/jonschlinkert/is-number
 -----------
-is-path-inside
-License: MIT
-License File: node_modules/is-path-inside/license
-Copyright: Copyright (c) Sindre Sorhus <************@*****.***> (sindresorhus.com)
-Source: sindresorhus/is-path-inside
-Link: sindresorhus/is-path-inside
------------
 is-potential-custom-element-name
 License: MIT
 License File: node_modules/is-potential-custom-element-name/LICENSE-MIT.txt
@@ -1256,6 +1285,13 @@ License File: node_modules/is-regex/LICENSE
 Copyright: Copyright (c) 2014 Jordan Harband
 Source: git://github.com/inspect-js/is-regex.git
 Link: https://github.com/inspect-js/is-regex
+-----------
+is-set
+License: MIT
+License File: node_modules/is-set/LICENSE
+Copyright: Copyright (c) 2019 Inspect JS
+Source: git+https://github.com/inspect-js/is-set.git
+Link: https://github.com/inspect-js/is-set#readme
 -----------
 is-shared-array-buffer
 License: MIT
@@ -1275,8 +1311,8 @@ is-string
 License: MIT
 License File: node_modules/is-string/LICENSE
 Copyright: Copyright (c) 2015 Jordan Harband
-Source: git://github.com/ljharb/is-string.git
-Link: git://github.com/ljharb/is-string.git
+Source: git://github.com/inspect-js/is-string.git
+Link: git://github.com/inspect-js/is-string.git
 -----------
 is-symbol
 License: MIT
@@ -1292,12 +1328,26 @@ Copyright: Copyright (c) 2015 Jordan Harband
 Source: git://github.com/inspect-js/is-typed-array.git
 Link: git://github.com/inspect-js/is-typed-array.git
 -----------
+is-weakmap
+License: MIT
+License File: node_modules/is-weakmap/LICENSE
+Copyright: Copyright (c) 2019 Inspect JS
+Source: git+https://github.com/inspect-js/is-weakmap.git
+Link: https://github.com/inspect-js/is-weakmap#readme
+-----------
 is-weakref
 License: MIT
 License File: node_modules/is-weakref/LICENSE
 Copyright: Copyright (c) 2020 Inspect JS
 Source: git+https://github.com/inspect-js/is-weakref.git
 Link: https://github.com/inspect-js/is-weakref#readme
+-----------
+is-weakset
+License: MIT
+License File: node_modules/is-weakset/LICENSE
+Copyright: Copyright (c) 2019 Inspect JS
+Source: git+https://github.com/inspect-js/is-weakset.git
+Link: https://github.com/inspect-js/is-weakset#readme
 -----------
 isarray
 License: MIT
@@ -1743,6 +1793,13 @@ Copyright: Copyright (c) 2014 Vitaly Puzrin, Alex Kocharin.
 Source: markdown-it/markdown-it
 Link: markdown-it/markdown-it
 -----------
+math-intrinsics
+License: MIT
+License File: node_modules/math-intrinsics/LICENSE
+Copyright: Copyright (c) 2024 ECMAScript Shims
+Source: git+https://github.com/es-shims/math-intrinsics.git
+Link: https://github.com/es-shims/math-intrinsics#readme
+-----------
 mdurl
 License: MIT
 License File: node_modules/mdurl/LICENSE
@@ -1878,9 +1935,9 @@ Link: sindresorhus/npm-run-path
 nwsapi
 License: MIT
 License File: node_modules/nwsapi/LICENSE
-Copyright: Copyright (c) 2007-2024 Diego Perini (http://www.iport.it/)
+Copyright: Copyright (c) 2007-2025 Diego Perini (http://www.iport.it/)
 Source: git://github.com/dperini/nwsapi.git
-Link: http://javascript.nwbox.com/nwsapi/
+Link: https://javascript.nwbox.com/nwsapi/
 -----------
 object-inspect
 License: MIT
@@ -1902,13 +1959,6 @@ License File: node_modules/object.assign/LICENSE
 Copyright: Copyright (c) 2014 Jordan Harband
 Source: git://github.com/ljharb/object.assign.git
 Link: git://github.com/ljharb/object.assign.git
------------
-object.entries
-License: MIT
-License File: node_modules/object.entries/LICENSE
-Copyright: Copyright (c) 2015 Jordan Harband
-Source: git://github.com/es-shims/Object.entries.git
-Link: git://github.com/es-shims/Object.entries.git
 -----------
 object.fromentries
 License: MIT
@@ -1960,6 +2010,13 @@ All rights reserved.
 Source: github:khtdr/opts
 Link: http://khtdr.com/opts
 -----------
+own-keys
+License: MIT
+License File: node_modules/own-keys/LICENSE
+Copyright: Copyright (c) 2024 Jordan Harband
+Source: git+https://github.com/ljharb/own-keys.git
+Link: https://github.com/ljharb/own-keys#readme
+-----------
 p-limit
 License: MIT
 License File: node_modules/p-limit/license
@@ -2000,7 +2057,7 @@ License: MIT
 License File: node_modules/parse5/LICENSE
 Copyright: Copyright (c) 2013-2019 Ivan Nikulin (******@*****.***, https://github.com/inikulin)
 Source: git://github.com/inikulin/parse5.git
-Link: https://github.com/inikulin/parse5
+Link: https://parse5.js.org
 -----------
 path-exists
 License: MIT
@@ -2140,13 +2197,6 @@ Copyright: Copyright (c) 2015 Unshift.io, Arnout Kazemier,  the Contributors.
 Source: https://github.com/unshiftio/querystringify
 Link: https://github.com/unshiftio/querystringify
 -----------
-queue-microtask
-License: MIT
-License File: node_modules/queue-microtask/LICENSE
-Copyright: Copyright (c) Feross Aboukhadijeh
-Source: git://github.com/feross/queue-microtask.git
-Link: https://github.com/feross/queue-microtask
------------
 react-is
 License: MIT
 License File: node_modules/react-is/LICENSE
@@ -2167,6 +2217,13 @@ License File: node_modules/readdirp/LICENSE
 Copyright: Copyright (c) 2012-2019 Thorsten Lorenz, Paul Miller (https://paulmillr.com)
 Source: git://github.com/paulmillr/readdirp.git
 Link: https://github.com/paulmillr/readdirp
+-----------
+reflect.getprototypeof
+License: MIT
+License File: node_modules/reflect.getprototypeof/LICENSE
+Copyright: Copyright (c) 2021 ECMAScript Shims
+Source: git+https://github.com/es-shims/Reflect.getPrototypeOf.git
+Link: https://github.com/es-shims/Reflect.getPrototypeOf
 -----------
 regexp.prototype.flags
 License: MIT
@@ -2224,33 +2281,19 @@ Copyright: Copyright (c) 2012 James Halliday
 Source: git://github.com/browserify/resolve.git
 Link: git://github.com/browserify/resolve.git
 -----------
-reusify
-License: MIT
-License File: node_modules/reusify/LICENSE
-Copyright: Copyright (c) 2015 Matteo Collina
-Source: git+https://github.com/mcollina/reusify.git
-Link: https://github.com/mcollina/reusify#readme
------------
-rimraf
-License: ISC
-License File: node_modules/rimraf/LICENSE
-Copyright: Copyright (c) Isaac Z. Schlueter and Contributors
-Source: git://github.com/isaacs/rimraf.git
-Link: git://github.com/isaacs/rimraf.git
------------
-run-parallel
-License: MIT
-License File: node_modules/run-parallel/LICENSE
-Copyright: Copyright (c) Feross Aboukhadijeh
-Source: git://github.com/feross/run-parallel.git
-Link: https://github.com/feross/run-parallel
------------
 safe-array-concat
 License: MIT
 License File: node_modules/safe-array-concat/LICENSE
 Copyright: Copyright (c) 2023 Jordan Harband
 Source: git+https://github.com/ljharb/safe-array-concat.git
 Link: https://github.com/ljharb/safe-array-concat#readme
+-----------
+safe-push-apply
+License: MIT
+License File: node_modules/safe-push-apply/LICENSE
+Copyright: Copyright (c) 2024 Jordan Harband
+Source: git+https://github.com/ljharb/safe-push-apply.git
+Link: https://github.com/ljharb/safe-push-apply#readme
 -----------
 safe-regex-test
 License: MIT
@@ -2306,6 +2349,13 @@ Copyright: Copyright (c) Jordan Harband and contributors
 Source: git+https://github.com/ljharb/set-function-name.git
 Link: https://github.com/ljharb/set-function-name#readme
 -----------
+set-proto
+License: MIT
+License File: node_modules/set-proto/LICENSE
+Copyright: Copyright (c) 2024 Jordan Harband
+Source: git+https://github.com/ljharb/set-proto.git
+Link: https://github.com/ljharb/set-proto#readme
+-----------
 shebang-command
 License: MIT
 License File: node_modules/shebang-command/license
@@ -2326,6 +2376,27 @@ License File: node_modules/shell-quote/LICENSE
 Copyright: Copyright (c) 2013 James Halliday (****@********.***)
 Source: http://github.com/ljharb/shell-quote.git
 Link: https://github.com/ljharb/shell-quote
+-----------
+side-channel-list
+License: MIT
+License File: node_modules/side-channel-list/LICENSE
+Copyright: Copyright (c) 2024 Jordan Harband
+Source: git+https://github.com/ljharb/side-channel-list.git
+Link: https://github.com/ljharb/side-channel-list#readme
+-----------
+side-channel-map
+License: MIT
+License File: node_modules/side-channel-map/LICENSE
+Copyright: Copyright (c) 2024 Jordan Harband
+Source: git+https://github.com/ljharb/side-channel-map.git
+Link: https://github.com/ljharb/side-channel-map#readme
+-----------
+side-channel-weakmap
+License: MIT
+License File: node_modules/side-channel-weakmap/LICENSE
+Copyright: Copyright (c) 2019 Jordan Harband
+Source: git+https://github.com/ljharb/side-channel-weakmap.git
+Link: https://github.com/ljharb/side-channel-weakmap#readme
 -----------
 side-channel
 License: MIT
@@ -2428,6 +2499,13 @@ License File: node_modules/stack-utils/LICENSE.md
 Copyright: Copyright (c) 2016-2022 Isaac Z. Schlueter <*@***.**>, James Talmage <*****@*******.**> (github.com/jamestalmage), and Contributors
 Source: tapjs/stack-utils
 Link: tapjs/stack-utils
+-----------
+stop-iteration-iterator
+License: MIT
+License File: node_modules/stop-iteration-iterator/LICENSE
+Copyright: Copyright (c) 2023 Jordan Harband
+Source: git+https://github.com/ljharb/stop-iteration-iterator.git
+Link: https://github.com/ljharb/stop-iteration-iterator#readme
 -----------
 string-length
 License: MIT
@@ -2534,26 +2612,12 @@ Copyright: Copyright (c) 2016, Contributors
 Source: git+https://github.com/istanbuljs/test-exclude.git
 Link: https://istanbul.js.org/
 -----------
-text-table
-License: MIT
-License File: node_modules/text-table/LICENSE
-Source: git://github.com/substack/text-table.git
-Link: https://github.com/substack/text-table
------------
 tmpl
 License: BSD-3-Clause
 License File: node_modules/tmpl/license
 Copyright: Copyright (c) 2014, Naitik Shah. All rights reserved.
 Source: https://github.com/daaku/nodejs-tmpl
 Link: https://github.com/daaku/nodejs-tmpl
------------
-to-fast-properties
-License: MIT
-License File: node_modules/to-fast-properties/license
-Copyright: Copyright (c) 2014 Petka Antonov
-              2015 Sindre Sorhus
-Source: sindresorhus/to-fast-properties
-Link: sindresorhus/to-fast-properties
 -----------
 to-regex-range
 License: MIT
@@ -2579,7 +2643,7 @@ Link: https://github.com/jsdom/tr46
 ts-jest
 License: MIT
 License File: node_modules/ts-jest/LICENSE.md
-Copyright: Copyright (c) 2016-2018
+Copyright: Copyright (c) 2016-2025
 Source: git+https://github.com/kulshekhar/ts-jest.git
 Link: https://kulshekhar.github.io/ts-jest
 -----------
@@ -2622,8 +2686,8 @@ typed-array-buffer
 License: MIT
 License File: node_modules/typed-array-buffer/LICENSE
 Copyright: Copyright (c) 2023 Jordan Harband
-Source: git+https://github.com/ljharb/typed-array-buffer.git
-Link: https://github.com/ljharb/typed-array-buffer#readme
+Source: git+https://github.com/inspect-js/typed-array-buffer.git
+Link: https://github.com/inspect-js/typed-array-buffer#readme
 -----------
 typed-array-byte-length
 License: MIT
@@ -2773,6 +2837,20 @@ License File: node_modules/which-boxed-primitive/LICENSE
 Copyright: Copyright (c) 2019 Jordan Harband
 Source: git+https://github.com/inspect-js/which-boxed-primitive.git
 Link: https://github.com/inspect-js/which-boxed-primitive#readme
+-----------
+which-builtin-type
+License: MIT
+License File: node_modules/which-builtin-type/LICENSE
+Copyright: Copyright (c) 2020 ECMAScript Shims
+Source: git+https://github.com/inspect-js/which-builtin-type.git
+Link: https://github.com/inspect-js/which-builtin-type#readme
+-----------
+which-collection
+License: MIT
+License File: node_modules/which-collection/LICENSE
+Copyright: Copyright (c) 2019 Inspect JS
+Source: git+https://github.com/inspect-js/which-collection.git
+Link: https://github.com/inspect-js/which-collection#readme
 -----------
 which-module
 License: ISC
@@ -2928,6 +3006,13 @@ Copyright: Copyright (c) 2014-present Sebastian McKenzie and other contributors
 Source: https://github.com/babel/babel.git
 Link: https://github.com/babel/babel.git
 -----------
+@babel/helper-globals
+License: MIT
+License File: node_modules/@babel/helper-globals/LICENSE
+Copyright: Copyright (c) 2014-present Sebastian McKenzie and other contributors
+Source: https://github.com/babel/babel.git
+Link: https://github.com/babel/babel.git
+-----------
 @babel/helper-module-imports
 License: MIT
 License File: node_modules/@babel/helper-module-imports/LICENSE
@@ -2948,13 +3033,6 @@ License File: node_modules/@babel/helper-plugin-utils/LICENSE
 Copyright: Copyright (c) 2014-present Sebastian McKenzie and other contributors
 Source: https://github.com/babel/babel.git
 Link: https://babel.dev/docs/en/next/babel-helper-plugin-utils
------------
-@babel/helper-simple-access
-License: MIT
-License File: node_modules/@babel/helper-simple-access/LICENSE
-Copyright: Copyright (c) 2014-present Sebastian McKenzie and other contributors
-Source: https://github.com/babel/babel.git
-Link: https://babel.dev/docs/en/next/babel-helper-simple-access
 -----------
 @babel/helper-string-parser
 License: MIT
@@ -2981,15 +3059,9 @@ Link: https://github.com/babel/babel.git
 License: MIT
 License File: node_modules/@babel/helpers/LICENSE
 Copyright: Copyright (c) 2014-present Sebastian McKenzie and other contributors
+Copyright (c) 2014-present, Facebook, Inc. (ONLY ./src/helpers/regenerator* files)
 Source: https://github.com/babel/babel.git
 Link: https://babel.dev/docs/en/next/babel-helpers
------------
-@babel/highlight
-License: MIT
-License File: node_modules/@babel/highlight/LICENSE
-Copyright: Copyright (c) 2014-present Sebastian McKenzie and other contributors
-Source: https://github.com/babel/babel.git
-Link: https://babel.dev/docs/en/next/babel-highlight
 -----------
 @babel/parser
 License: MIT
@@ -3182,7 +3254,7 @@ Link: https://github.com/codemirror/lang-javascript.git
 @codemirror/lang-json
 License: MIT
 License File: node_modules/@codemirror/lang-json/LICENSE
-Copyright: Copyright (C) 2018-2021 by Marijn Haverbeke <*******@*****.***> and others
+Copyright: Copyright (C) 2018-2021 by Marijn Haverbeke <******@*********.******> and others
 Source: https://github.com/codemirror/lang-json.git
 Link: https://github.com/codemirror/lang-json.git
 -----------
@@ -3196,7 +3268,7 @@ Link: https://github.com/codemirror/lang-markdown.git
 @codemirror/lang-php
 License: MIT
 License File: node_modules/@codemirror/lang-php/LICENSE
-Copyright: Copyright (C) 2018-2021 by Marijn Haverbeke <*******@*****.***> and others
+Copyright: Copyright (C) 2018-2021 by Marijn Haverbeke <******@*********.******> and others
 Source: https://github.com/codemirror/lang-php.git
 Link: https://github.com/codemirror/lang-php.git
 -----------
@@ -3282,6 +3354,24 @@ Copyright: Copyright (c) 2018 Toru Nagashima
 Source: https://github.com/eslint-community/regexpp
 Link: https://github.com/eslint-community/regexpp#readme
 -----------
+@eslint/config-array
+License: Apache-2.0
+License File: node_modules/@eslint/config-array/LICENSE
+Source: git+https://github.com/eslint/rewrite.git
+Link: https://github.com/eslint/rewrite/tree/main/packages/config-array#readme
+-----------
+@eslint/config-helpers
+License: Apache-2.0
+License File: node_modules/@eslint/config-helpers/LICENSE
+Source: git+https://github.com/eslint/rewrite.git
+Link: https://github.com/eslint/rewrite/tree/main/packages/config-helpers#readme
+-----------
+@eslint/core
+License: Apache-2.0
+License File: node_modules/@eslint/core/LICENSE
+Source: git+https://github.com/eslint/rewrite.git
+Link: https://github.com/eslint/rewrite/tree/main/packages/core#readme
+-----------
 @eslint/eslintrc
 License: MIT
 License File: node_modules/@eslint/eslintrc/LICENSE
@@ -3294,11 +3384,29 @@ License File: node_modules/@eslint/js/LICENSE
 Source: https://github.com/eslint/eslint.git
 Link: https://eslint.org
 -----------
-@humanwhocodes/config-array
+@eslint/object-schema
 License: Apache-2.0
-License File: node_modules/@humanwhocodes/config-array/LICENSE
-Source: git+https://github.com/humanwhocodes/config-array.git
-Link: https://github.com/humanwhocodes/config-array#readme
+License File: node_modules/@eslint/object-schema/LICENSE
+Source: git+https://github.com/eslint/rewrite.git
+Link: https://github.com/eslint/rewrite#readme
+-----------
+@eslint/plugin-kit
+License: Apache-2.0
+License File: node_modules/@eslint/plugin-kit/LICENSE
+Source: git+https://github.com/eslint/rewrite.git
+Link: https://github.com/eslint/rewrite/tree/main/packages/plugin-kit#readme
+-----------
+@humanfs/core
+License: Apache-2.0
+License File: node_modules/@humanfs/core/LICENSE
+Source: git+https://github.com/humanwhocodes/humanfs.git
+Link: https://github.com/humanwhocodes/humanfs#readme
+-----------
+@humanfs/node
+License: Apache-2.0
+License File: node_modules/@humanfs/node/LICENSE
+Source: git+https://github.com/humanwhocodes/humanfs.git
+Link: https://github.com/humanwhocodes/humanfs#readme
 -----------
 @humanwhocodes/module-importer
 License: Apache-2.0
@@ -3306,13 +3414,11 @@ License File: node_modules/@humanwhocodes/module-importer/LICENSE
 Source: git+https://github.com/humanwhocodes/module-importer.git
 Link: git+https://github.com/humanwhocodes/module-importer.git
 -----------
-@humanwhocodes/object-schema
-License: BSD-3-Clause
-License File: node_modules/@humanwhocodes/object-schema/LICENSE
-Copyright: Copyright (c) 2019, Human Who Codes
-All rights reserved.
-Source: git+https://github.com/humanwhocodes/object-schema.git
-Link: https://github.com/humanwhocodes/object-schema#readme
+@humanwhocodes/retry
+License: Apache-2.0
+License File: node_modules/@humanwhocodes/retry/LICENSE
+Source: git+https://github.com/humanwhocodes/retry.git
+Link: git+https://github.com/humanwhocodes/retry.git
 -----------
 @istanbuljs/load-nyc-config
 License: ISC
@@ -3429,9 +3535,9 @@ Link: https://github.com/jestjs/jest.git
 @jridgewell/gen-mapping
 License: MIT
 License File: node_modules/@jridgewell/gen-mapping/LICENSE
-Copyright: Copyright 2022 Justin Ridgewell <**********@******.***>
-Source: https://github.com/jridgewell/gen-mapping
-Link: https://github.com/jridgewell/gen-mapping
+Copyright: Copyright 2024 Justin Ridgewell <******@*********.****>
+Source: git+https://github.com/jridgewell/sourcemaps.git
+Link: https://github.com/jridgewell/sourcemaps/tree/main/packages/gen-mapping
 -----------
 @jridgewell/resolve-uri
 License: MIT
@@ -3440,26 +3546,19 @@ Copyright: Copyright 2019 Justin Ridgewell <**********@******.***>
 Source: https://github.com/jridgewell/resolve-uri
 Link: https://github.com/jridgewell/resolve-uri
 -----------
-@jridgewell/set-array
-License: MIT
-License File: node_modules/@jridgewell/set-array/LICENSE
-Copyright: Copyright 2022 Justin Ridgewell <**********@******.***>
-Source: https://github.com/jridgewell/set-array
-Link: https://github.com/jridgewell/set-array
------------
 @jridgewell/sourcemap-codec
 License: MIT
 License File: node_modules/@jridgewell/sourcemap-codec/LICENSE
-Copyright: Copyright (c) 2015 Rich Harris
-Source: git+https://github.com/jridgewell/sourcemap-codec.git
-Link: git+https://github.com/jridgewell/sourcemap-codec.git
+Copyright: Copyright 2024 Justin Ridgewell <******@*********.****>
+Source: git+https://github.com/jridgewell/sourcemaps.git
+Link: https://github.com/jridgewell/sourcemaps/tree/main/packages/sourcemap-codec
 -----------
 @jridgewell/trace-mapping
 License: MIT
 License File: node_modules/@jridgewell/trace-mapping/LICENSE
-Copyright: Copyright 2022 Justin Ridgewell <******@*********.****>
-Source: git+https://github.com/jridgewell/trace-mapping.git
-Link: git+https://github.com/jridgewell/trace-mapping.git
+Copyright: Copyright 2024 Justin Ridgewell <******@*********.****>
+Source: git+https://github.com/jridgewell/sourcemaps.git
+Link: https://github.com/jridgewell/sourcemaps/tree/main/packages/trace-mapping
 -----------
 @lezer/common
 License: MIT
@@ -3540,29 +3639,10 @@ Link: https://github.com/lezer-parser/xml.git
 -----------
 @marijn/find-cluster-break
 License: MIT
+License File: node_modules/@marijn/find-cluster-break/LICENSE
+Copyright: Copyright (C) 2024 by Marijn Haverbeke <******@*********.******>
 Source: git+https://github.com/marijnh/find-cluster-break.git
 Link: https://github.com/marijnh/find-cluster-break#readme
------------
-@nodelib/fs.scandir
-License: MIT
-License File: node_modules/@nodelib/fs.scandir/LICENSE
-Copyright: Copyright (c) Denis Malinochkin
-Source: https://github.com/nodelib/nodelib/tree/master/packages/fs/fs.scandir
-Link: https://github.com/nodelib/nodelib/tree/master/packages/fs/fs.scandir
------------
-@nodelib/fs.stat
-License: MIT
-License File: node_modules/@nodelib/fs.stat/LICENSE
-Copyright: Copyright (c) Denis Malinochkin
-Source: https://github.com/nodelib/nodelib/tree/master/packages/fs/fs.stat
-Link: https://github.com/nodelib/nodelib/tree/master/packages/fs/fs.stat
------------
-@nodelib/fs.walk
-License: MIT
-License File: node_modules/@nodelib/fs.walk/LICENSE
-Copyright: Copyright (c) Denis Malinochkin
-Source: https://github.com/nodelib/nodelib/tree/master/packages/fs/fs.walk
-Link: https://github.com/nodelib/nodelib/tree/master/packages/fs/fs.walk
 -----------
 @parcel/watcher-linux-x64-glibc
 License: MIT
@@ -3686,6 +3766,13 @@ Copyright: Copyright (c) Microsoft Corporation.
 Source: https://github.com/DefinitelyTyped/DefinitelyTyped.git
 Link: https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/babel__traverse
 -----------
+@types/estree
+License: MIT
+License File: node_modules/@types/estree/LICENSE
+Copyright: Copyright (c) Microsoft Corporation.
+Source: https://github.com/DefinitelyTyped/DefinitelyTyped.git
+Link: https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/estree
+-----------
 @types/graceful-fs
 License: MIT
 License File: node_modules/@types/graceful-fs/LICENSE
@@ -3728,10 +3815,38 @@ Copyright: Copyright (c) Microsoft Corporation.
 Source: https://github.com/DefinitelyTyped/DefinitelyTyped.git
 Link: https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/jsdom
 -----------
+@types/json-schema
+License: MIT
+License File: node_modules/@types/json-schema/LICENSE
+Copyright: Copyright (c) Microsoft Corporation.
+Source: https://github.com/DefinitelyTyped/DefinitelyTyped.git
+Link: https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/json-schema
+-----------
 @types/json5
 License: MIT
 Source: https://www.github.com/DefinitelyTyped/DefinitelyTyped.git
 Link: https://www.github.com/DefinitelyTyped/DefinitelyTyped.git
+-----------
+@types/linkify-it
+License: MIT
+License File: node_modules/@types/linkify-it/LICENSE
+Copyright: Copyright (c) Microsoft Corporation.
+Source: https://github.com/DefinitelyTyped/DefinitelyTyped.git
+Link: https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/linkify-it
+-----------
+@types/markdown-it
+License: MIT
+License File: node_modules/@types/markdown-it/LICENSE
+Copyright: Copyright (c) Microsoft Corporation.
+Source: https://github.com/DefinitelyTyped/DefinitelyTyped.git
+Link: https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/markdown-it
+-----------
+@types/mdurl
+License: MIT
+License File: node_modules/@types/mdurl/LICENSE
+Copyright: Copyright (c) Microsoft Corporation.
+Source: https://github.com/DefinitelyTyped/DefinitelyTyped.git
+Link: https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/mdurl
 -----------
 @types/node
 License: MIT
@@ -3739,6 +3854,13 @@ License File: node_modules/@types/node/LICENSE
 Copyright: Copyright (c) Microsoft Corporation.
 Source: https://github.com/DefinitelyTyped/DefinitelyTyped.git
 Link: https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/node
+-----------
+@types/sortablejs
+License: MIT
+License File: node_modules/@types/sortablejs/LICENSE
+Copyright: Copyright (c) Microsoft Corporation.
+Source: https://github.com/DefinitelyTyped/DefinitelyTyped.git
+Link: https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/sortablejs
 -----------
 @types/stack-utils
 License: MIT
@@ -3767,10 +3889,3 @@ License File: node_modules/@types/yargs/LICENSE
 Copyright: Copyright (c) Microsoft Corporation.
 Source: https://github.com/DefinitelyTyped/DefinitelyTyped.git
 Link: https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/yargs
------------
-@ungap/structured-clone
-License: ISC
-License File: node_modules/@ungap/structured-clone/LICENSE
-Copyright: Copyright (c) 2021, Andrea Giammarchi, @WebReflection
-Source: git+https://github.com/ungap/structured-clone.git
-Link: https://github.com/ungap/structured-clone#readme

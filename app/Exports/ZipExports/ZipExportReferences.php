@@ -12,22 +12,23 @@ use BookStack\Exports\ZipExports\Models\ZipExportChapter;
 use BookStack\Exports\ZipExports\Models\ZipExportImage;
 use BookStack\Exports\ZipExports\Models\ZipExportModel;
 use BookStack\Exports\ZipExports\Models\ZipExportPage;
+use BookStack\Permissions\Permission;
 use BookStack\Uploads\Attachment;
 use BookStack\Uploads\Image;
 
 class ZipExportReferences
 {
-    /** @var ZipExportPage[] */
+    /** @var array<int, ZipExportPage> */
     protected array $pages = [];
-    /** @var ZipExportChapter[] */
+    /** @var array<int, ZipExportChapter> */
     protected array $chapters = [];
-    /** @var ZipExportBook[] */
+    /** @var array<int, ZipExportBook> */
     protected array $books = [];
 
-    /** @var ZipExportAttachment[] */
+    /** @var array<int, ZipExportAttachment> */
     protected array $attachments = [];
 
-    /** @var ZipExportImage[] */
+    /** @var array<int, ZipExportImage> */
     protected array $images = [];
 
     public function __construct(
@@ -134,11 +135,12 @@ class ZipExportReferences
 
             // Find and include images if in visibility
             $page = $model->getPage();
-            if ($page && userCan('view', $page)) {
+            $pageExportModel = $this->pages[$page->id] ?? ($exportModel instanceof ZipExportPage ? $exportModel : null);
+            if (isset($this->images[$model->id]) || ($page && $pageExportModel && userCan(Permission::PageView, $page))) {
                 if (!isset($this->images[$model->id])) {
                     $exportImage = ZipExportImage::fromModel($model, $files);
                     $this->images[$model->id] = $exportImage;
-                    $exportModel->images[] = $exportImage;
+                    $pageExportModel->images[] = $exportImage;
                 }
                 return "[[bsexport:image:{$model->id}]]";
             }

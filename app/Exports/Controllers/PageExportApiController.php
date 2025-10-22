@@ -4,7 +4,9 @@ namespace BookStack\Exports\Controllers;
 
 use BookStack\Entities\Queries\PageQueries;
 use BookStack\Exports\ExportFormatter;
+use BookStack\Exports\ZipExports\ZipExportBuilder;
 use BookStack\Http\ApiController;
+use BookStack\Permissions\Permission;
 use Throwable;
 
 class PageExportApiController extends ApiController
@@ -13,7 +15,7 @@ class PageExportApiController extends ApiController
         protected ExportFormatter $exportFormatter,
         protected PageQueries $queries,
     ) {
-        $this->middleware('can:content-export');
+        $this->middleware(Permission::ContentExport->middleware());
     }
 
     /**
@@ -62,5 +64,16 @@ class PageExportApiController extends ApiController
         $markdown = $this->exportFormatter->pageToMarkdown($page);
 
         return $this->download()->directly($markdown, $page->slug . '.md');
+    }
+
+    /**
+     * Export a page as a contained ZIP file.
+     */
+    public function exportZip(int $id, ZipExportBuilder $builder)
+    {
+        $page = $this->queries->findVisibleByIdOrFail($id);
+        $zip = $builder->buildForPage($page);
+
+        return $this->download()->streamedFileDirectly($zip, $page->slug . '.zip', true);
     }
 }
